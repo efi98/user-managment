@@ -1,0 +1,93 @@
+<div class="container">
+    <form [formGroup]="userForm" (ngSubmit)="save()">
+        <div class="view-grid">
+            <div class="grid-item">
+                <label for="username">Username</label>
+                <input id="username" formControlName="username" readonly>
+            </div>
+            <div class="grid-item">
+                <label for="displayName">Display Name</label>
+                <input id="displayName" formControlName="displayName" [readonly]="mode === Mode.View"
+                       [class.error]="userForm.get('displayName')?.dirty && !userForm.get('displayName')?.value">
+            </div>
+            <div class="grid-item">
+                <label for="password">Password</label>
+                @if (mode === Mode.View) {
+                    @if (showPassword) {
+                        <input id="password-view" formControlName="password" readonly>
+                    } @else {
+                        <input id="password-view" value="(Click to reveal)" readonly class="empty-field reveal"
+                               (click)="togglePasswordVisibility()">
+                    }
+                } @else {
+                    <input id="password-edit" type="password" formControlName="password"
+                           [class.error]="userForm.get('password')?.dirty && userForm.get('password')?.invalid">
+                    <app-password-strength
+                            [passwordValidationResult]="passwordValidationResult"></app-password-strength>
+                }
+            </div>
+            <div class="grid-item">
+                <label for="age">Age</label>
+                @if (mode === Mode.View) {
+                    <input id="age" [value]="userForm.get('age')?.value || 'EMPTY'" readonly
+                           [class.empty-field]="!userForm.get('age')?.value">
+                } @else {
+                    <input id="age" type="number" formControlName="age"
+                           min="1" max="120"
+                           [class.error]="userForm.get('age')?.dirty && (!userForm.get('age')?.value || userForm.get('age')?.errors)">
+                }
+            </div>
+            <div class="grid-item">
+                <label for="gender">Gender</label>
+                @if (mode === Mode.View) {
+                    <input id="gender-view" [value]="userForm.get('gender')?.value || 'EMPTY'" readonly
+                           [class.empty-field]="!userForm.get('gender')?.value">
+                } @else {
+                    <select id="gender-edit" formControlName="gender"
+                            [class.error]="userForm.get('gender')?.dirty && !userForm.get('gender')?.value">
+                        <option value="">Select Gender</option>
+                        @for (gender of GENDERS_LIST; track gender) {
+                            <option [value]="gender">{{ gender }}</option>
+                        }
+                    </select>
+                }
+            </div>
+            <div class="grid-item">
+                <label>Role</label>
+                <div class="role-card" [class.edit-mode]="isEditRole(mode)">
+                    <div class="role-option" (click)="toggleRole()"
+                         [class.edit-mode]="isEditRole(mode)"
+                         [class.active]="userForm.get('isAdmin')?.value">
+                        <span>👑</span>
+                        <span>Admin</span>
+                    </div>
+                    <div class="role-option" (click)="toggleRole()"
+                         [class.edit-mode]="isEditRole(mode)"
+                         [class.active]="!userForm.get('isAdmin')?.value">
+                        <span>👤</span>
+                        <span>User</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="timestamps">
+            <span><b>Created:</b> {{ createdRelative() }}</span>
+            @if (updatedRelative().length) {
+                <span>|</span>
+                <span><b>Modified:</b> {{ updatedRelative() }}</span>
+            }
+        </div>
+
+
+        @if (mode === Mode.View) {
+            <button type="button" (click)="switchToEditMode()" class="edit primary">Edit</button>
+        } @else {
+            <div class="actions">
+                <button type="button" class="delete" (click)="delete()">Delete</button>
+                <button type="button" class="cancel" (click)="cancel()">Cancel</button>
+                <button type="submit" class="save" [disabled]="isSaveDisabled">Save</button>
+            </div>
+        }
+    </form>
+</div>

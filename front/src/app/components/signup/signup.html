@@ -1,0 +1,53 @@
+<div class="container">
+    <h2>Sign Up</h2>
+    <form [formGroup]="signupForm" (ngSubmit)="submit()" novalidate>
+        <div class="form-group">
+            <label for="username">Username <span class="required-asterisk"
+                    [class.error]="signupForm.get('username')?.touched && signupForm.get('username')?.invalid">*</span></label>
+            <input id="username" type="text" formControlName="username" autocomplete="username"
+                   [class.error]="signupForm.get('username')?.touched && signupForm.get('username')?.invalid"/>
+            @if (signupForm.get('username')?.touched && signupForm.get('username')?.invalid) {
+                <div class="error">Username is required.</div>
+            }
+        </div>
+        <div class="form-group">
+            <label for="displayName">Display Name (optional)</label>
+            <input id="displayName" type="text" formControlName="displayName" autocomplete="name"/>
+        </div>
+        <div class="form-group">
+            <label for="password">Password <span class="required-asterisk"
+                    [class.error]="signupForm.get('password')?.touched && signupForm.get('password')?.invalid">*</span></label>
+            <input id="password" type="password" formControlName="password" autocomplete="new-password"
+                   [class.error]="signupForm.get('password')?.touched && signupForm.get('password')?.invalid"/>
+            <app-password-strength [passwordValidationResult]="passwordValidationResult"></app-password-strength>
+        </div>
+        <div class="form-group">
+            <label for="age">Age (optional)</label>
+            <input id="age" type="number" formControlName="age" min="1" max="120"
+                   [class.error]="signupForm.get('age')?.touched && signupForm.get('age')?.invalid"/>
+            @if (signupForm.get('age')?.touched && signupForm.get('age')?.invalid) {
+                <div class="error">
+                    @if (signupForm.get('age')?.errors?.['pattern']) {
+                        Age must be a valid number.
+                    } @else {
+                        Age must be between 1 and 120.
+                    }
+                </div>
+            }
+        </div>
+        <div class="form-group">
+            <label for="gender">Gender (optional)</label>
+            <select id="gender" formControlName="gender">
+                <option value="">Select Gender</option>
+                @for (g of GENDERS_LIST; track g) {
+                    <option [value]="g">{{ g }}</option>
+                }
+            </select>
+        </div>
+        <button type="submit" [disabled]="loading || signupForm.invalid">Sign Up</button>
+    </form>
+    <div class="footer-card">
+        Already have an account? <a routerLink="/login">Login</a>
+    </div>
+</div>
+

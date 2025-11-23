@@ -1,0 +1,28 @@
+<nav class="navbar">
+    <div class="navbar__brand">
+        <b>User Management App</b>
+        @if (isLoggedIn()) {
+            <span>&nbsp;|&nbsp;{{ getTitleName() }}</span>
+        }
+    </div>
+
+    <ul class="navbar__links">
+        @if (isLoggedIn() && isAdmin()) {
+            @if (isInAdminPanel() || selectedUser()) {
+                <li>
+                    <button (click)="navigate('/')">User Dashboard</button>
+                </li>
+            }
+            @if (!isInAdminPanel()) {
+                <li>
+                    <button (click)="navigate('/admin-panel')">Admin Panel</button>
+                </li>
+            }
+        }
+        @if (isLoggedIn()) {
+            <li>
+                <button type="button" (click)="logout()">Logout</button>
+            </li>
+        }
+    </ul>
+</nav>

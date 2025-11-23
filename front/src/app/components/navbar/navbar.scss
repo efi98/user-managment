@@ -1,0 +1,43 @@
+@use '../../../styles';
+@use 'sass:color';
+
+.navbar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--primary-color);
+  color: var(--white);
+  padding: 0.5rem 1.5rem;
+}
+
+.navbar__brand {
+  font-size: 1.2rem;
+}
+
+.navbar__links {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar__links a,
+.navbar__links button {
+  color: var(--white);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: none;
+  padding: 0.25rem 0.75rem;
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+
+.navbar__links a:hover,
+.navbar__links button:hover {
+  background: color.adjust(styles.$primary-color, $lightness: -10%);
+}

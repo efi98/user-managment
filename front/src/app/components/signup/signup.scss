@@ -1,0 +1,26 @@
+@use '../../../styles';
+
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+button[type="submit"] {
+  grid-column: 1 / -1;
+}
+
+:not(input).error {
+  grid-column: 1 / -1;
+  color: var(--error-color);
+  font-size: 0.7em;
+
+  &.required-asterisk {
+    font-size: inherit;
+  }
+}

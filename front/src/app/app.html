@@ -1,0 +1,8 @@
+<app-navbar></app-navbar>
+@if (authService.isLoggedIn()) {
+    <h2>Hello <span style="color: var(--primary-color)">{{ authService.currentUser()?.displayName }}</span>!</h2>
+}
+<router-outlet/>
+<app-confirm-dialog/>
+<app-toast/>
+

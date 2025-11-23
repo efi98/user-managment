@@ -1,0 +1,17 @@
+@use '../../../styles';
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.2rem;
+}
+
+button[type="submit"] {
+  width: 100%;
+}
+
+:not(input).error {
+  color: #d32f2f;
+  font-size: 0.7em;
+}
+

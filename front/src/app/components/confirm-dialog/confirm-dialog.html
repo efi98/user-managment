@@ -1,0 +1,16 @@
+@if (dialogService.isVisible$()) {
+    <div class="overlay">
+        <div class="dialog">
+            <header>
+                <h2>Confirm</h2>
+                <button class="close-btn" (click)="onCancel()">X</button>
+            </header>
+            <p [innerHTML]="dialogService.message$()"></p>
+            <footer>
+                <button class="primary" (click)="onConfirm()">Confirm</button>
+                <button (click)="onCancel()">Cancel</button>
+            </footer>
+        </div>
+    </div>
+
+}

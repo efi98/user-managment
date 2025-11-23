@@ -1,0 +1,8 @@
+<div class="card">
+    <div class="grid-wrapper">
+        <ag-grid-angular style="height:100%"
+                         [rowData]="users()"
+                         [columnDefs]="colDefs"
+                         (cellClicked)="onCellClicked($event)"/>
+    </div>
+</div>

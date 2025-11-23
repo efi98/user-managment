@@ -1,0 +1,108 @@
+@use '../../../styles';
+@use 'sass:color';
+
+.edit {
+  width: 50%;
+  margin: 1rem 25%;
+}
+
+.cancel, .save {
+  width: 40%;
+}
+
+.actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-evenly;
+}
+
+.timestamps {
+  text-align: center;
+  font-size: small;
+  margin-top: 16px;
+}
+
+.timestamps span {
+  margin: 0 4px;
+  color: var(--text-color-secondary);
+}
+
+.empty-field {
+  font-style: italic;
+  color: color.adjust(styles.$text-color-secondary, $lightness: 40%);
+
+}
+
+input.reveal {
+  cursor: pointer;
+}
+
+.view-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-item label {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.grid-item input[readonly] {
+  background-color: var(--background-color);
+}
+
+.role-card {
+  display: flex;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+
+  &.edit-mode {
+    cursor: pointer;
+  }
+}
+
+.role-option {
+  background-color: var(--background-color);
+  display: flex;
+  align-items: center;
+  padding: 0.4rem;
+  border: transparent 1px solid;
+  transition: background-color 0.3s;
+  flex: 1;
+  justify-content: center;
+
+  &.edit-mode {
+    background-color: transparent;
+  }
+
+  &.active {
+    background-color: var(--active-color);
+    font-weight: bold;
+    border: var(--text-color) 1px solid;
+
+    &.edit-mode {
+      background-color: var(--background-color);
+    }
+  }
+
+  &:first-child {
+    border-radius: 4px 0 0 4px;
+  }
+
+  &:last-child {
+    border-radius: 0 4px 4px 0;
+  }
+
+  span:first-child {
+    margin-right: 0.5rem;
+  }
+}
+

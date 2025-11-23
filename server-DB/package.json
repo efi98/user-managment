@@ -1,0 +1,14 @@
+{
+  "name": "server-db",
+  "scripts": {
+    "start": "nodemon"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "fs": "^0.0.1-security",
+    "init": "^0.1.2",
+    "nodemon": "^3.1.10",
+    "uuid": "^13.0.0"
+  }
+}

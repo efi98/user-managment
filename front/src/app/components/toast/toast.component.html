@@ -1,0 +1,12 @@
+@if (toastService.toast(); as toast) {
+    <div
+            class="toast-container"
+            [ngClass]="'toast-' + toast.severity">
+        <div class="toast-message">
+            <p [innerText]="toast.message"></p>
+        </div>
+        <button class="toast-close-btn" (click)="toastService.hide()">
+            &times;
+        </button>
+    </div>
+}

@@ -1,0 +1,117 @@
+$primary-color: #1976d2;
+$success-color: #388e3c;
+$background-color: #f5f5f5;
+$disabled-bg: #90caf9;
+$disabled-success-bg: #a5d6a7;
+$text-color: #222;
+$text-color-secondary: #535353;
+$border-color: #ccc;
+$error-color: #d32f2f;
+$white: #fff;
+$active-color: #e0e0e0;
+
+:root {
+  --primary-color: #{$primary-color};
+  --success-color: #{$success-color};
+  --background-color: #{$background-color};
+  --disabled-bg: #{$disabled-bg};
+  --disabled-success-bg: #{$disabled-success-bg};
+  --text-color: #{$text-color};
+  --text-color-secondary: #{$text-color-secondary};
+  --border-color: #{$border-color};
+  --error-color: #{$error-color};
+  --white: #{$white};
+  --active-color: #{$active-color};
+}
+
+body {
+  height: 100vh;
+  background: var(--background-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  user-select: none;
+  cursor: default;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.container {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 1.5rem 2.5rem;
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.footer-card {
+  text-align: center;
+  margin-top: 1.2rem;
+  font-size: 0.98em;
+}
+
+input,
+select {
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+
+  &.error {
+    border-color: var(--error-color);
+    color: var(--error-color);
+  }
+
+  &:read-only {
+    cursor: default;
+  }
+
+}
+
+button {
+  padding: 0.7rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &[type="submit"],
+  &.primary {
+    background: var(--primary-color);
+    color: var(--white);
+  }
+  &.delete {
+    background: var(--error-color);
+    color: var(--white);
+  }
+
+  &[disabled] {
+    cursor: default;
+    background: var(--disabled-bg);
+  }
+}
+
+.ag-cell.link-cell:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
