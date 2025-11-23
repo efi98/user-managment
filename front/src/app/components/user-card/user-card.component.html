@@ -12,13 +12,9 @@
             </div>
             <div class="grid-item">
                 <label for="password">Password</label>
+<!--                    <input id="password-view" value="******" readonly class="empty-field reveal">-->
                 @if (mode === Mode.View) {
-                    @if (showPassword) {
-                        <input id="password-view" formControlName="password" readonly>
-                    } @else {
-                        <input id="password-view" value="(Click to reveal)" readonly class="empty-field reveal"
-                               (click)="togglePasswordVisibility()">
-                    }
+                    <input id="password-view" value="******" readonly class="empty-field reveal">
                 } @else {
                     <input id="password-edit" type="password" formControlName="password"
                            [class.error]="userForm.get('password')?.dirty && userForm.get('password')?.invalid">

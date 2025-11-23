@@ -34,14 +34,12 @@ export class UserCardComponent {
     fb = inject(FormBuilder);
     userService = inject(UserService);
     authService = inject(AuthService);
-    route = inject(ActivatedRoute);
     router = inject(Router);
     passwordPolicyService = inject(PasswordPolicyService);
     authStore = inject(AuthStore);
     dialogService = inject(DialogService);
     toastService = inject(ToastService);
     passwordValidationResult!: PasswordValidation;
-    showPassword = false;
     currentUser: Signal<User | null> = this.authStore.currentUser;
     selectedUser: Signal<User | null> = this.authStore.selectedUser;
     user = computed(() => this.selectedUser() || this.currentUser());
@@ -109,10 +107,6 @@ export class UserCardComponent {
         return (mode === Mode.Edit && (!!this.selectedUser() && !this.authStore.isSelectedIsCurrent()))
     }
 
-    togglePasswordVisibility() {
-        this.showPassword = !this.showPassword;
-    }
-
     switchToEditMode() {
         this.mode = Mode.Edit;
     }
@@ -154,7 +148,6 @@ export class UserCardComponent {
                         this.authService.updateCurrentUser(user);
                     }
                     this.mode = Mode.View;
-                    this.showPassword = false;
                     this.userForm.markAsPristine();
                     this.toastService.show('User updated successfully', 'success');
                 }
@@ -207,7 +200,6 @@ export class UserCardComponent {
             ...user,
             age: user.age ?? null,
         });
-        this.showPassword = false;
         this.mode = Mode.View;
     }
 

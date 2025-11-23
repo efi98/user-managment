@@ -40,7 +40,7 @@ architecture, rules, and step-by-step tasks.
 
 ---
 
-### Phase B - nice to have
+### Nice to have
 
 * encode/decode pass in server.
-* login with telegrem widget
+* login with "google", "facebook".
