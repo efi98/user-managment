@@ -42,5 +42,7 @@ architecture, rules, and step-by-step tasks.
 
 ### Nice to have
 
-* encode/decode pass in server.
+* save the session in the server express session.
+* logout auto
+* focus inputs - bold
 * login with "google", "facebook".

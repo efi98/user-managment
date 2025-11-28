@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { Mode, PasswordValidation, User } from '../../interfaces';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { PasswordStrengthComponent } from '../password-strength/password-strength';
 import { PasswordPolicyService } from '../../services/password-policy.service';
 import { GENDERS_LIST } from '../../consts';
@@ -145,7 +145,7 @@ export class UserCardComponent {
                     if (this.selectedUser()) {
                         this.authStore.setSelectedUser(user);
                     } else if (this.currentUser()) {
-                        this.authService.updateCurrentUser(user);
+                        this.authStore.setCurrentUser(user);
                     }
                     this.mode = Mode.View;
                     this.userForm.markAsPristine();

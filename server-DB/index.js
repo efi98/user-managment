@@ -1,12 +1,29 @@
 const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
+const session = require("express-session");
 const {User, UpdateUser} = require('./user');
 const bcrypt = require("bcrypt");
 
+const ALLOWED_ORIGIN = 'http://localhost:4001';
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: ALLOWED_ORIGIN,
+    credentials: true
+}));
 app.use(express.json());
+
+app.use(session({
+    secret: 'your-very-secret-key', // todo use process.env.SESSION_SECRET in real apps
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 // 1 day
+        // secure: true, // todo enable in production with HTTPS
+        // sameSite: 'lax'
+    }
+}));
 
 const DATA_FILE = './assets/example.json';
 const SALT_ROUNDS = 10;
@@ -24,12 +41,12 @@ app.get("/", (req, res) => {
     res.send("hello");
 });
 
-app.get("/users", (req, res) => {
+app.get("/users", requireLogin, (req, res) => {
     const users = readUsers();
     res.json(users);
 });
 
-app.get("/users/:username", (req, res) => {
+app.get("/users/:username", requireLogin, (req, res) => {
     const users = readUsers();
     const {params} = req;
     const user = users.find(u => u.username === params.username);
@@ -41,7 +58,7 @@ app.get("/users/:username", (req, res) => {
     res.json(userSafe);
 });
 
-app.post("/users", (req, res) => {
+app.post("/users", requireLogin, (req, res) => {
     try {
         const users = readUsers();
         const {body} = req;
@@ -97,10 +114,23 @@ app.post("/login", (req, res) => {
 
     const {password: _, ...userSafe} = user;
 
+    req.session.user = {...userSafe};
+
     res.json(userSafe);
 });
 
-app.patch("/users/:username", (req, res) => {
+app.post("/logout", (req, res) => {
+
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({error: "Failed to logout"});
+        }
+        res.clearCookie('connect.sid'); // default cookie name
+        res.status(204).send();
+    });
+});
+
+app.patch("/users/:username", requireLogin, (req, res) => {
     try {
         const users = readUsers();
         const {params, body} = req;
@@ -145,7 +175,7 @@ app.patch("/users/:username", (req, res) => {
     }
 });
 
-app.delete("/users/:username", (req, res) => {
+app.delete("/users/:username", requireLogin, (req, res) => {
     const users = readUsers();
     const {params} = req;
 
@@ -158,6 +188,17 @@ app.delete("/users/:username", (req, res) => {
     writeUsers(filteredUsers);
     res.status(204).send();
 });
+
+app.get("/me", requireLogin, (req, res) => {
+    res.json(req.session.user);
+});
+
+function requireLogin(req, res, next) {
+    if (!req.session.user) {
+        return res.status(401).json({error: "Not logged in"});
+    }
+    next();
+}
 
 app.listen(process.env.PORT || 1000, function () {
     console.log("Server is running on port", process.env.PORT || 1000);
