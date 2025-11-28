@@ -6,6 +6,7 @@ const {User, UpdateUser} = require('./user');
 const bcrypt = require("bcrypt");
 
 const ALLOWED_ORIGIN = 'http://localhost:4001';
+const MAX_AGE = 1000 * 60 * 60 * 24; // 1 day
 const app = express();
 app.use(cors({
     origin: ALLOWED_ORIGIN,
@@ -19,7 +20,7 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 // 1 day
+        maxAge: MAX_AGE
         // secure: true, // todo enable in production with HTTPS
         // sameSite: 'lax'
     }
@@ -58,7 +59,7 @@ app.get("/users/:username", requireLogin, (req, res) => {
     res.json(userSafe);
 });
 
-app.post("/users", requireLogin, (req, res) => {
+app.post("/users", (req, res) => {
     try {
         const users = readUsers();
         const {body} = req;
@@ -116,7 +117,12 @@ app.post("/login", (req, res) => {
 
     req.session.user = {...userSafe};
 
-    res.json(userSafe);
+    const ttlMs = req.session.cookie.maxAge;
+    const expiresAt = Date.now() + ttlMs;
+    res.json({
+        user: userSafe,
+        sessionExpiresAt: expiresAt
+    });
 });
 
 app.post("/logout", (req, res) => {
@@ -190,7 +196,11 @@ app.delete("/users/:username", requireLogin, (req, res) => {
 });
 
 app.get("/me", requireLogin, (req, res) => {
-    res.json(req.session.user);
+    //todo unify
+    const ttlMs = req.session.cookie.maxAge;
+    const sessionExpiresAt = Date.now() + ttlMs;
+    const user = req.session.user;
+    res.json({user, sessionExpiresAt});
 });
 
 function requireLogin(req, res, next) {

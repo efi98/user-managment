@@ -42,7 +42,20 @@ architecture, rules, and step-by-step tasks.
 
 ### Nice to have
 
-* save the session in the server express session.
-* logout auto
+#### subject 1
+
+* unify repetition of usable methods
+* error messgae - order
+* split to another files different logic
+
+#### subject 2
+
 * focus inputs - bold
+
+#### subject 3
+
+* add a loading spinner to the login/signup button
+
+#### subject 4
+
 * login with "google", "facebook".

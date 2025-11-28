@@ -1,5 +1,6 @@
 import zxcvbn from 'zxcvbn';
 
+// Enums
 export enum Gender {
     Male = 'male',
     Female = 'female',
@@ -11,6 +12,7 @@ export enum Mode {
     Edit = 'Edit'
 }
 
+// User
 export interface User {
     username: string;
     displayName: string;
@@ -28,6 +30,7 @@ export type NewUser =
 
 export type UpdatedUser = Partial<Pick<User, 'displayName' | 'password' | 'age' | 'gender' | 'isAdmin'>>;
 
+// Password
 export interface PasswordValidation {
     isValid: boolean;
     score: zxcvbn.ZXCVBNScore;
@@ -41,4 +44,10 @@ export type ToastSeverity = 'success' | 'error' | 'info' | 'warning';
 export interface Toast {
     message: string;
     severity: ToastSeverity;
+}
+
+// Http Responses
+export interface UserResponse {
+    user: User;
+    sessionExpiresAt?: number;
 }

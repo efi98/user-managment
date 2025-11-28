@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Gender, NewUser, PasswordValidation } from '../../interfaces';
 import { AuthService } from '../../services/auth.service';
 import { PasswordPolicyService } from '../../services/password-policy.service';
@@ -76,12 +76,14 @@ export class SignupComponent {
             }
         });
     }
-
-    displayErrorMessage(err: any): string {
-        const {error, suggestions} = err;
+// todo what??
+    displayErrorMessage(err: { error: string; suggestions: string[] } | string): string {
+        if (typeof err === 'string') {
+            return 'Signup failed: ' + err;
+        }
         let message = 'Signup failed: ';
-        message += (error + '. \n');
-        message += 'suggestions: ' + (suggestions.join(', ')) + '.';
+        message += (err.error + '. \n');
+        message += 'suggestions: ' + (err.suggestions.join(', ')) + '.';
         return message;
     }
 }
