@@ -7,15 +7,17 @@ const bcrypt = require("bcrypt");
 require('dotenv').config();
 
 const ALLOWED_ORIGIN = 'http://localhost:4001';
-const MAX_AGE = 1000 * 60 * 60 * 24; // 1 day
-const app = express();
-app.use(cors({
+const MAX_AGE = 1000 * 60// * 60 * 24; // 1 day
+const DATA_FILE = './assets/example.json';
+const SALT_ROUNDS = 10;
+
+
+const corsOptions = {
     origin: ALLOWED_ORIGIN,
     credentials: true
-}));
-app.use(express.json());
+};
 
-app.use(session({
+const sessionOptions = {
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
@@ -24,19 +26,15 @@ app.use(session({
         maxAge: MAX_AGE,
         rolling: true
     }
-}));
-
-const DATA_FILE = './assets/example.json';
-const SALT_ROUNDS = 10;
-
-const readUsers = () => {
-    const data = fs.readFileSync(DATA_FILE, 'utf8');
-    return JSON.parse(data);
 };
 
-const writeUsers = (users) => {
-    fs.writeFileSync(DATA_FILE, JSON.stringify(users, null, 2));
-};
+const app = express();
+
+app.use(
+    cors(corsOptions),
+    express.json(),
+    session(sessionOptions)
+);
 
 app.get("/", (req, res) => {
     res.send("hello");
@@ -117,12 +115,7 @@ app.post("/login", (req, res) => {
 
     req.session.user = {...userSafe};
 
-    const ttlMs = req.session.cookie.maxAge;
-    const expiresAt = Date.now() + ttlMs;
-    res.json({
-        user: userSafe,
-        sessionExpiresAt: expiresAt
-    });
+    res.json(userSafe);
 });
 
 app.post("/logout", (req, res) => {
@@ -196,11 +189,8 @@ app.delete("/users/:username", requireLogin, (req, res) => {
 });
 
 app.get("/me", requireLogin, (req, res) => {
-    //todo unify
-    const ttlMs = req.session.cookie.maxAge;
-    const sessionExpiresAt = Date.now() + ttlMs;
     const user = req.session.user;
-    res.json({user, sessionExpiresAt});
+    res.json(user);
 });
 
 function requireLogin(req, res, next) {
@@ -208,6 +198,15 @@ function requireLogin(req, res, next) {
         return res.status(401).json({error: "Not logged in"});
     }
     next();
+}
+
+function readUsers() {
+    const data = fs.readFileSync(DATA_FILE, 'utf8');
+    return JSON.parse(data);
+}
+
+function writeUsers(users) {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(users, null, 2));
 }
 
 app.listen(process.env.PORT || 1000, function () {
