@@ -8,7 +8,7 @@ const {requireLogin} = require('./middleware/auth');
 const {readUsers} = require('./helpers/db');
 
 const ALLOWED_ORIGIN = 'http://localhost:4001';
-const MAX_AGE = 1000 * 60; // 1 minute
+const MAX_AGE = 1000 * 60 * 60; // 1 hour
 
 const corsOptions = {
     origin: ALLOWED_ORIGIN,
