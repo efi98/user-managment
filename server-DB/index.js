@@ -4,6 +4,7 @@ const fs = require("fs");
 const session = require("express-session");
 const {User, UpdateUser} = require('./user');
 const bcrypt = require("bcrypt");
+require('dotenv').config();
 
 const ALLOWED_ORIGIN = 'http://localhost:4001';
 const MAX_AGE = 1000 * 60 * 60 * 24; // 1 day
@@ -15,14 +16,13 @@ app.use(cors({
 app.use(express.json());
 
 app.use(session({
-    secret: 'your-very-secret-key', // todo use process.env.SESSION_SECRET in real apps
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
-        maxAge: MAX_AGE
-        // secure: true, // todo enable in production with HTTPS
-        // sameSite: 'lax'
+        maxAge: MAX_AGE,
+        rolling: true
     }
 }));
 
