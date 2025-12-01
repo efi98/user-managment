@@ -16,6 +16,7 @@ const corsOptions = {
 };
 
 const sessionOptions = {
+    name: process.env.COOKIE_NAME,
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
@@ -66,7 +67,7 @@ app.post("/logout", (req, res) => {
         if (err) {
             return res.status(500).json({error: "Failed to logout"});
         }
-        res.clearCookie('connect.sid'); // default cookie name
+        res.clearCookie(process.env.COOKIE_NAME); // default cookie name
         res.status(204).send();
     });
 });
