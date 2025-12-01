@@ -43,9 +43,7 @@ architecture, rules, and step-by-step tasks.
 ### Nice to have
 
 #### subject 1
-* hold timeout on cliend and update each request (rolling true on server)
 * alert message warning color
-* unify repetition of usable methods
 * error messgae - order
 * split to another files different logic
 

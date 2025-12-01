@@ -72,18 +72,11 @@ export class SignupComponent {
                 }
             },
             error: (err) => {
-                this.toastService.show(this.displayErrorMessage(err), 'error');
+                this.toastService.show(`Signup failed: ${err.message}`, 'error');
+            },
+            complete: () => {
+                this.loading = false;
             }
         });
-    }
-// todo what??
-    displayErrorMessage(err: { error: string; suggestions: string[] } | string): string {
-        if (typeof err === 'string') {
-            return 'Signup failed: ' + err;
-        }
-        let message = 'Signup failed: ';
-        message += (err.error + '. \n');
-        message += 'suggestions: ' + (err.suggestions.join(', ')) + '.';
-        return message;
     }
 }
