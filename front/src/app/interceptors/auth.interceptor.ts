@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
-import { Observable, Subscription, timer } from 'rxjs';
+import { catchError, Observable, Subscription, timer } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { environment } from '@environments';
@@ -15,9 +15,15 @@ export class AuthInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             tap(event => {
                 if (event instanceof HttpResponse) {
-                    console.log('[AuthInterceptor] Response intercepted:', event);
                     this.resetSessionTimer();
                 }
+            }),
+            catchError(error => {
+                console.error('[AuthInterceptor] Error intercepted:', error);
+                if (error.status === 401) {
+                    this.authService.sessionExpiredLogout();
+                }
+                throw error;
             })
         );
     }

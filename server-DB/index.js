@@ -20,10 +20,10 @@ const sessionOptions = {
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    rolling: true,
     cookie: {
         httpOnly: true,
-        maxAge: MAX_AGE,
-        rolling: true
+        maxAge: MAX_AGE
     }
 };
 
@@ -40,7 +40,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/health", (req, res) => {
-    res.json({ status: "ok"});
+    res.json({status: "ok"});
 });
 
 app.use('/users', usersRouter);
