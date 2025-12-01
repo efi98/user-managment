@@ -45,9 +45,3 @@ export interface Toast {
     message: string;
     severity: ToastSeverity;
 }
-
-// Http Responses
-export interface UserResponse {
-    user: User;
-    sessionExpiresAt?: number;
-}

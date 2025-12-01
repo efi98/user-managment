@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { UserService } from './user.service';
 import { catchError, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
-import { NewUser, ToastSeverity, User, UserResponse } from '../interfaces';
+import { NewUser, ToastSeverity, User } from '../interfaces';
 import { Router } from '@angular/router';
 import { AuthStore } from '../store/auth.store';
 import { ToastService } from "./toast.service";
@@ -23,21 +23,15 @@ export class AuthService {
     initUserSession$(): Observable<User | null> {
         return this.userService.me().pipe(
             tap((res) => {
-                const {user, sessionExpiresAt} = res ?? {};
-                if (user) {
-                    this.handleAuthSuccess({user, sessionExpiresAt});
+                if (res) {
+                    this.handleAuthSuccess(res);
                 } else {
                     //todo unify error handling
-                    this.authStore.setCurrentUser(null);
-                    this.clearSessionExpiryTimer();
-                    this.router.navigate(['/login']);
+                    this.handleAuthFailure();
                 }
             }),
-            map(res => res?.user ?? null),
             catchError(() => {
-                this.authStore.setCurrentUser(null);
-                this.clearSessionExpiryTimer();
-                this.router.navigate(['/login']);
+                this.handleAuthFailure();
                 return of(null);
             })
         );
@@ -98,11 +92,6 @@ export class AuthService {
      * Do NOT show toast if there is no user in store.
      */
     sessionExpiredLogout(): void {
-        if (!this.authStore.isLoggedIn()) {
-            // Already not logged in (e.g. after refresh) → just ensure /login, no toast.
-            this.router.navigate(['/login']);
-            return;
-        }
 
         const toastOptions: { message: string, severity: ToastSeverity } = {
             message: 'Your session has expired. Please log in again.',
@@ -111,70 +100,25 @@ export class AuthService {
         this.finishLogout(toastOptions);
     }
 
-    /**
-     * Common logout cleanup: clear user, clear timer, navigate, show toast (if relevant).
-     */
     private finishLogout(toastOptions: { message: string, severity?: ToastSeverity }): void {
         const {message, severity = 'info'} = toastOptions;
 
-        const wasLoggedIn = this.authStore.isLoggedIn();
-
-        // Clear store and timer regardless
         this.authStore.setCurrentUser(null);
-        this.clearSessionExpiryTimer();
-
-        // If user was not logged in, no toast; but we still navigate to /login.
-        if (!wasLoggedIn) {
-            this.router.navigate(['/login']);
-            return;
-        }
 
         this.router.navigate(['/login']).then(() => {
             this.toastService.show(message, severity);
         });
     }
 
-    /**
-     * Schedule automatic session expiration logout based on absolute timestamp (ms).
-     * If expiresAt is in the past, logout immediately.
-     */
-    // todo move
-    private scheduleSessionExpiry(expiresAt?: number | null): void {
-        this.clearSessionExpiryTimer();
-
-        if (!expiresAt) {
-            return;
-        }
-
-        const diff = expiresAt - Date.now();
-
-        if (diff <= 0) {
-            this.sessionExpiredLogout();
-            return;
-        }
-
-        this.sessionExpiryTimeoutId = setTimeout(() => {
-            this.sessionExpiryTimeoutId = null;
-            this.sessionExpiredLogout();
-        }, diff);
+    private handleAuthSuccess(res: User): User {
+        this.authStore.setCurrentUser(res);
+        return res;
     }
 
-    /**
-     * Clears any existing automatic session-expiry timer.
-     */
-    private clearSessionExpiryTimer(): void {
-        if (this.sessionExpiryTimeoutId) {
-            clearTimeout(this.sessionExpiryTimeoutId);
-            this.sessionExpiryTimeoutId = null;
-        }
-    }
-
-    private handleAuthSuccess(res: UserResponse): User {
-        const {user, sessionExpiresAt} = res;
-        this.authStore.setCurrentUser(user);
-        if (sessionExpiresAt) {
-            this.scheduleSessionExpiry(sessionExpiresAt);
-        }
-        return user;
+    private handleAuthFailure(): void {
+        this.authStore.setCurrentUser(null);
+        this.router.navigate(['/login']).then(() => {
+            this.toastService.show('not logged in.', 'warning');
+        });
     }
 }

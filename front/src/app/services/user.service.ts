@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { UserResponse, NewUser, UpdatedUser, User } from '../interfaces';
+import { NewUser, UpdatedUser, User } from '../interfaces';
 import { BASE_URL } from "../consts";
 import { AuthStore } from "../store/auth.store";
 import { ToastService } from "./toast.service";
@@ -19,7 +19,7 @@ export class UserService {
             }),
             catchError(error => {
                 this.toastService.show(
-                    'Error fetching users:' + (error.status === 0 ? ' Server Is Down' : ''),
+                    'Error fetching users' + (error.status === 0 ? ': Server Is Down' : ''),
                     'error'
                 );
                 return of([]);
@@ -60,8 +60,8 @@ export class UserService {
      * Calls /login to authenticate and start a session.
      * Expected response: { user: User; sessionExpiresAt: number }
      */
-    login(credentials: Pick<User, 'username' | 'password'>): Observable<UserResponse> {
-        return this.http.post<UserResponse>(`${BASE_URL}/login`, credentials, { withCredentials: true });
+    login(credentials: Pick<User, 'username' | 'password'>): Observable<User> {
+        return this.http.post<User>(`${BASE_URL}/login`, credentials, { withCredentials: true });
     }
 
     /**
@@ -69,8 +69,8 @@ export class UserService {
      * Expected response: { user: User | null; sessionExpiresAt?: number }
      * Returns null on error.
      */
-    me(): Observable<UserResponse | null> {
-        return this.http.get<UserResponse>(`${BASE_URL}/me`, { withCredentials: true }).pipe(
+    me(): Observable<User | null> {
+        return this.http.get<User>(`${BASE_URL}/me`, { withCredentials: true }).pipe(
             catchError(() => of(null))
         );
     }
