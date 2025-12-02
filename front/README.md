@@ -43,11 +43,6 @@ architecture, rules, and step-by-step tasks.
 ### Nice to have
 
 #### subject 1
-* alert message warning color
-* error messgae - order
-* split to another files different logic
-
-#### subject 2
 
 * focus inputs - bold
 
