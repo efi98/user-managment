@@ -44,12 +44,8 @@ architecture, rules, and step-by-step tasks.
 
 #### subject 1
 
-* focus inputs - bold
-
-#### subject 3
-
 * add a loading spinner to the login/signup button
 
-#### subject 4
+#### subject 2
 
 * login with "google", "facebook".

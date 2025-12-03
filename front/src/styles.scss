@@ -75,6 +75,11 @@ select {
   border-radius: 4px;
   font-size: 1rem;
 
+  &:focus:not(:read-only) {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+  }
+
   &.error {
     border-color: var(--error-color);
     color: var(--error-color);
