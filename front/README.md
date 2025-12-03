@@ -42,10 +42,9 @@ architecture, rules, and step-by-step tasks.
 
 ### Nice to have
 
+* add redis cache for user data and session data.
+
 #### subject 1
 
 * add a loading spinner to the login/signup button
-
-#### subject 2
-
 * login with "google", "facebook".
