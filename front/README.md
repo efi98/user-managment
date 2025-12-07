@@ -39,12 +39,3 @@ architecture, rules, and step-by-step tasks.
 * **Empty/No results:** friendly empty state with tips to clear filters.
 
 ---
-
-### Nice to have
-
-* add redis cache for user data and session data.
-
-#### subject 1
-
-* add a loading spinner to the login/signup button
-* login with "google", "facebook".
