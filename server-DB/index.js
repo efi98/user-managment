@@ -11,14 +11,15 @@ const authRouter = require('./routes/auth');
 const ALLOWED_ORIGIN = 'http://localhost:4001';
 const MAX_AGE = 1000 * 60 * 60; // 1 hour
 
+const corsOptions = {
+    origin: ALLOWED_ORIGIN,
+    credentials: true
+};
+
 const redisClient = createClient({
     socket: {
-        // אם ה-backend רץ מחוץ ל-Docker וה-Valkey עם -p 6379:6379:
-        host: '127.0.0.1',
-        port: 6379,
-
-        // אם שניהם ב-docker-compose, החלף ל:
-        // host: 'valkey',
+        host: process.env.VALKEY_HOST,
+        port: process.env.VALKEY_PORT
     },
 });
 
@@ -27,15 +28,10 @@ redisClient.on('error', (err) => {
 });
 
 redisClient.connect().catch((err) => {
-    console.error('Could not connect to Redis/Valkey', err);
+    console.error("Could not connect to Redis/Valkey:", err.message);
 });
 
-const corsOptions = {
-    origin: ALLOWED_ORIGIN,
-    credentials: true
-};
-
-const sessionOptions = {
+const baseSessionOptions = {
     name: process.env.COOKIE_NAME,
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -44,33 +40,51 @@ const sessionOptions = {
     cookie: {
         httpOnly: true,
         maxAge: MAX_AGE
-    },
-    store: new RedisStore({
-        client: redisClient,
-        // optional:
-        // prefix: 'sess:',
-        // ttl: MAX_AGE / 1000,
-    }),
+    }
 };
+
+const memorySession = session({
+    ...baseSessionOptions
+});
+
+const redisStore = new RedisStore({client: redisClient});
+const redisSession = session({
+    ...baseSessionOptions,
+    store: redisStore
+});
+
+// wrapper that chooses at runtime
+function sessionMiddleware(req, res, next) {
+    if (redisClient.isReady) {
+        return redisSession(req, res, next);
+    } else {
+        return memorySession(req, res, next);
+    }
+}
 
 const app = express();
 
 app.use(
     cors(corsOptions),
     express.json(),
-    session(sessionOptions)
+    sessionMiddleware
+    // session(sessionOptions)
 );
 
-app.get("/", (req, res) => {
+const apiRouter = express.Router();
+
+apiRouter.get("/", (req, res) => {
     res.send("Welcome to the User Management API");
 });
 
-app.get("/health", (req, res) => {
+apiRouter.get("/health", (req, res) => {
     res.json({status: "ok"});
 });
 
-app.use('/users', usersRouter);
-app.use('/', authRouter);
+apiRouter.use('/users', usersRouter);
+apiRouter.use('/', authRouter);
+
+app.use('/api', apiRouter);
 
 app.listen(process.env.PORT || 1000, function () {
     console.log("Server is running on port", process.env.PORT || 1000);

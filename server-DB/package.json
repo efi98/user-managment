@@ -1,7 +1,8 @@
 {
   "name": "server-db",
   "scripts": {
-    "start": "nodemon"
+    "start": "node index.js",
+    "dev": "nodemon"
   },
   "dependencies": {
     "@keyv/valkey": "^1.0.11",
