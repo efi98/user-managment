@@ -10,6 +10,7 @@ const authRouter = require('./routes/auth');
 
 const ALLOWED_ORIGIN = 'http://localhost:4001';
 const MAX_AGE = 1000 * 60 * 60; // 1 hour
+const isProduction = process.env.NODE_ENV === 'production'
 
 const corsOptions = {
     origin: ALLOWED_ORIGIN,
@@ -35,10 +36,14 @@ const baseSessionOptions = {
     name: process.env.COOKIE_NAME,
     secret: process.env.SESSION_SECRET,
     resave: false,
+    proxy: isProduction,
     saveUninitialized: false,
     rolling: true,
     cookie: {
         httpOnly: true,
+        sameSite: 'lax',
+        secure: isProduction,
+        path: '/',
         maxAge: MAX_AGE
     }
 };
@@ -63,6 +68,8 @@ function sessionMiddleware(req, res, next) {
 }
 
 const app = express();
+
+app.set('trust proxy', 1);
 
 app.use(
     cors(corsOptions),
