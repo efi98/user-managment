@@ -42,11 +42,11 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
-/server-DB/assets/
-/front/.claude/
-/front/.gemini/
-/front/.junie/
-/front/.angular/
+/backend/assets/
+/frontend/.claude/
+/frontend/.gemini/
+/frontend/.junie/
+/frontend/.angular/
 /.run
-/server-DB/.env
-/front/dist/*
+/backend/.env
+/frontend/dist/*
