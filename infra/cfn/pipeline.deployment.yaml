@@ -1,7 +1,7 @@
 template-file-path: infra/cfn/pipeline.template.yaml
 
 parameters:
-  ConnectionArn: arn:aws:codestar-connections:us-east-1:874851036047:connection/REPLACE_ME
+  ConnectionArn: arn:aws:codeconnections:us-east-1:874851036047:connection/220eff36-4ed2-4af1-bc11-537b084891b8
   RepoOwner: efi98
   RepoName: user-managment
   BranchName: main
