@@ -1,3 +1,11 @@
 template-file-path: infra/cfn/pipeline.template.yaml
-parameters: {}
-tags: {}
+
+parameters:
+  ConnectionArn: arn:aws:codestar-connections:us-east-1:874851036047:connection/REPLACE_ME
+  RepoOwner: efi98
+  RepoName: user-managment
+  BranchName: main
+
+tags:
+  app: user-management
+  managed-by: cloudformation-git-sync
