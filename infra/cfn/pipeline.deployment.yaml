@@ -5,6 +5,12 @@ parameters:
   RepoOwner: efi98
   RepoName: user-managment
   BranchName: main
+  EcrRepoUri: 874851036047.dkr.ecr.us-east-1.amazonaws.com/valkey-backend
+  EcsClusterName: user-managment-app
+  EcsServiceName: user-managment-app
+  FrontendBucketName: user-management-fronfend
+  CloudFrontDistributionId: E1DPJ9CKSIXIA
+  AwsRegion: us-east-1
 
 tags:
   app: user-management
