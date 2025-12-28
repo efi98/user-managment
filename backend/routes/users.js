@@ -12,6 +12,29 @@ router.get('/', requireLogin, (req, res) => {
     res.json(users);
 });
 
+router.get('/stats', (req, res) => {
+    const users = readUsers();
+    const totalUsers = users.length;
+    const adminCount = users.filter(u => u.isAdmin).length;
+    const adminPercent = totalUsers > 0 ? Math.round((adminCount / totalUsers) * 100) : 0;
+    const recentSignups = users.filter(u => {
+        const created = new Date(u.createdAt);
+        return (Date.now() - created.getTime()) < 7 * 24 * 60 * 60 * 1000;
+    }).length;
+    const genderBreakdown = users.reduce((acc, u) => {
+        const g = (u.gender || 'other').toLowerCase();
+        acc[g] = (acc[g] || 0) + 1;
+        return acc;
+    }, {});
+    res.json({
+        totalUsers,
+        adminCount,
+        adminPercent,
+        recentSignups,
+        genderBreakdown
+    });
+});
+
 router.get('/:username', requireLogin, (req, res) => {
     const users = readUsers();
     const {params} = req;
@@ -38,7 +61,7 @@ router.post('/', (req, res) => {
             const suggestions = [];
             while (suggestions.length < 3) {
                 const suggestion = `${username}${Math.floor(Math.random() * 1000)}`;
-                if (!users.find(u => u.username === suggestion)) {
+                if (!users.some(u => u.username === suggestion)) {
                     suggestions.push(suggestion);
                 }
             }

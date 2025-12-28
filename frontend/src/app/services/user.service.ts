@@ -9,8 +9,8 @@ import { ToastService } from "./toast.service";
 @Injectable({providedIn: 'root'})
 export class UserService {
     http = inject(HttpClient);
-    private authStore = inject(AuthStore);
-    private toastService = inject(ToastService);
+    private readonly authStore = inject(AuthStore);
+    private readonly toastService = inject(ToastService);
 
     getUsers(): Observable<User[]> {
         return this.http.get<User[]>(`${BASE_URL}/users`, { withCredentials: true }).pipe(
@@ -80,5 +80,9 @@ export class UserService {
      */
     logout(): Observable<void> {
         return this.http.post<void>(`${BASE_URL}/logout`, {}, { withCredentials: true });
+    }
+
+    getStats() {
+        return this.http.get<any>(`${BASE_URL}/users/stats`);
     }
 }

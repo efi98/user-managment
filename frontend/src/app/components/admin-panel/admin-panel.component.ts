@@ -46,11 +46,11 @@ export class AdminPanelComponent implements OnInit {
         {field: "createdAt", filter: true, cellRenderer: (d: any) => getRelativeTime(d.value)},
         {field: "updatedAt", filter: true, cellRenderer: (d: any) => getRelativeTime(d.value)},
     ];
-    private route = inject(ActivatedRoute);
-    private router = inject(Router);
-    private authStore = inject(AuthStore);
+    private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
+    private readonly authStore = inject(AuthStore);
     users = this.authStore.users;
-    private userService = inject(UserService);
+    private readonly userService = inject(UserService);
 
     ngOnInit(): void {
         this.userService.getUsers().subscribe();

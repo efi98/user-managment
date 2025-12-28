@@ -9,9 +9,10 @@ import { adminGuard } from "./guards/admin-guard";
 import { authGuard } from "./guards/auth-guard";
 import { noAuthGuard } from "./guards/no-auth-guard";
 import { UserGuard } from "./guards/user-guard";
+import { statsResolver } from './guards/stats-resolver';
 
 export const routes: Routes = [
-    {path: '', component: HomeComponent, canActivate: [authGuard]},
+    {path: '', component: HomeComponent, canActivate: [authGuard], resolve: { stats: statsResolver }},
     {path: 'login', component: LoginComponent, canActivate: [noAuthGuard]},
     {path: 'signup', component: SignupComponent, canActivate: [noAuthGuard]},
     {path: 'admin-panel', component: AdminPanelComponent, canActivate: [authGuard, adminGuard]},
