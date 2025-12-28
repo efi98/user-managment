@@ -5,6 +5,8 @@ const RedisStore = require('connect-redis').RedisStore;
 const {createClient} = require('redis');
 require('dotenv').config();
 
+const {AppDataSource} = require('./helpers/db');
+
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 
@@ -93,6 +95,11 @@ apiRouter.use('/', authRouter);
 
 app.use('/api', apiRouter);
 
-app.listen(process.env.PORT || 1000, function () {
-    console.log("Server is running on port", process.env.PORT || 1000);
+AppDataSource.initialize().then(() => {
+    console.log('Database initialized');
+    app.listen(process.env.PORT || 1000, function () {
+        console.log("Server is running on port", process.env.PORT || 1000);
+    });
+}).catch((err) => {
+    console.error('Error during Data Source initialization', err);
 });

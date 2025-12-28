@@ -7,13 +7,13 @@ const {requireLogin} = require('../middleware/auth');
 const SALT_ROUNDS = 10;
 const router = express.Router();
 
-router.get('/', requireLogin, (req, res) => {
-    const users = readUsers();
+router.get('/', requireLogin, async (req, res) => {
+    const users = await readUsers();
     res.json(users);
 });
 
-router.get('/stats', requireLogin, (req, res) => {
-    const users = readUsers();
+router.get('/stats', requireLogin, async (req, res) => {
+    const users = await readUsers();
     const totalUsers = users.length;
     const adminCount = users.filter(u => u.isAdmin).length;
     const adminPercent = totalUsers > 0 ? Math.round((adminCount / totalUsers) * 100) : 0;
@@ -54,8 +54,8 @@ router.get('/stats', requireLogin, (req, res) => {
     });
 });
 
-router.get('/:username', requireLogin, (req, res) => {
-    const users = readUsers();
+router.get('/:username', requireLogin, async (req, res) => {
+    const users = await readUsers();
     const {params} = req;
     const user = users.find(u => u.username === params.username);
     if (!user) {
@@ -65,9 +65,9 @@ router.get('/:username', requireLogin, (req, res) => {
     res.json(userSafe);
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     try {
-        const users = readUsers();
+        const users = await readUsers();
         const {body} = req;
         const {username, password, displayName, age, gender, ...extraFields} = body;
         if (Object.keys(extraFields).length > 0) {
@@ -93,16 +93,16 @@ router.post('/', (req, res) => {
         const newUser = new User(username, passwordHash, displayName, age, gender);
         newUser.validate();
         users.push(newUser);
-        writeUsers(users);
+        await writeUsers(users);
         res.status(201).json(newUser);
     } catch (error) {
         res.status(400).json({error: error.message});
     }
 });
 
-router.patch('/:username', requireLogin, (req, res) => {
+router.patch('/:username', requireLogin, async (req, res) => {
     try {
-        const users = readUsers();
+        const users = await readUsers();
         const {params, body} = req;
         const index = users.findIndex(u => u.username === params.username);
         if (index === -1) {
@@ -129,7 +129,7 @@ router.patch('/:username', requireLogin, (req, res) => {
             existingUser.createdAt);
         updatedUser.validate();
         users[index] = updatedUser;
-        writeUsers(users);
+        await writeUsers(users);
         const {password: _, ...updatedUserSafe} = updatedUser;
         res.json(updatedUserSafe);
     } catch (error) {
@@ -137,14 +137,14 @@ router.patch('/:username', requireLogin, (req, res) => {
     }
 });
 
-router.delete('/:username', requireLogin, (req, res) => {
-    const users = readUsers();
+router.delete('/:username', requireLogin, async (req, res) => {
+    const users = await readUsers();
     const {params} = req;
     const filteredUsers = users.filter(u => u.username !== params.username);
     if (users.length === filteredUsers.length) {
         return res.status(404).json({error: "User not found"});
     }
-    writeUsers(filteredUsers);
+    await writeUsers(filteredUsers);
     res.status(204).send();
 });
 

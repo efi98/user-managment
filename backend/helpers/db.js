@@ -1,13 +1,27 @@
-const fs = require('fs');
-const DATA_FILE = './assets/example.json';
+const {AppDataSource} = require('./db-orm');
+const {UserEntity} = require('../user');
 
-function readUsers() {
-    const data = fs.readFileSync(DATA_FILE, 'utf8');
-    return JSON.parse(data);
+async function readUsers() {
+    const repo = AppDataSource.getRepository(UserEntity);
+    const result = await repo.find();
+    return Array.isArray(result) ? result : [];
 }
 
-function writeUsers(users) {
-    fs.writeFileSync(DATA_FILE, JSON.stringify(users, null, 2));
+async function writeUsers(users) {
+    const repo = AppDataSource.getRepository(UserEntity);
+    await repo.clear();
+    // Always save plain objects, not class instances
+    const plainUsers = users.map(u => ({
+        username: u.username,
+        password: u.password,
+        displayName: u.displayName,
+        age: u.age,
+        gender: u.gender,
+        isAdmin: u.isAdmin,
+        createdAt: u.createdAt,
+        updatedAt: u.updatedAt
+    }));
+    await repo.save(plainUsers);
 }
 
-module.exports = { readUsers, writeUsers };
+module.exports = {readUsers, writeUsers, AppDataSource};

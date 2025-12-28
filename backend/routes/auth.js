@@ -5,8 +5,8 @@ const {requireLogin} = require('../middleware/auth');
 
 const router = express.Router();
 
-router.post("/login", (req, res) => {
-    const users = readUsers();
+router.post("/login", async (req, res) => {
+    const users = await readUsers();
     const {username, password} = req.body;
     const user = users.find(u => u.username === username);
     if (!user) {
@@ -37,4 +37,3 @@ router.get("/me", requireLogin, (req, res) => {
 });
 
 module.exports = router;
-

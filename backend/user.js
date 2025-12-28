@@ -1,3 +1,41 @@
+const { EntitySchema } = require('typeorm');
+
+const UserEntity = new EntitySchema({
+    name: 'User',
+    tableName: 'users',
+    columns: {
+        username: {
+            type: String,
+            primary: true,
+        },
+        password: {
+            type: String,
+        },
+        displayName: {
+            type: String,
+            nullable: true,
+        },
+        age: {
+            type: 'integer',
+            nullable: true,
+        },
+        gender: {
+            type: String,
+            nullable: true,
+        },
+        isAdmin: {
+            type: Boolean,
+            default: false,
+        },
+        createdAt: {
+            type: String,
+        },
+        updatedAt: {
+            type: String,
+        },
+    },
+});
+
 class User {
     constructor(username, password, displayName, age, gender) {
         this.username = username;
@@ -15,13 +53,13 @@ class User {
         if (!this.username) {
             throw new Error('Username is required');
         } else if (typeof this.username !== 'string') {
-            throw new Error('Username must be a string');
+            throw new TypeError('Username must be a string');
         }
 
         if (!this.password) {
             throw new Error('Password is required');
         } else if (typeof this.password !== 'string') {
-            throw new Error('Password must be a string');
+            throw new TypeError('Password must be a string');
         } else if (this.password.length < 4) {
             throw new Error('Password must be 4 characters or more');
         }
@@ -39,7 +77,7 @@ class User {
         }
         if (this.gender !== undefined && this.gender !== null) {
             if (typeof this.gender !== 'string') {
-                throw new Error('Gender must be a string');
+                throw new TypeError('Gender must be a string');
             }
             const allowedGenders = ['male', 'female', 'other'];
             if (!allowedGenders.includes(this.gender.toLowerCase())) {
@@ -49,7 +87,7 @@ class User {
 
         if (this.isAdmin !== undefined && this.isAdmin !== null) {
             if (typeof this.isAdmin !== 'boolean') {
-                throw new Error('isAdmin must be a boolean');
+                throw new TypeError('isAdmin must be a boolean');
             }
         }
 
@@ -67,4 +105,4 @@ class UpdateUser extends User {
 }
 
 
-module.exports = { User, UpdateUser };
+module.exports = { User, UpdateUser, UserEntity };

@@ -2,7 +2,7 @@
   "name": "server-db",
   "scripts": {
     "start": "node index.js",
-    "dev": " nodemon --config nodemon.json"
+    "dev": "nodemon --config nodemon.json"
   },
   "dependencies": {
     "@keyv/valkey": "^1.0.11",
@@ -15,6 +15,9 @@
     "init": "^0.1.2",
     "nodemon": "^3.1.10",
     "redis": "^5.10.0",
+    "reflect-metadata": "^0.2.2",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.28",
     "uuid": "^13.0.0"
   }
 }
