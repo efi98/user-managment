@@ -12,7 +12,7 @@ router.get('/', requireLogin, (req, res) => {
     res.json(users);
 });
 
-router.get('/stats', (req, res) => {
+router.get('/stats', requireLogin, (req, res) => {
     const users = readUsers();
     const totalUsers = users.length;
     const adminCount = users.filter(u => u.isAdmin).length;

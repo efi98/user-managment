@@ -83,6 +83,6 @@ export class UserService {
     }
 
     getStats() {
-        return this.http.get<any>(`${BASE_URL}/users/stats`);
+        return this.http.get<any>(`${BASE_URL}/users/stats`, { withCredentials: true });
     }
 }
