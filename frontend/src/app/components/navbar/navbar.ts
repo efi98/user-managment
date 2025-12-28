@@ -1,7 +1,6 @@
-import { Component, inject, Signal } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, Signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { ToastService } from '../../services/toast.service';
 import { User } from "../../interfaces";
 import { AuthStore } from "../../store/auth.store";
 
@@ -15,13 +14,26 @@ export class Navbar {
     router = inject(Router);
     authService = inject(AuthService);
     authStore = inject(AuthStore);
-
     isLoggedIn = this.authService.isLoggedIn;
     isAdmin = this.authService.isAdmin;
     selectedUser: Signal<User | null> = this.authStore.selectedUser;
+    showUserDropdown = false;
+    private readonly elementRef = inject(ElementRef);
 
-    isInAdminPanel(): boolean {
-        return this.router.url === '/admin-panel';
+    @HostListener('document:click', ['$event'])
+    onDocumentClick(event: MouseEvent) {
+        if (!this.elementRef.nativeElement.contains(event.target)) {
+            this.closeUserDropdown();
+        }
+    }
+
+    getCurrentRouteTitle(): string {
+        const path = this.router.url.split('?')[0].replace(/^\//, '').split('/')[0];
+        if (!path) return 'Home page';
+        return path
+            .split('-')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
     }
 
     logout() {
@@ -34,18 +46,27 @@ export class Navbar {
     }
 
     getTitleName() {
-        if (!this.isInAdminPanel()) {
-            if (this.selectedUser()) {
-                let title = `Edit '${this.selectedUser()?.username}'`;
-                if (this.authStore.isSelectedIsCurrent()) {
-                    title += ' (YOU)';
-                }
-                return title;
-            } else {
-                return 'User Dashboard';
+        if (this.selectedUser()) {
+            let title = `Edit '${this.selectedUser()?.username}'`;
+            if (this.authStore.isSelectedIsCurrent()) {
+                title += ' (YOU)';
             }
+            return title;
         } else {
-            return 'Admin Panel'
+            return this.getCurrentRouteTitle();
         }
+    }
+
+    toggleUserDropdown() {
+        this.showUserDropdown = !this.showUserDropdown;
+    }
+
+    closeUserDropdown() {
+        this.showUserDropdown = false;
+    }
+
+    goToSettings() {
+        this.closeUserDropdown();
+        this.navigate('/settings');
     }
 }

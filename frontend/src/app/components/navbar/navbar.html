@@ -1,27 +1,37 @@
 <nav class="navbar">
     <div class="navbar__brand">
-        <b>User Management App</b>
+        <button class="text" (click)="navigate('/')">
+            <b>User Management App</b>
+        </button>
         @if (isLoggedIn()) {
             <span>&nbsp;|&nbsp;{{ getTitleName() }}</span>
         }
     </div>
 
-    <ul class="navbar__links">
-        @if (isLoggedIn() && isAdmin()) {
-            @if (isInAdminPanel() || selectedUser()) {
-                <li>
-                    <button (click)="navigate('/')">User Dashboard</button>
-                </li>
-            }
-            @if (!isInAdminPanel()) {
+    <ul class="navbar-links">
+        @if (isLoggedIn()) {
+            <li>
+                <button (click)="navigate('/')">Home</button>
+            </li>
+            @if (isAdmin()) {
                 <li>
                     <button (click)="navigate('/admin-panel')">Admin Panel</button>
                 </li>
             }
-        }
-        @if (isLoggedIn()) {
-            <li>
-                <button type="button" (click)="logout()">Logout</button>
+            <li class="user-dropdown-wrapper" style="position: relative;">
+                <button type="button" (click)="toggleUserDropdown()">
+                    {{ authService.currentUser()?.displayName }} &#x25BC;
+                </button>
+                @if (showUserDropdown) {
+                    <ul class="user-dropdown-menu">
+                        <li>
+                            <button type="button" class="text" (click)="goToSettings()">Settings</button>
+                        </li>
+                        <li>
+                            <button type="button" class="text" (click)="logout()">Logout</button>
+                        </li>
+                    </ul>
+                }
             </li>
         }
     </ul>

@@ -2,7 +2,7 @@
   "name": "server-db",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon"
+    "dev": " nodemon --config nodemon.json"
   },
   "dependencies": {
     "@keyv/valkey": "^1.0.11",

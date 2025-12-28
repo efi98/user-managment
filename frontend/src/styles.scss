@@ -52,7 +52,7 @@ a {
 
 .container {
   max-width: 400px;
-  margin: 40px auto;
+  margin: 20px auto;
   padding: 1.5rem 2.5rem;
   background: var(--white);
   border-radius: 8px;
@@ -113,6 +113,18 @@ button {
   &[disabled] {
     cursor: default;
     background: var(--disabled-bg);
+  }
+
+  &.text {
+    background: none;
+    border: none;
+    color: inherit;
+    padding: 0;
+    font-weight: inherit;
+    font-size: inherit;
+    box-shadow: none;
+    cursor: pointer;
+    transition: none;
   }
 }
 
