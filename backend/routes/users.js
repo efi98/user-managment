@@ -22,16 +22,35 @@ router.get('/stats', (req, res) => {
         return (Date.now() - created.getTime()) < 7 * 24 * 60 * 60 * 1000;
     }).length;
     const genderBreakdown = users.reduce((acc, u) => {
-        const g = (u.gender || 'other').toLowerCase();
+        let g = u.gender;
+        if (g === undefined || g === null || g === "") {
+            g = "blank";
+        } else {
+            g = g.toLowerCase();
+        }
         acc[g] = (acc[g] || 0) + 1;
         return acc;
     }, {});
+    // Age stats
+    const ages = users.map(u => typeof u.age === 'number' ? u.age : null).filter(a => a !== null);
+    let ageStats = null;
+    if (ages.length > 0) {
+        const sum = ages.reduce((a, b) => a + b, 0);
+        const avg = Math.round((sum / ages.length) * 10) / 10;
+        const min = Math.min(...ages);
+        const max = Math.max(...ages);
+        const sorted = [...ages].sort((a, b) => a - b);
+        const mid = Math.floor(sorted.length / 2);
+        const median = sorted.length % 2 === 0 ? Math.round(((sorted[mid - 1] + sorted[mid]) / 2) * 10) / 10 : sorted[mid];
+        ageStats = { avg, min, max, median };
+    }
     res.json({
         totalUsers,
         adminCount,
         adminPercent,
         recentSignups,
-        genderBreakdown
+        genderBreakdown,
+        ageStats
     });
 });
 

@@ -16,7 +16,12 @@ export class HomeComponent {
         this.stats = this.route.snapshot.data['stats'];
     }
 
-    genderKeys(obj: any): string[] {
-        return obj ? Object.keys(obj) : [];
+    statKeys(obj: any, orderBy = 0): string[] {
+        if (!obj) return [];
+        const keys = Object.keys(obj);
+        if (orderBy === 1) {
+            return keys.sort((a, b) => obj[b] - obj[a]);
+        }
+        return keys;
     }
 }
