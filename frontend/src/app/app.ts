@@ -1,10 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navbar } from './components/navbar/navbar';
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog';
 import { ToastComponent } from './components/toast/toast.component';
-import { AuthService } from "./services/auth.service";
 
 @Component({
     selector: 'app-root',
@@ -13,5 +12,4 @@ import { AuthService } from "./services/auth.service";
     styleUrl: './app.scss',
 })
 export class App {
-    authService = inject(AuthService);
 }
