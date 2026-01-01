@@ -3,13 +3,15 @@ const bcrypt = require('bcrypt');
 const {User, UpdateUser} = require('../user');
 const {readUsers, writeUsers} = require('../helpers/db');
 const {requireLogin} = require('../middleware/auth');
+const {toSafeUser, toSafeUsers} = require('../helpers/userView');
+const {uploadAvatar, avatarsDir, deleteAvatarIfExists} = require("../helpers/avatar");
+const router = express.Router();
 
 const SALT_ROUNDS = 10;
-const router = express.Router();
 
 router.get('/', requireLogin, async (req, res) => {
     const users = await readUsers();
-    res.json(users);
+    res.json(toSafeUsers(users));
 });
 
 router.get('/stats', requireLogin, async (req, res) => {
@@ -42,7 +44,7 @@ router.get('/stats', requireLogin, async (req, res) => {
         const sorted = [...ages].sort((a, b) => a - b);
         const mid = Math.floor(sorted.length / 2);
         const median = sorted.length % 2 === 0 ? Math.round(((sorted[mid - 1] + sorted[mid]) / 2) * 10) / 10 : sorted[mid];
-        ageStats = { avg, min, max, median };
+        ageStats = {avg, min, max, median};
     }
     res.json({
         totalUsers,
@@ -61,8 +63,7 @@ router.get('/:username', requireLogin, async (req, res) => {
     if (!user) {
         return res.status(404).json({error: "User not found"});
     }
-    const {password: _, ...userSafe} = user;
-    res.json(userSafe);
+    res.json(toSafeUser(user));
 });
 
 router.post('/', async (req, res) => {
@@ -90,7 +91,13 @@ router.post('/', async (req, res) => {
             });
         }
         const passwordHash = bcrypt.hashSync(password, SALT_ROUNDS);
-        const newUser = new User(username, passwordHash, displayName, age, gender);
+        const newUser = new User({
+            username,
+            password: passwordHash,
+            displayName,
+            age,
+            gender
+        });
         newUser.validate();
         users.push(newUser);
         await writeUsers(users);
@@ -119,19 +126,19 @@ router.patch('/:username', requireLogin, async (req, res) => {
         if (password) {
             newPasswordHash = bcrypt.hashSync(password, SALT_ROUNDS);
         }
-        const updatedUser = new UpdateUser(
-            existingUser.username,
-            newPasswordHash,
-            displayName || existingUser.displayName,
-            age || existingUser.age,
-            gender || existingUser.gender,
-            isAdmin ?? existingUser.isAdmin,
-            existingUser.createdAt);
+        const updatedUser = new UpdateUser({
+            username: existingUser.username,
+            password: newPasswordHash,
+            displayName: displayName ?? existingUser.displayName,
+            age: age ?? existingUser.age,
+            gender: gender ?? existingUser.gender,
+            isAdmin: isAdmin ?? existingUser.isAdmin,
+            createdAt: existingUser.createdAt
+        });
         updatedUser.validate();
         users[index] = updatedUser;
         await writeUsers(users);
-        const {password: _, ...updatedUserSafe} = updatedUser;
-        res.json(updatedUserSafe);
+        res.json(toSafeUser(updatedUser));
     } catch (error) {
         res.status(400).json({error: error.message});
     }
@@ -147,5 +154,47 @@ router.delete('/:username', requireLogin, async (req, res) => {
     await writeUsers(filteredUsers);
     res.status(204).send();
 });
+
+router.post(
+    '/:username/avatar',
+    requireLogin,
+    uploadAvatar.single('avatar'),
+    async (req, res) => {
+        const {username} = req.params;
+
+        const users = await readUsers();
+        const userIndex = users.findIndex(u => u.username === username);
+
+        if (userIndex === -1) {
+            return res.status(404).json({error: 'User not found'});
+        }
+
+        if (
+            req.session.user.username !== username &&
+            !req.session.user.isAdmin
+        ) {
+            return res.status(403).json({error: 'Forbidden'});
+        }
+
+        const user = users[userIndex];
+
+        await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
+
+        const publicPath = `/uploads/avatars/${req.file.filename}`;
+        user.profilePhoto = publicPath;
+        user.updatedAt = new Date().toISOString();
+
+        users[userIndex] = user;
+        await writeUsers(users);
+
+        res.status(200).json({
+            message: 'Profile image uploaded successfully',
+            profilePhoto: publicPath
+        });
+    }
+);
+
+
+
 
 module.exports = router;

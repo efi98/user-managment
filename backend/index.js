@@ -3,6 +3,7 @@ const cors = require("cors");
 const session = require("express-session");
 const RedisStore = require('connect-redis').RedisStore;
 const {createClient} = require('redis');
+const path = require('node:path');
 require('dotenv').config();
 
 const {AppDataSource} = require('./helpers/db');
@@ -94,6 +95,11 @@ apiRouter.use('/users', usersRouter);
 apiRouter.use('/', authRouter);
 
 app.use('/api', apiRouter);
+
+app.use(
+    '/uploads',
+    express.static(path.join(process.cwd(), 'assets/uploads'))
+);
 
 AppDataSource.initialize().then(() => {
     console.log('Database initialized');

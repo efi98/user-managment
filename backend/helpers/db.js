@@ -18,6 +18,7 @@ async function writeUsers(users) {
         age: u.age,
         gender: u.gender,
         isAdmin: u.isAdmin,
+        profilePhoto: u.profilePhoto,
         createdAt: u.createdAt,
         updatedAt: u.updatedAt
     }));

@@ -19,6 +19,10 @@ const UserEntity = new EntitySchema({
             type: 'integer',
             nullable: true,
         },
+        profilePhoto: {
+            type: String,
+            nullable: true,
+        },
         gender: {
             type: String,
             nullable: true,
@@ -37,12 +41,13 @@ const UserEntity = new EntitySchema({
 });
 
 class User {
-    constructor(username, password, displayName, age, gender) {
+    constructor({ username, password, displayName = null, age = null, gender = null, profilePhoto = null }) {
         this.username = username;
-        this.displayName = displayName || username;
+        this.displayName = displayName ?? username;
         this.password = password;
         this.age = age;
         this.gender = gender;
+        this.profilePhoto = profilePhoto;
         this.isAdmin = false;
         this.createdAt = new Date().toISOString();
         this.updatedAt = new Date().toISOString();
@@ -91,18 +96,23 @@ class User {
             }
         }
 
+        if (this.profilePhoto !== undefined && this.profilePhoto !== null) {
+            if (typeof this.profilePhoto !== 'string') {
+                throw new TypeError('profilePhoto must be a string');
+            }
+        }
+
         return true;
     }
 }
 
 class UpdateUser extends User {
-    constructor(username, password, displayName, age, gender, isAdmin,  createdAt) {
-        super(username, password, displayName, age, gender);
+    constructor({ username, password, displayName, age, gender, profilePhoto, isAdmin, createdAt }) {
+        super({ username, password, displayName, age, gender, profilePhoto });
         this.createdAt = createdAt;
         this.isAdmin = isAdmin;
         this.updatedAt = new Date().toISOString();
     }
 }
-
 
 module.exports = { User, UpdateUser, UserEntity };
