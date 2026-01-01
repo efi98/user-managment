@@ -194,6 +194,38 @@ router.post(
     }
 );
 
+router.delete('/:username/avatar', requireLogin, async (req, res) => {
+    const { username } = req.params;
+
+    const users = await readUsers();
+    const userIndex = users.findIndex(u => u.username === username);
+
+    if (userIndex === -1) {
+        return res.status(404).json({ error: 'User not found' });
+    }
+
+    const sessionUser = req.session?.user;
+    if (!sessionUser) {
+        return res.status(401).json({ error: 'Unauthenticated' });
+    }
+
+    if (sessionUser.username !== username && !sessionUser.isAdmin) {
+        return res.status(403).json({ error: 'Forbidden' });
+    }
+
+    const user = users[userIndex];
+
+    await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
+
+    user.profilePhoto = null;
+    user.updatedAt = new Date().toISOString();
+
+    users[userIndex] = user;
+    await writeUsers(users);
+
+    return res.status(200).json({ message: 'Avatar deleted' });
+});
+
 
 
 
