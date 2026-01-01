@@ -10,7 +10,6 @@ async function readUsers() {
 async function writeUsers(users) {
     const repo = AppDataSource.getRepository(UserEntity);
     await repo.clear();
-    // Always save plain objects, not class instances
     const plainUsers = users.map(u => ({
         username: u.username,
         password: u.password,

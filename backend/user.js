@@ -54,7 +54,6 @@ class User {
     }
 
     validate() {
-        // Required fields
         if (!this.username) {
             throw new Error('Username is required');
         } else if (typeof this.username !== 'string') {
@@ -69,8 +68,6 @@ class User {
             throw new Error('Password must be 4 characters or more');
         }
 
-
-        // Optional fields validation
         if ((this.displayName !== undefined && this.displayName !== null) && typeof this.displayName !== 'string') {
             throw new Error('DisplayName must be a string');
         }

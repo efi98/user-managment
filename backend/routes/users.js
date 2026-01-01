@@ -4,7 +4,9 @@ const {User, UpdateUser} = require('../user');
 const {readUsers, writeUsers} = require('../helpers/db');
 const {requireLogin} = require('../middleware/auth');
 const {toSafeUser, toSafeUsers} = require('../helpers/userView');
-const {uploadAvatar, avatarsDir, deleteAvatarIfExists} = require("../helpers/avatar");
+const {uploadAvatar, avatarsDir} = require('../middleware/uploadAvatar');
+const {deleteAvatarIfExists} = require('../helpers/avatarFiles');
+const {loadUserByUsername, requireSelfOrAdmin, requireAdminToChangeIsAdmin} = require("../middleware/users");
 const router = express.Router();
 
 const SALT_ROUNDS = 10;
@@ -33,7 +35,7 @@ router.get('/stats', requireLogin, async (req, res) => {
         acc[g] = (acc[g] || 0) + 1;
         return acc;
     }, {});
-    // Age stats
+
     const ages = users.map(u => typeof u.age === 'number' ? u.age : null).filter(a => a !== null);
     let ageStats = null;
     if (ages.length > 0) {
@@ -56,14 +58,8 @@ router.get('/stats', requireLogin, async (req, res) => {
     });
 });
 
-router.get('/:username', requireLogin, async (req, res) => {
-    const users = await readUsers();
-    const {params} = req;
-    const user = users.find(u => u.username === params.username);
-    if (!user) {
-        return res.status(404).json({error: "User not found"});
-    }
-    res.json(toSafeUser(user));
+router.get('/:username', requireLogin, loadUserByUsername, async (req, res) => {
+    res.json(toSafeUser(req.targetUser));
 });
 
 router.post('/', async (req, res) => {
@@ -101,21 +97,19 @@ router.post('/', async (req, res) => {
         newUser.validate();
         users.push(newUser);
         await writeUsers(users);
-        res.status(201).json(newUser);
+        res.status(201).json(toSafeUser(newUser));
     } catch (error) {
         res.status(400).json({error: error.message});
     }
 });
 
-router.patch('/:username', requireLogin, async (req, res) => {
+router.patch('/:username', requireLogin, loadUserByUsername, requireAdminToChangeIsAdmin, requireSelfOrAdmin, async (req, res) => {
     try {
-        const users = await readUsers();
-        const {params, body} = req;
-        const index = users.findIndex(u => u.username === params.username);
-        if (index === -1) {
-            return res.status(404).json({error: "User not found"});
-        }
-        const existingUser = users[index];
+        const {body} = req;
+        const users = req.users;
+        const index = req.userIndex;
+        const existingUser = req.targetUser;
+
         const {password, displayName, age, gender, isAdmin, ...extraFields} = body;
         if (Object.keys(extraFields).length > 0) {
             return res.status(400).json({
@@ -144,41 +138,33 @@ router.patch('/:username', requireLogin, async (req, res) => {
     }
 });
 
-router.delete('/:username', requireLogin, async (req, res) => {
-    const users = await readUsers();
-    const {params} = req;
-    const filteredUsers = users.filter(u => u.username !== params.username);
-    if (users.length === filteredUsers.length) {
-        return res.status(404).json({error: "User not found"});
-    }
-    await writeUsers(filteredUsers);
+router.delete('/:username', requireLogin, loadUserByUsername, async (req, res) => {
+    const users = req.users;
+    const index = req.userIndex;
+
+    users.splice(index, 1);
+    await writeUsers(users);
+
     res.status(204).send();
 });
 
 router.post(
     '/:username/avatar',
     requireLogin,
+    loadUserByUsername,
+    requireSelfOrAdmin,
     uploadAvatar.single('avatar'),
     async (req, res) => {
-        const {username} = req.params;
-
-        const users = await readUsers();
-        const userIndex = users.findIndex(u => u.username === username);
-
-        if (userIndex === -1) {
-            return res.status(404).json({error: 'User not found'});
-        }
-
-        if (
-            req.session.user.username !== username &&
-            !req.session.user.isAdmin
-        ) {
-            return res.status(403).json({error: 'Forbidden'});
-        }
-
-        const user = users[userIndex];
+        const users = req.users;
+        const userIndex = req.userIndex;
+        const user = req.targetUser;
 
         await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
+
+        if (!req.file) {
+            return res.status(400).json({error: 'No file uploaded (field name should be "avatar")'});
+        }
+
 
         const publicPath = `/uploads/avatars/${req.file.filename}`;
         user.profilePhoto = publicPath;
@@ -194,26 +180,10 @@ router.post(
     }
 );
 
-router.delete('/:username/avatar', requireLogin, async (req, res) => {
-    const { username } = req.params;
-
-    const users = await readUsers();
-    const userIndex = users.findIndex(u => u.username === username);
-
-    if (userIndex === -1) {
-        return res.status(404).json({ error: 'User not found' });
-    }
-
-    const sessionUser = req.session?.user;
-    if (!sessionUser) {
-        return res.status(401).json({ error: 'Unauthenticated' });
-    }
-
-    if (sessionUser.username !== username && !sessionUser.isAdmin) {
-        return res.status(403).json({ error: 'Forbidden' });
-    }
-
-    const user = users[userIndex];
+router.delete('/:username/avatar', requireLogin, loadUserByUsername, requireSelfOrAdmin, async (req, res) => {
+    const users = req.users;
+    const userIndex = req.userIndex;
+    const user = req.targetUser;
 
     await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
 
@@ -223,10 +193,8 @@ router.delete('/:username/avatar', requireLogin, async (req, res) => {
     users[userIndex] = user;
     await writeUsers(users);
 
-    return res.status(200).json({ message: 'Avatar deleted' });
+    return res.status(200).json({message: 'Avatar deleted'});
 });
-
-
 
 
 module.exports = router;
