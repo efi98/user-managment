@@ -3,5 +3,5 @@
 - smart queries instead of find all and then filter
 - add photo profile (in the frontend)
 - handle errors for avatar in the frontend (like file size and format)
-- unit tests
+- unit tests for backed
 - add logs in the backend

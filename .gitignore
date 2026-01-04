@@ -43,6 +43,7 @@ __screenshots__/
 Thumbs.db
 
 /backend/assets/
+/backend/__tests__/test-assets2/
 /frontend/.claude/
 /frontend/.gemini/
 /frontend/.junie/
@@ -50,3 +51,4 @@ Thumbs.db
 /.run
 /backend/.env
 /frontend/dist/*
+.jest/

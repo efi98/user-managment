@@ -2,7 +2,9 @@ const path = require('node:path');
 const fs = require('node:fs');
 const multer = require('multer');
 
-const avatarsDir = path.join(process.cwd(), 'assets/uploads/avatars');
+const avatarsDir = process.env.AVATARS_DIR
+    ? path.resolve(process.env.AVATARS_DIR)
+    : path.join(process.cwd(), "assets/uploads/avatars");
 
 fs.mkdirSync(avatarsDir, { recursive: true });
 

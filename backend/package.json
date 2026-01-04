@@ -2,7 +2,9 @@
   "name": "backend",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon --config nodemon.json"
+    "dev": "nodemon --config nodemon.json",
+    "test": "cross-env NODE_ENV=test USE_REDIS_SESSION=false DB_PATH=assets/test.sqlite AVATARS_DIR=assets/test-uploads/avatars jest --runInBand --verbose",
+    "test:coverage": "npm test -- --coverage"
   },
   "dependencies": {
     "@keyv/valkey": "^1.0.11",
@@ -22,6 +24,7 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "jest": "^30.2.0",
     "supertest": "^7.1.4"
   }
