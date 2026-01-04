@@ -3,13 +3,21 @@ const { createApp } = require("../../app");
 const { AppDataSource } = require("../../helpers/db");
 
 async function initTestApp() {
-    await AppDataSource.initialize();
+    if (!AppDataSource.isInitialized) {
+        await AppDataSource.initialize();
+    }
     const app = createApp();
     return { app };
 }
 
 async function resetDb() {
     await AppDataSource.synchronize(true);
+}
+
+async function closeDb() {
+    if (AppDataSource.isInitialized) {
+        await AppDataSource.destroy();
+    }
 }
 
 async function login(agent, username, password) {
@@ -20,4 +28,4 @@ async function createUser(agentOrReq, user) {
     return agentOrReq.post("/api/users").send(user);
 }
 
-module.exports = { request, initTestApp, resetDb, login, createUser };
+module.exports = { request, initTestApp, resetDb, closeDb, login, createUser };
