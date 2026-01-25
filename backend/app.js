@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
 const RedisStore = require("connect-redis").RedisStore;
-const { createClient } = require("redis");
+const {createClient} = require("redis");
 
 const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
@@ -38,7 +38,7 @@ function buildSessionMiddleware() {
         },
     };
 
-    const memorySession = session({ ...baseSessionOptions });
+    const memorySession = session({...baseSessionOptions});
 
     // For tests (or if explicitly disabled), skip redis completely
     if (process.env.USE_REDIS_SESSION === "false" || process.env.NODE_ENV === "test") {
@@ -60,8 +60,8 @@ function buildSessionMiddleware() {
         console.error("Could not connect to Redis/Valkey:", err.message);
     });
 
-    const redisStore = new RedisStore({ client: redisClient });
-    const redisSession = session({ ...baseSessionOptions, store: redisStore });
+    const redisStore = new RedisStore({client: redisClient});
+    const redisSession = session({...baseSessionOptions, store: redisStore});
 
     return function (req, res, next) {
         if (redisClient.isReady) return redisSession(req, res, next);
@@ -85,13 +85,13 @@ function createApp() {
 
     const apiRouter = express.Router();
     apiRouter.get("/", (req, res) => res.send("Welcome to the User Management API"));
-    apiRouter.get("/health", (req, res) => res.json({ status: "ok" }));
+    apiRouter.get("/health", (req, res) => res.json({status: "ok"}));
     apiRouter.use("/users", usersRouter);
     apiRouter.use("/", authRouter);
 
-    app.use("/api", apiRouter);
+    app.use("/", apiRouter);
 
     return app;
 }
 
-module.exports = { createApp };
+module.exports = {createApp};

@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "ng": "ng",
     "start": "ng serve",
     "start-SSL": "ng serve --ssl true --ssl-key ssl/localhost.key --ssl-cert ssl/localhost.crt",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "typecheck": "tsc --noEmit"
   },
   "prettier": {
     "printWidth": 100,

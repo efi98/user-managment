@@ -21,11 +21,11 @@ async function closeDb() {
 }
 
 async function login(agent, username, password) {
-    return agent.post("/api/login").send({ username, password });
+    return agent.post("/login").send({ username, password });
 }
 
 async function createUser(agentOrReq, user) {
-    return agentOrReq.post("/api/users").send(user);
+    return agentOrReq.post("/users").send(user);
 }
 
 module.exports = { request, initTestApp, resetDb, closeDb, login, createUser };

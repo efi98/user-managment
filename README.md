@@ -1,7 +1,7 @@
 ## todo:
-- replace age with birth date
+- unit tests for backed (check if all cases are covered)
+- replace age with birthdate
 - smart queries instead of find all and then filter
-- add photo profile (in the frontend)
-- handle errors for avatar in the frontend (like file size and format)
-- unit tests for backed
+- add a photo profile (in the frontend)
+- handle errors for an avatar in the frontend (like file size and format)
 - add logs in the backend

@@ -44,8 +44,8 @@ test("upload avatar: self allowed, saves profilePhoto", async () => {
     await createUser(request(app), { username: "u1", password: "pass1234" });
     await login(agent, "u1", "pass1234");
 
-    const imgPath = path.join(__dirname, "test-assets", "avatar.jpg");
-    const res = await agent.post("/api/users/u1/avatar").attach("avatar", imgPath);
+    const imgPath = path.join(__dirname, "test-assets", "avatar.png");
+    const res = await agent.post("/users/u1/avatar").attach("avatar", imgPath);
 
     expect(res.status).toBe(200);
     expect(res.body.profilePhoto).toMatch(/^\/uploads\/avatars\/.+/);
@@ -63,7 +63,7 @@ test("upload avatar: non-image rejected", async () => {
 
     const badFile = path.join(__dirname, "test-assets", "not-image.txt");
 
-    const res = await agent.post("/api/users/u1/avatar").attach("avatar", badFile);
+    const res = await agent.post("/users/u1/avatar").attach("avatar", badFile);
 
     // depending on your multer error handling, this can be 400 or bubble to 500
     expect([400, 500]).toContain(res.status);
@@ -92,8 +92,8 @@ describe("middleware/uploadAvatar (unit-ish)", () => {
 });
 
 // Covers routes/users.js avatar endpoints:
-// - POST /api/users/:username/avatar when no file (400 branch)
-// - DELETE /api/users/:username/avatar success
+// - POST /users/:username/avatar when no file (400 branch)
+// - DELETE /users/:username/avatar success
 // routes/users.js :contentReference[oaicite:2]{index=2}
 describe("avatar routes - missing coverage", () => {
     const path = require("node:path");
@@ -121,16 +121,16 @@ describe("avatar routes - missing coverage", () => {
         await closeDb();
     });
 
-    test('POST /api/users/:username/avatar returns 400 when no file uploaded (field mismatch)', async () => {
+    test('POST /users/:username/avatar returns 400 when no file uploaded (field mismatch)', async () => {
         await createUser(request(app), { username: "u1", password: "pass1234" });
 
         const agent = request.agent(app);
         await login(agent, "u1", "pass1234");
 
         // Send multipart but with wrong field name so req.file is undefined
-        const imgPath = path.join(__dirname, "test-assets", "avatar.jpg");
+        const imgPath = path.join(__dirname, "test-assets", "avatar.png");
         const res = await agent
-            .post("/api/users/u1/avatar")
+            .post("/users/u1/avatar")
             .attach("wrongField", imgPath);
 
         expect(res.status).toBe(400);
@@ -139,22 +139,22 @@ describe("avatar routes - missing coverage", () => {
         });
     });
 
-    test("DELETE /api/users/:username/avatar returns 200 and clears profilePhoto", async () => {
+    test("DELETE /users/:username/avatar returns 200 and clears profilePhoto", async () => {
         await createUser(request(app), { username: "u1", password: "pass1234" });
 
         const agent = request.agent(app);
         await login(agent, "u1", "pass1234");
 
         // upload first (so delete path executes deleteAvatarIfExists + sets null)
-        const imgPath = path.join(__dirname, "test-assets", "avatar.jpg");
-        const up = await agent.post("/api/users/u1/avatar").attach("avatar", imgPath);
+        const imgPath = path.join(__dirname, "test-assets", "avatar.png");
+        const up = await agent.post("/users/u1/avatar").attach("avatar", imgPath);
         expect(up.status).toBe(200);
 
-        const del = await agent.delete("/api/users/u1/avatar");
+        const del = await agent.delete("/users/u1/avatar");
         expect(del.status).toBe(200);
         expect(del.body).toEqual({ message: "Avatar deleted" });
 
-        const user = await agent.get("/api/users/u1");
+        const user = await agent.get("/users/u1");
         expect(user.status).toBe(200);
         expect(user.body.profilePhoto).toBe("/uploads/avatars/default.jpg"); // toSafeUser default
     });

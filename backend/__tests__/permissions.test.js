@@ -29,7 +29,7 @@ test("non-admin cannot change isAdmin", async () => {
 
     await login(agent, "u1", "pass1234");
 
-    const res = await agent.patch("/api/users/u2").send({ isAdmin: true });
+    const res = await agent.patch("/users/u2").send({ isAdmin: true });
     expect(res.status).toBe(403);
 });
 
@@ -50,7 +50,7 @@ test("admin cannot change own isAdmin (self-demotion protection)", async () => {
     // ensure session has isAdmin=true
     await login(adminAgent, "admin", "pass1234");
 
-    const res = await adminAgent.patch("/api/users/admin").send({ isAdmin: false });
+    const res = await adminAgent.patch("/users/admin").send({ isAdmin: false });
     expect(res.status).toBe(403);
 });
 
@@ -62,7 +62,7 @@ test("non-admin cannot patch other user's profile fields", async () => {
 
     await login(agent, "u1", "pass1234");
 
-    const res = await agent.patch("/api/users/u2").send({ displayName: "hacked" });
+    const res = await agent.patch("/users/u2").send({ displayName: "hacked" });
     expect(res.status).toBe(403);
 });
 
