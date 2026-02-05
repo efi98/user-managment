@@ -43,7 +43,7 @@ __screenshots__/
 Thumbs.db
 
 /backend/assets/
-/backend/__tests__/test-assets2/
+/backend/tests/test-assets/
 /frontend/.claude/
 /frontend/.gemini/
 /frontend/.junie/
