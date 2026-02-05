@@ -72,6 +72,11 @@ router.post('/', async (req, res) => {
                 error: `Forbidden fields: ${Object.keys(extraFields).map(f => `'${f}'`).join(', ')}.`
             });
         }
+
+        if (!password) {
+            return res.status(400).json({error: 'Password is required'});
+        }
+
         const existingUser = users.find(u => u.username === username);
         if (existingUser) {
             const suggestions = [];

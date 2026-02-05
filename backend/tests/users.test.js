@@ -187,6 +187,7 @@ describe("PATCH /users/:username authorization and edge cases", () => {
         // create existing usernames so first suggestion collides, second collides, third ok
         await createUser(request(app), {username: "u1", password: "pass1234"});
         await createUser(request(app), {username: "taken0", password: "pass1234"});
+        await createUser(request(app), {username: "taken", password: "pass1234"});
         await createUser(request(app), {username: "taken1", password: "pass1234"});
 
         // Force Math.random to produce 0 then ~0.001 then ~0.002
@@ -260,6 +261,10 @@ describe("PATCH /users/:username authorization and edge cases", () => {
 
     test("PATCH /users/:username Target user missing -> 404", async () => {
         // create and login as someone so requireLogin passes
+        await createUser(request(app), {username: "u1", password: "pass1234"});
+        const agent = request.agent(app);
+        await login(agent, "u1", "pass1234");
+
         const res = await agent.patch("/users/nope").send({displayName: "x"});
         expect(res.status).toBe(404);
         expect(res.body.error).toBe("User not found");

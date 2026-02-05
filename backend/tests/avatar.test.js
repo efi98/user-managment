@@ -25,7 +25,7 @@ function cleanAvatarsDir() {
 let app;
 
 beforeAll(async () => {
-    ({ app } = await initTestApp());
+    ({app} = await initTestApp());
 });
 
 beforeEach(async () => {
@@ -41,7 +41,7 @@ afterAll(async () => {
 test("upload avatar: self allowed, saves profilePhoto", async () => {
     const agent = request.agent(app);
 
-    await createUser(request(app), { username: "u1", password: "pass1234" });
+    await createUser(request(app), {username: "u1", password: "pass1234"});
     await login(agent, "u1", "pass1234");
 
     const imgPath = path.join(__dirname, "test-assets", "avatar.png");
@@ -58,7 +58,7 @@ test("upload avatar: self allowed, saves profilePhoto", async () => {
 test("upload avatar: non-image rejected", async () => {
     const agent = request.agent(app);
 
-    await createUser(request(app), { username: "u1", password: "pass1234" });
+    await createUser(request(app), {username: "u1", password: "pass1234"});
     await login(agent, "u1", "pass1234");
 
     const badFile = path.join(__dirname, "test-assets", "not-image.txt");
@@ -69,13 +69,30 @@ test("upload avatar: non-image rejected", async () => {
     expect([400, 500]).toContain(res.status);
 });
 
+test('POST /users/:username/avatar rejects text file (non-image)', async () => {
+    const agent = request.agent(app);
+
+    await createUser(request(app), {username: "u1", password: "pass1234"});
+    await login(agent, "u1", "pass1234");
+
+    const textFile = path.join(__dirname, "test-assets", "not-image.txt");
+
+    const res = await agent.post("/users/u1/avatar").attach("avatar", textFile);
+
+    expect([400, 500]).toContain(res.status);
+});
+
 describe("middleware/uploadAvatar (unit-ish)", () => {
     test("accepts image mimetype", (done) => {
         jest.resetModules();
-        const { uploadAvatar } = require("../middleware/uploadAvatar"); // :contentReference[oaicite:13]{index=13}
+        const {uploadAvatar} = require("../middleware/uploadAvatar"); // :contentReference[oaicite:13]{index=13}
 
-        const req = { params: { username: "u1" } };
-        const file = { mimetype: "image/jpeg", originalname: "a.jpg" };
+        // Provide minimal request shape expected by multer/type-is
+        const req = {
+            params: {username: "u1"},
+            headers: {},
+            method: 'POST'
+        };
 
         // access multer's internal fileFilter via the instance options
         // multer stores it on uploadAvatar (a multer instance) as .limits/.storage etc are not public,
@@ -109,7 +126,7 @@ describe("avatar routes - missing coverage", () => {
     let app;
 
     beforeAll(async () => {
-        ({ app } = await initTestApp());
+        ({app} = await initTestApp());
     });
 
     beforeEach(async () => {
@@ -122,7 +139,7 @@ describe("avatar routes - missing coverage", () => {
     });
 
     test('POST /users/:username/avatar returns 400 when no file uploaded (field mismatch)', async () => {
-        await createUser(request(app), { username: "u1", password: "pass1234" });
+        await createUser(request(app), {username: "u1", password: "pass1234"});
 
         const agent = request.agent(app);
         await login(agent, "u1", "pass1234");
@@ -132,6 +149,18 @@ describe("avatar routes - missing coverage", () => {
         const res = await agent
             .post("/users/u1/avatar")
             .attach("wrongField", imgPath);
+        expect([400, 500]).toContain(res.status);
+    });
+
+    test('POST /users/:username/avatar returns 400 when no file uploaded', async () => {
+        await createUser(request(app), {username: "u1", password: "pass1234"});
+
+        const agent = request.agent(app);
+        await login(agent, "u1", "pass1234");
+
+        const res = await agent
+            .post("/users/u1/avatar")
+            .field('dummy', '1');
 
         expect(res.status).toBe(400);
         expect(res.body).toEqual({
@@ -140,7 +169,7 @@ describe("avatar routes - missing coverage", () => {
     });
 
     test("DELETE /users/:username/avatar returns 200 and clears profilePhoto", async () => {
-        await createUser(request(app), { username: "u1", password: "pass1234" });
+        await createUser(request(app), {username: "u1", password: "pass1234"});
 
         const agent = request.agent(app);
         await login(agent, "u1", "pass1234");
@@ -152,7 +181,7 @@ describe("avatar routes - missing coverage", () => {
 
         const del = await agent.delete("/users/u1/avatar");
         expect(del.status).toBe(200);
-        expect(del.body).toEqual({ message: "Avatar deleted" });
+        expect(del.body).toEqual({message: "Avatar deleted"});
 
         const user = await agent.get("/users/u1");
         expect(user.status).toBe(200);

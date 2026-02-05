@@ -3,7 +3,7 @@ module.exports = {
     coverageDirectory: "<rootDir>/.jest/coverage",
     testPathIgnorePatterns: [
         "/node_modules/",
-        "/__tests__/test-utils/",
+        "/tests/test-utils/",
     ],
     collectCoverageFrom: [
         "routes/**/*.js",

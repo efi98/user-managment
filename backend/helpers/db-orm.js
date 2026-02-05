@@ -4,7 +4,9 @@ const { UserEntity } = require('../user');
 
 const dbPath =
     process.env.DB_PATH ||
-    path.join(__dirname, '../assets/userdb.sqlite');
+    (process.env.NODE_ENV === 'test'
+        ? path.join(__dirname, '../assets/test.sqlite')
+        : path.join(__dirname, '../assets/userdb.sqlite'));
 
 const AppDataSource = new DataSource({
     type: 'sqlite',
