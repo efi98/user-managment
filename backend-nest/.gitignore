@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+dist/
+
+# Database
+assets/*.sqlite
+
+# Uploads
+assets/uploads/
+assets/test-uploads/
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Testing
+coverage/
+.jest/
+
+# Logs
+*.log
+npm-debug.log*
