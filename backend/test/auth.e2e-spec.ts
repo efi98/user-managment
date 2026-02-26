@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { closeApp, createTestApp, createUser, login, resetDb } from './test-utils';
+import {agentFor, closeApp, createTestApp, createUser, login, resetDb} from './test-utils';
 import { AuthModule } from '@src/auth';
 import { UsersModule } from '@src/users';
 
@@ -43,7 +43,7 @@ describe('Auth (e2e)', () => {
     it('login -> me -> logout -> me', async () => {
         await createUser(app, {username: 'u1', password: 'pass1234'});
 
-        const agent = request.agent(app.getHttpServer());
+        const agent = agentFor(app.getHttpServer());
 
         const loginRes = await login(agent, 'u1', 'pass1234');
         expect(loginRes.status).toBe(200);

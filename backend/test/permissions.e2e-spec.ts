@@ -1,6 +1,5 @@
 import {INestApplication} from '@nestjs/common';
-import * as request from 'supertest';
-import {closeApp, createTestApp, createUser, login, resetDb} from './test-utils';
+import {closeApp, createTestApp, createUser, login, resetDb, agentFor} from './test-utils';
 import {UsersModule} from '@src/users';
 import {AuthModule} from '@src/auth';
 import {DataSource} from "typeorm";
@@ -26,7 +25,7 @@ describe('Permissions (e2e)', () => {
         await createUser(app, {username: 'u1', password: 'pass1234'});
         await createUser(app, {username: 'u2', password: 'pass1234'});
 
-        const agent = request.agent(app.getHttpServer());
+        const agent = agentFor(app.getHttpServer());
         await login(agent, 'u1', 'pass1234');
 
         const res = await agent.patch('/users/u2').send({isAdmin: true});
@@ -37,7 +36,7 @@ describe('Permissions (e2e)', () => {
     it('non-admin trying to change own isAdmin should be rejected', async () => {
         await createUser(app, {username: 'self', password: 'pass1234'});
 
-        const agent = request.agent(app.getHttpServer());
+        const agent = agentFor(app.getHttpServer());
         await login(agent, 'self', 'pass1234');
 
         const res = await agent.patch('/users/self').send({isAdmin: true});
@@ -58,7 +57,7 @@ describe('Permissions (e2e)', () => {
         admin.isAdmin = true;
         await userRepo.save(admin);
 
-        const agent = request.agent(app.getHttpServer());
+        const agent = agentFor(app.getHttpServer());
         await login(agent, 'admin', 'pass1234');
 
         // Admin promoting u2 to admin should succeed
@@ -78,7 +77,7 @@ describe('Permissions (e2e)', () => {
         admin.isAdmin = true;
         await userRepo.save(admin);
 
-        const agent = request.agent(app.getHttpServer());
+        const agent = agentFor(app.getHttpServer());
         await login(agent, 'selfadmin', 'pass1234');
 
         const res = await agent.patch('/users/selfadmin').send({isAdmin: false});
@@ -90,7 +89,7 @@ describe('Permissions (e2e)', () => {
         await createUser(app, {username: 'u1', password: 'pass1234'});
         await createUser(app, {username: 'u2', password: 'pass1234'});
 
-        const agent = request.agent(app.getHttpServer());
+        const agent = agentFor(app.getHttpServer());
         await login(agent, 'u1', 'pass1234');
 
         const res = await agent.patch('/users/u2').send({displayName: 'Hacked'});
@@ -100,7 +99,7 @@ describe('Permissions (e2e)', () => {
     it('user can update own profile', async () => {
         await createUser(app, {username: 'u1', password: 'pass1234'});
 
-        const agent = request.agent(app.getHttpServer());
+        const agent = agentFor(app.getHttpServer());
         await login(agent, 'u1', 'pass1234');
 
         const res = await agent.patch('/users/u1').send({displayName: 'New Name'});
