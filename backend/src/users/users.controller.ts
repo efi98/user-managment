@@ -1,27 +1,28 @@
 import {
+    ArgumentsHost,
     BadRequestException,
-    Body,
+    Body, Catch,
     Controller,
-    Delete,
+    Delete, ExceptionFilter,
     Get,
     HttpCode,
     Param,
     Patch,
-    Post,
-    UploadedFile,
+    Post, Req,
+    UploadedFile, UseFilters,
     UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+import {FileInterceptor} from '@nestjs/platform-express';
+import {diskStorage, MulterError} from 'multer';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
-import { UsersService } from './users.service';
-import { CreateUserDto, UpdateUserDto } from '@users/dto';
-import { UserStats } from '@users/interfaces';
-import { AdminChangeGuard, AuthGuard, SelfOrAdminGuard } from '@common/guards';
-import { deleteAvatarIfExists } from '@common/helpers';
-import { ERRORS } from '@errors';
+import {UsersService} from './users.service';
+import {CreateUserDto, UpdateUserDto} from '@users/dto';
+import {UserStats} from '@users/interfaces';
+import {AdminChangeGuard, AuthGuard, SelfOrAdminGuard} from '@common/guards';
+import {deleteAvatarIfExists} from '@common/helpers';
+import {ERRORS} from '@errors';
 
 const avatarsDir = process.env.AVATARS_DIR
     ? path.resolve(process.env.AVATARS_DIR)
@@ -32,24 +33,34 @@ fs.mkdirSync(avatarsDir, {recursive: true});
 
 const multerOptions = {
     storage: diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, avatarsDir);
-        },
+        destination: (req, file, cb) => cb(null, avatarsDir),
         filename: (req, file, cb) => {
             const ext = path.extname(file.originalname);
             const filename = `${req.params.username}-${Date.now()}${ext}`;
             cb(null, filename);
         },
     }),
-    fileFilter: (req, file, cb) => {
-        if (file.mimetype?.startsWith('image/')) {
-            cb(null, true);
-        } else {
-            cb(new Error(ERRORS.AVATAR_INVALID_FORMAT.message), false);
-        }
+    fileFilter: (req: any, file: any, cb: any) => {
+        if (file.mimetype?.startsWith('image/')) return cb(null, true)
+
+        req.fileValidationError = ERRORS.AVATAR_INVALID_FORMAT.message
+        return cb(null, false)
     },
-    limits: {fileSize: 2 * 1024 * 1024}, // 2 MB
-};
+    limits: {fileSize: 2 * 1024 * 1024},
+}
+
+@Catch(MulterError)
+class MulterExceptionFilter implements ExceptionFilter {
+    catch(exception: MulterError, host: ArgumentsHost) {
+        const ctx = host.switchToHttp();
+        const res = ctx.getResponse();
+
+        return res.status(400).json({
+            error: exception.message,
+            code: exception.code,
+        });
+    }
+}
 
 @Controller('users')
 export class UsersController {
@@ -100,18 +111,24 @@ export class UsersController {
     }
 
     @Post(':username/avatar')
+    @HttpCode(200)
     @UseGuards(AuthGuard, SelfOrAdminGuard)
+    @UseFilters(MulterExceptionFilter)
     @UseInterceptors(FileInterceptor('avatar', multerOptions))
     async uploadAvatar(
         @Param('username') username: string,
-        @UploadedFile() file: Express.Multer.File,
+        @Req() req: Request & { fileValidationError?: string },
+        @UploadedFile() file?: Express.Multer.File,
     ) {
-        if (!file) {
-            const {code, message} = ERRORS.NO_FILE_UPLOADED;
-            throw new BadRequestException({code, message});
+        if (req.fileValidationError) {
+            throw new BadRequestException({ error: req.fileValidationError })
         }
 
-        // Get old photo and delete it
+        if (!file) {
+            throw new BadRequestException({error: ERRORS.NO_FILE_UPLOADED.message});
+        }
+
+        // Get the old photo and delete it
         const user = await this.usersService.findOne(username);
         if (user.profilePhoto) {
             await deleteAvatarIfExists(user.profilePhoto, avatarsDir);

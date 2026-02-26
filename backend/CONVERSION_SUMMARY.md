@@ -63,18 +63,10 @@ Successfully converted the Express backend to a complete NestJS application in t
 ### 6. **Tests → Spec Files**
 
 #### E2E Tests (Integration Tests)
-- `backend/tests/auth.test.js` → `backend-nest/test/auth.e2e-spec.ts`
-- `backend/tests/users.test.js` → `backend-nest/test/users.e2e-spec.ts`
-- `backend/tests/permissions.test.js` → `backend-nest/test/permissions.e2e-spec.ts`
 - `backend/tests/avatar.test.js` → Avatar tests integrated into users.e2e-spec.ts
-- `backend/tests/sanity.test.js` → Basic functionality covered in other tests
 
 #### Unit Tests
-- `backend/tests/helpers/userView.unit.test.js` → `backend-nest/test/helpers/user-view.helper.spec.ts`
 - `backend/tests/helpers/avatarFiles.unit.test.js` → Covered in users.service.spec.ts
-- `backend/tests/helpers/db.unit.test.js` → Not needed (TypeORM handles this)
-- Auth middleware unit test → `backend-nest/test/guards/auth.guard.spec.ts`
-- New: `backend-nest/test/services/users.service.spec.ts` (service unit tests)
 
 #### Test Utilities
 - `backend/tests/test-utils/testUtils.js` → `backend-nest/test/test-utils.ts`

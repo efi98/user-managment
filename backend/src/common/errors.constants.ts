@@ -34,7 +34,7 @@ export const ERRORS = {
 
     PERMISSION_DENIED: {
         code: 'PERMISSION_DENIED',
-        message: 'You do not have permission to perform this action',
+        message: 'Only admins can change isAdmin',
         status: 403 as const,
     },
 

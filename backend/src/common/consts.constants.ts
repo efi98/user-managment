@@ -5,7 +5,7 @@ export enum GENDER {
 }
 
 export const CONSTS = {
-    DEFAULT_AVATAR_FILENAME: 'default.png',
+    DEFAULT_AVATAR_FILENAME: 'default.jpg',
 
     // App messages / responses
     WELCOME_MESSAGE: 'Welcome to the User Management API',
