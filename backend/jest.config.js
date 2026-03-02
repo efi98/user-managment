@@ -1,7 +1,7 @@
 module.exports = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: '.',
-  testRegex: '.*\\.spec\\.ts$',
+  testRegex: String.raw`.*\.spec\.ts$`,
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
@@ -31,9 +31,9 @@ module.exports = {
   coverageThreshold: {
     global: {
       branches: 70,
-      functions: 70,
-      lines: 75,
-      statements: 75,
+      functions: 75,
+      lines: 80,
+      statements: 80,
     },
   },
 };

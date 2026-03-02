@@ -5,7 +5,7 @@ declare module 'express-session' {
     user?: {
       username: string;
       displayName: string;
-      age: number;
+      birthdate: string;
       profilePhoto: string;
       gender: string;
       isAdmin: boolean;

@@ -11,8 +11,8 @@ export class User {
   @Column({ nullable: true })
   displayName: string;
 
-  @Column({ type: 'integer', nullable: true })
-  age: number;
+  @Column({ type: 'date', nullable: true })
+  birthdate: string;
 
   @Column({ nullable: true })
   profilePhoto: string;

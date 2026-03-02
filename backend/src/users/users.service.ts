@@ -1,12 +1,12 @@
-import { ConflictException, Injectable, NotFoundException, } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {ConflictException, Injectable, NotFoundException,} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { User } from '@users/entities';
-import { CreateUserDto, UpdateUserDto } from '@users/dto';
-import { SafeUser, UserStats } from '@users/interfaces';
-import { toSafeUser, toSafeUsers } from '@common/helpers';
-import { ERRORS } from '@errors';
+import {User} from '@users/entities';
+import {CreateUserDto, UpdateUserDto} from '@users/dto';
+import {SafeUser, UserStats} from '@users/interfaces';
+import {ageFromBirthdate, toSafeUser, toSafeUsers} from '@common/helpers';
+import {ERRORS} from '@errors';
 
 const SALT_ROUNDS = 10;
 
@@ -59,7 +59,7 @@ export class UsersService {
             username,
             password: passwordHash,
             displayName: rest.displayName ?? username,
-            age: rest.age,
+            birthdate: rest.birthdate,
             gender: rest.gender,
             isAdmin: false,
             createdAt: new Date().toISOString(),
@@ -131,7 +131,9 @@ export class UsersService {
         }, {} as Record<string, number>);
 
         const ages = users
-            .map((u) => (typeof u.age === 'number' ? u.age : null))
+            .map((u) => {
+                return ageFromBirthdate(u.birthdate);
+            })
             .filter((a) => a !== null);
         let ageStats = null;
         if (ages.length > 0) {

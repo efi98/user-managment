@@ -1,7 +1,7 @@
 export interface SafeUser {
   username: string;
   displayName: string;
-  age: number;
+  birthdate: string;
   profilePhoto: string;
   gender: string;
   isAdmin: boolean;
