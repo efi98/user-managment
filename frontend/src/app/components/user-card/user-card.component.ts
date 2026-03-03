@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Mode, PasswordValidation, User } from '../../interfaces';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
@@ -27,7 +27,7 @@ export class UserCardComponent {
         username: FormControl<string | null>;
         displayName: FormControl<string | null>;
         password: FormControl<string | null>;
-        age: FormControl<number | null>;
+        birthdate: FormControl<string | null>;
         gender: FormControl<string | null>;
         isAdmin: FormControl<boolean | null>;
     }>;
@@ -67,11 +67,7 @@ export class UserCardComponent {
                     }),
                 ],
             ],
-            age: new FormControl<number | null>(null, [
-                Validators.min(1),
-                Validators.max(120),
-                Validators.pattern(/^[0-9]+$/),
-            ]),
+            birthdate: new FormControl<string | null>(null, []),
             gender: [''],
             isAdmin: [false],
         });
@@ -79,9 +75,38 @@ export class UserCardComponent {
         effect(() => {
             const user = this.user();
             if (user) {
-                this.userForm.patchValue(user);
+                // prepare patch with only fields that exist on the form
+                const formattedBirthdate = this.formatBirthdateForInput(user.birthdate);
+                const patch: any = {
+                    username: user.username,
+                    displayName: user.displayName ?? null,
+                    birthdate: formattedBirthdate,
+                    gender: user.gender ?? null,
+                    isAdmin: user.isAdmin ?? false,
+                };
+                this.userForm.patchValue(patch);
             }
         });
+    }
+
+    // make public so template can call it
+    public computeAgeFromBirthdate = (birthdate?: string | Date | null): number | null => {
+        if (!birthdate) return null;
+        const b = typeof birthdate === 'string' ? new Date(birthdate) : birthdate;
+        if (Number.isNaN(b.getTime())) return null;
+        const today = new Date();
+        let age = today.getFullYear() - b.getFullYear();
+        const m = today.getMonth() - b.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < b.getDate())) age--;
+        return Math.max(age, 0);
+    }
+
+    private formatBirthdateForInput(birthdate?: string | Date | null): string | null {
+        if (!birthdate) return null;
+        const b = typeof birthdate === 'string' ? new Date(birthdate) : birthdate;
+        if (Number.isNaN(b.getTime())) return null;
+        // YYYY-MM-DD
+        return b.toISOString().substring(0, 10);
     }
 
     get isSaveDisabled(): boolean {
@@ -197,9 +222,12 @@ export class UserCardComponent {
             this.toastService.show('Changes cancelled', 'info');
         }
         this.userForm.reset({
-            ...user,
-            age: user.age ?? null,
-        });
+            username: user.username,
+            displayName: user.displayName ?? null,
+            birthdate: this.formatBirthdateForInput(user.birthdate),
+            gender: user.gender ?? null,
+            isAdmin: user.isAdmin ?? false,
+        } as any);
         this.mode = Mode.View;
     }
 

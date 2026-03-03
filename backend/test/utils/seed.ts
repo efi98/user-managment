@@ -1,4 +1,4 @@
-import {SessionAgent} from "./session-agent";
+import {SessionAgent} from "@tests/utils/session-agent";
 
 type Agent = SessionAgent;
 

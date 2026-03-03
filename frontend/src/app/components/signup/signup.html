@@ -22,17 +22,11 @@
             <app-password-strength [passwordValidationResult]="passwordValidationResult"></app-password-strength>
         </div>
         <div class="form-group">
-            <label for="age">Age (optional)</label>
-            <input id="age" type="number" formControlName="age" min="1" max="120"
-                   [class.error]="signupForm.get('age')?.touched && signupForm.get('age')?.invalid"/>
-            @if (signupForm.get('age')?.touched && signupForm.get('age')?.invalid) {
-                <div class="error">
-                    @if (signupForm.get('age')?.errors?.['pattern']) {
-                        Age must be a valid number.
-                    } @else {
-                        Age must be between 1 and 120.
-                    }
-                </div>
+            <label for="birthdate">Birthdate (optional)</label>
+            <input id="birthdate" type="date" formControlName="birthdate"
+                   [class.error]="signupForm.get('birthdate')?.touched && signupForm.get('birthdate')?.invalid"/>
+            @if (signupForm.get('birthdate')?.touched && signupForm.get('birthdate')?.invalid) {
+                <div class="error">Please enter a valid birthdate (not in the future).</div>
             }
         </div>
         <div class="form-group">

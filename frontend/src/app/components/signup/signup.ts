@@ -40,7 +40,7 @@ export class SignupComponent {
                     }
                 )
             ]],
-            age: [null, [Validators.min(1), Validators.max(120), Validators.pattern(/^[0-9]+$/)]],
+            birthdate: [null, []],
             gender: ['']
         });
     }
@@ -57,8 +57,8 @@ export class SignupComponent {
             password: formValue.password!,
             displayName: formValue.displayName!,
         };
-        if (formValue.age) {
-            newUser.age = parseInt(formValue.age);
+        if (formValue.birthdate) {
+            newUser.birthdate = formValue.birthdate;
         }
         if (formValue.gender) {
             newUser.gender = formValue.gender as Gender;

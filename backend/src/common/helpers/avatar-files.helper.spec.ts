@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {deleteAvatarIfExists} from '@src/common';
 import {CONSTS} from '@consts';
-import {makeTmpDir, rmTmpDir} from '../../../test/utils/tmp-dir';
+import {makeTmpDir, rmTmpDir} from '@tests/utils/tmp-dir';
 
 describe('avatar-files.helper', () => {
     let dir: string;

@@ -1,6 +1,5 @@
 import {Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {isArray} from 'lodash';
 
 @Component({
     selector: 'app-dashboard',
@@ -18,12 +17,5 @@ export class DashboardComponent {
             return keys.sort((a, b) => obj[b] - obj[a]);
         }
         return keys;
-    }
-
-    hasValue(value: any): boolean {
-        if (value === null || value === undefined) return false;
-        if (isArray(value)) return value.length > 0;
-        if (typeof value === 'object') return Object.keys(value).length > 0;
-        return true;
     }
 }

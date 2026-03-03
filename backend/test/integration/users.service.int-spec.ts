@@ -1,7 +1,5 @@
-import {Test} from '@nestjs/testing';
-import {TypeOrmModule} from '@nestjs/typeorm';
 import {User, UsersService} from '@src/users';
-import {createInMemoryTestingModule} from "../utils/build-test-app";
+import {createInMemoryTestingModule} from "@tests/utils/build-test-app";
 
 describe('UsersService integration', () => {
     let service: UsersService;

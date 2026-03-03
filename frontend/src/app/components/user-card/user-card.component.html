@@ -12,7 +12,6 @@
             </div>
             <div class="grid-item">
                 <label for="password">Password</label>
-<!--                    <input id="password-view" value="******" readonly class="empty-field reveal">-->
                 @if (mode === Mode.View) {
                     <input id="password-view" value="******" readonly class="empty-field reveal">
                 } @else {
@@ -23,14 +22,13 @@
                 }
             </div>
             <div class="grid-item">
-                <label for="age">Age</label>
+                <label for="birthdate">Birthdate</label>
                 @if (mode === Mode.View) {
-                    <input id="age" [value]="userForm.get('age')?.value || 'EMPTY'" readonly
-                           [class.empty-field]="!userForm.get('age')?.value">
+                    <input id="birthdate-view" [value]="(user()?.birthdate ? (computeAgeFromBirthdate(user()?.birthdate) + ' yrs') : 'EMPTY')" readonly
+                           [class.empty-field]="!user()?.birthdate">
                 } @else {
-                    <input id="age" type="number" formControlName="age"
-                           min="1" max="120"
-                           [class.error]="userForm.get('age')?.dirty && (!userForm.get('age')?.value || userForm.get('age')?.errors)">
+                    <input id="birthdate-edit" type="date" formControlName="birthdate"
+                           [class.error]="userForm.get('birthdate')?.dirty && userForm.get('birthdate')?.invalid">
                 }
             </div>
             <div class="grid-item">

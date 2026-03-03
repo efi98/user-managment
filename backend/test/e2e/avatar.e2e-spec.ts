@@ -1,11 +1,11 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {INestApplication} from '@nestjs/common';
-import {buildTestApp} from '../utils/build-test-app';
-import {sessionAgent} from '../utils/session-agent';
-import {loginUser, seedUser} from '../utils/seed';
-import {makeTmpDir, rmTmpDir} from '../utils/tmp-dir';
 import {ERRORS} from "@errors";
+import {sessionAgent} from "@tests/utils/session-agent";
+import {buildTestApp} from "@tests/utils/build-test-app";
+import {makeTmpDir, rmTmpDir} from "@tests/utils/tmp-dir";
+import {loginUser, seedUser} from "@tests/utils/seed";
 
 describe('E2E avatar upload and delete', () => {
     let app: INestApplication;

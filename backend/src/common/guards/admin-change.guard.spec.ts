@@ -30,6 +30,19 @@ describe('AdminChangeGuard', () => {
         ).toThrow(ForbiddenException);
     });
 
+    it('throws when non admin tries to change own isAdmin', () => {
+        const guard = new AdminChangeGuard();
+        expect(() =>
+            guard.canActivate(
+                makeCtx({
+                    session: {user: {username: 'bob', isAdmin: false}},
+                    params: {username: 'bob'},
+                    body: {isAdmin: true},
+                }),
+            ),
+        ).toThrow(ForbiddenException);
+    });
+
     it('throws when admin tries to change own isAdmin', () => {
         const guard = new AdminChangeGuard();
         expect(() =>

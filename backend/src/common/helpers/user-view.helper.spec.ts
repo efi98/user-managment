@@ -1,4 +1,5 @@
-import { ageFromBirthdate, toSafeUser, toSafeUsers } from '@src/common';
+import {ageFromBirthdate, toSafeUser, toSafeUsers} from '@src/common';
+import {CONSTS} from '@consts';
 
 describe('user-view.helper', () => {
     it('toSafeUser returns null for null input', () => {
@@ -21,8 +22,34 @@ describe('user-view.helper', () => {
         expect(s.profilePhoto).toContain('/uploads/avatars/');
     });
 
+    it('toSafeUser adds default avatar when profilePhoto is missing', () => {
+        const u: any = {
+            username: 'alice',
+            password: 'secret',
+            profilePhoto: null,
+            createdAt: 'c',
+            updatedAt: 'u',
+        };
+
+        const s = toSafeUser(u)!;
+        expect(s.profilePhoto).toBe(`/uploads/avatars/${CONSTS.DEFAULT_AVATAR_FILENAME}`);
+    });
+
+    it('toSafeUser keeps existing profilePhoto', () => {
+        const u: any = {
+            username: 'alice',
+            password: 'secret',
+            profilePhoto: '/uploads/avatars/custom.jpg',
+            createdAt: 'c',
+            updatedAt: 'u',
+        };
+
+        const s = toSafeUser(u)!;
+        expect(s.profilePhoto).toBe('/uploads/avatars/custom.jpg');
+    });
+
     it('toSafeUsers maps array', () => {
-        const out = toSafeUsers([{ username: 'a', password: 'x', createdAt: 'c', updatedAt: 'u' } as any]);
+        const out = toSafeUsers([{username: 'a', password: 'x', createdAt: 'c', updatedAt: 'u'} as any]);
         expect(out).toHaveLength(1);
         expect(out[0].username).toBe('a');
     });

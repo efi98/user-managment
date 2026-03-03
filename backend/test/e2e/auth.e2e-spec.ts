@@ -1,7 +1,7 @@
 import {INestApplication} from '@nestjs/common';
-import {buildTestApp} from '../utils/build-test-app';
-import {SessionAgent, sessionAgent} from '../utils/session-agent';
-import {loginUser, logoutUser, seedUser} from "../utils/seed";
+import {sessionAgent, SessionAgent} from "@tests/utils/session-agent";
+import {buildTestApp} from "@tests/utils/build-test-app";
+import {loginUser, logoutUser, seedUser} from "@tests/utils/seed";
 
 describe('E2E auth flow', () => {
     let app: INestApplication;
@@ -38,6 +38,10 @@ describe('E2E auth flow', () => {
     it('login fails on wrong password', async () => {
         await agent.post('/login').send({username: 'alice', password: 'nope'}).expect(401);
     });
+
+  it('login fails on non existing user', async () => {
+    await agent.post('/login').send({ username: 'does-not-exist', password: 'pass' }).expect(404);
+  });
 
     it('logout clears session', async () => {
         await logoutUser(agent);

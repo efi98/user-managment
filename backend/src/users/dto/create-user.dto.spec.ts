@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { validate } from 'class-validator';
+import { ValidationPipe, BadRequestException } from '@nestjs/common';
 import { CreateUserDto } from '@src/users';
 import { CONSTS } from '@consts';
 
@@ -44,5 +45,54 @@ describe('CreateUserDto validation', () => {
         const res = await validate(dto);
         expect(res[0].constraints).toHaveProperty('isIn');
     });
-    // todo add test case for extra property
+
+    it('extra property is rejected by ValidationPipe forbidNonWhitelisted', async () => {
+        const pipe = new ValidationPipe({
+            whitelist: true,
+            forbidNonWhitelisted: true,
+            transform: true,
+        });
+
+        const payload: any = {
+            username: 'alice',
+            password: 'pass',
+            birthdate: '2000-01-01',
+            gender: 'female',
+            extra: 'nope',
+        };
+
+        await expect(
+            pipe.transform(payload, {
+                type: 'body',
+                metatype: CreateUserDto,
+                data: '',
+            } as any),
+        ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it('extra property is stripped when forbidNonWhitelisted is false', async () => {
+        const pipe = new ValidationPipe({
+            whitelist: true,
+            forbidNonWhitelisted: false,
+            transform: true,
+        });
+
+        const payload: any = {
+            username: 'alice',
+            password: 'pass',
+            birthdate: '2000-01-01',
+            gender: 'female',
+            extra: 'nope',
+        };
+
+        const out = await pipe.transform(payload, {
+            type: 'body',
+            metatype: CreateUserDto,
+            data: '',
+        } as any);
+
+        expect((out as any).extra).toBeUndefined();
+        expect(out).toBeInstanceOf(CreateUserDto);
+        expect((out as any).username).toBe('alice');
+    });
 });

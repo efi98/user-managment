@@ -1,6 +1,6 @@
 import request from 'supertest';
 import {INestApplication} from '@nestjs/common';
-import {buildTestApp} from '../utils/build-test-app';
+import {buildTestApp} from '@tests/utils/build-test-app';
 
 describe('E2E app', () => {
     let app: INestApplication;

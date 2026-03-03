@@ -1,9 +1,7 @@
-import {Test} from '@nestjs/testing';
-import {TypeOrmModule} from '@nestjs/typeorm';
 import {NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {AuthService} from '@src/auth';
 import {User, UsersService} from '@src/users';
-import {createInMemoryTestingModule} from "../utils/build-test-app";
+import {createInMemoryTestingModule} from "@tests/utils/build-test-app";
 
 describe('AuthService integration', () => {
     let auth: AuthService;

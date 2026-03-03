@@ -25,6 +25,7 @@
       "@common/*": ["src/common/*"],
       "@types/*": ["src/types/*"],
       "@assets/*": ["assets/*"],
+      "@tests/*": ["test/*"],
       "@consts": ["src/common/consts.constants"],
       "@errors": ["src/common/errors.constants"]
     }
