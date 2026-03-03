@@ -14,11 +14,7 @@ import { User } from '@users/entities/user.entity';
 
         TypeOrmModule.forRoot({
             type: 'sqlite',
-            database:
-                process.env.DB_PATH ||
-                (process.env.NODE_ENV === 'test'
-                    ? join(__dirname, '..', 'assets', 'test.sqlite')
-                    : join(__dirname, '..', 'assets', 'userdb.sqlite')),
+            database: process.env.DB_PATH || join(__dirname, '..', 'assets', 'userdb.sqlite'),
             entities: [User],
             synchronize: true,
             logging: false,

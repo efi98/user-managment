@@ -1,14 +1,20 @@
 import {INestApplication, ValidationPipe} from '@nestjs/common';
 import {Test, TestingModule} from '@nestjs/testing';
-import {join} from 'node:path';
+import path from 'node:path';
 import {TypeOrmModule} from "@nestjs/typeorm";
+import * as os from "node:os";
+import * as fs from "node:fs";
+
+function ensureTmpDir(prefix: string) {
+    return fs.mkdtempSync(path.join(os.tmpdir(), prefix));
+}
 
 export async function buildTestApp(): Promise<INestApplication> {
-    process.env.NODE_ENV = process.env.NODE_ENV || 'test';
-    process.env.DB_PATH = process.env.DB_PATH || join(__dirname, '..', '..', 'assets', 'test.sqlite');
-    process.env.COOKIE_NAME = process.env.COOKIE_NAME || 'sid';
-    process.env.AVATARS_DIR =
-        process.env.AVATARS_DIR || join(__dirname, '..', '..', 'assets', 'test-uploads', 'avatars');
+    process.env.NODE_ENV ||= 'test';
+    process.env.DB_PATH = ':memory:';
+    process.env.COOKIE_NAME ||= 'sid';
+    process.env.AVATARS_DIR ||= ensureTmpDir('avatars-');
+
     const {AppModule} = await import('@src/app.module');
 
     const modRef = await Test.createTestingModule({

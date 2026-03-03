@@ -1,11 +1,10 @@
-import path from 'node:path';
+import { deleteAvatarIfExists } from '@common/helpers';
+import * as fs from "node:fs";
 
 jest.mock('node:fs', () => ({
   unlink: jest.fn((_, cb) => cb(null)),
 }));
 
-const fs = require('node:fs');
-import { deleteAvatarIfExists } from '@common/helpers';
 
 describe('common/helpers/deleteAvatarIfExists', () => {
   test('returns early when profilePhoto is falsy', async () => {

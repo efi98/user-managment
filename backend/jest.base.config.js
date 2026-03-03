@@ -1,7 +1,6 @@
 module.exports = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: '.',
-  testRegex: String.raw`.*\.spec\.ts$`,
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
@@ -13,7 +12,6 @@ module.exports = {
     '!src/**/*.entity.ts',
     '!src/**/*.interface.ts',
   ],
-  coverageDirectory: './coverage',
   coverageReporters: ['json', 'lcov', 'text', 'clover'],
   testEnvironment: 'node',
   moduleNameMapper: {

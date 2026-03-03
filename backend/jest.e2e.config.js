@@ -1,7 +1,9 @@
-const base = require('./jest.config');
+const base = require('./jest.base.config');
 
 module.exports = {
-  ...base, testRegex: String.raw`.*\.e2e-spec\.ts$`,
+  ...base,
+  displayName: 'e2e',
+  testRegex: String.raw`.*\.e2e-spec\.ts$`,
   coverageDirectory: './coverage-e2e',
-  maxWorkers: 1
+  maxWorkers: 1,
 };

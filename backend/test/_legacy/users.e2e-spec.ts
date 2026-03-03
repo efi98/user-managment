@@ -2,10 +2,17 @@ import { INestApplication } from '@nestjs/common';
 import { agentFor, closeApp, createTestApp, createUser, http, login, resetDb } from './test-utils';
 import { UsersModule } from '@src/users';
 import { AuthModule } from '@src/auth';
-import path from "node:path";
 import * as bcrypt from 'bcrypt';
 import {getDataSourceToken} from "@nestjs/typeorm";
 import {DataSource} from "typeorm";
+
+function birthdateFromAge(age: number): string {
+    const now = new Date();
+    const y = now.getFullYear() - age;
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+}
 
 describe('Users (e2e)', () => {
     let app: INestApplication;
@@ -75,7 +82,7 @@ describe('Users (e2e)', () => {
     });
 
     it('POST /users returns 201 and safe body when payload is valid', async () => {
-        const payload = {username: 'newuser', password: 'pass1234', displayName: 'New User', age: 25, gender: 'male'};
+        const payload = {username: 'newuser', password: 'pass1234', displayName: 'New User', birthdate: birthdateFromAge(25), gender: 'male'};
         const res = await http(app.getHttpServer())
             .post('/users')
             .send(payload);
@@ -164,9 +171,6 @@ describe('Users (e2e)', () => {
 
     it('GET /users/stats returns correct statistics', async () => {
 
-        // Use fresh agents after DB changes to avoid stale cookie/session issues
-        const agent = agentFor(app.getHttpServer());
-
         const dataSource = app.get<DataSource>(getDataSourceToken());
         const userRepo = dataSource.getRepository('User');
 
@@ -183,7 +187,7 @@ describe('Users (e2e)', () => {
                 createdAt: twoDaysAgo,
                 updatedAt: twoDaysAgo,
                 gender: '',
-                age: 10,
+                birthdate: birthdateFromAge(10),
                 isAdmin: true,
                 profilePhoto: null,
             },
@@ -193,7 +197,7 @@ describe('Users (e2e)', () => {
                 createdAt: twoDaysAgo,
                 updatedAt: twoDaysAgo,
                 gender: 'MALE',
-                age: 20,
+                birthdate: birthdateFromAge(20),
                 isAdmin: false,
                 profilePhoto: null,
             },
@@ -203,7 +207,7 @@ describe('Users (e2e)', () => {
                 createdAt: eightDaysAgo,
                 updatedAt: eightDaysAgo,
                 gender: null,
-                age: 30,
+                birthdate: birthdateFromAge(30),
                 isAdmin: false,
                 profilePhoto: null,
             },
@@ -213,7 +217,7 @@ describe('Users (e2e)', () => {
                 createdAt: twoDaysAgo,
                 updatedAt: twoDaysAgo,
                 gender: 'female',
-                age: 'nope',
+                birthdate: 'nope',
                 isAdmin: false,
                 profilePhoto: null,
             },
@@ -251,8 +255,8 @@ describe('Users (e2e)', () => {
         const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000).toISOString();
         await userRepo.clear();
         await userRepo.save([
-            {username: 'e1', password: bcrypt.hashSync('pass1234', 10), createdAt: oneDayAgo, updatedAt: oneDayAgo, gender: 'male', age: 10, isAdmin: false, profilePhoto: null},
-            {username: 'e2', password: bcrypt.hashSync('pass1234', 10), createdAt: oneDayAgo, updatedAt: oneDayAgo, gender: 'female', age: 21, isAdmin: false, profilePhoto: null},
+            {username: 'e1', password: bcrypt.hashSync('pass1234', 10), createdAt: oneDayAgo, updatedAt: oneDayAgo, gender: 'male', birthdate: birthdateFromAge(10), isAdmin: false, profilePhoto: null},
+            {username: 'e2', password: bcrypt.hashSync('pass1234', 10), createdAt: oneDayAgo, updatedAt: oneDayAgo, gender: 'female', birthdate: birthdateFromAge(21), isAdmin: false, profilePhoto: null},
         ]);
 
         // Log in as one of the seeded users to get an authenticated agent

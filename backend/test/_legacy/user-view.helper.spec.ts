@@ -7,7 +7,7 @@ describe('UserView Helper', () => {
                 username: 'testuser',
                 password: 'secret123',
                 displayName: 'Test User',
-                age: 25,
+                birthdate: '1998-01-01',
             };
 
             const safeUser = toSafeUser(user);
