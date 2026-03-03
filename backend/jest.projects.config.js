@@ -4,4 +4,5 @@ module.exports = {
     '<rootDir>/jest.integration.config.js',
     '<rootDir>/jest.e2e.config.js',
   ],
+  coverageDirectory: './coverage-projects',
 };
