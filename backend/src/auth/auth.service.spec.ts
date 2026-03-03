@@ -1,11 +1,17 @@
 import {Test} from '@nestjs/testing';
 import {getRepositoryToken} from '@nestjs/typeorm';
 import {NotFoundException, UnauthorizedException} from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
 import {Repository} from 'typeorm';
 import {AuthService} from './auth.service';
 import {User} from '@users/entities';
 import {ERRORS} from '@errors';
+
+jest.mock('bcrypt', () => ({
+  compareSync: jest.fn(),
+  hashSync: jest.fn(),
+}));
+
+import * as bcrypt from 'bcrypt';
 
 describe('AuthService', () => {
     let service: AuthService;
@@ -23,12 +29,9 @@ describe('AuthService', () => {
             ],
         }).compile();
 
-        service = mod.get(AuthService);
-    });
-
-    afterEach(() => {
-        jest.restoreAllMocks();
-    });
+    service = mod.get(AuthService);
+    jest.clearAllMocks();
+  });
 
     it('login returns safe user on valid credentials', async () => {
         const user = {
@@ -43,8 +46,8 @@ describe('AuthService', () => {
             profilePhoto: null,
         } as User;
 
-        repo.findOne!.mockResolvedValue(user);
-        jest.spyOn(bcrypt, 'compareSync').mockReturnValue(true);
+    repo.findOne!.mockResolvedValue(user);
+    (bcrypt.compareSync as unknown as jest.Mock).mockReturnValue(true);
 
         const res = await service.login({username: 'alice', password: 'pass'});
 
@@ -70,9 +73,9 @@ describe('AuthService', () => {
         );
     });
 
-    it('login throws UnauthorizedException on wrong password', async () => {
-        repo.findOne!.mockResolvedValue({username: 'alice', password: 'hashed'} as any);
-        jest.spyOn(bcrypt, 'compareSync').mockReturnValue(false);
+  it('login throws UnauthorizedException on wrong password', async () => {
+    repo.findOne!.mockResolvedValue({ username: 'alice', password: 'hashed' } as any);
+    (bcrypt.compareSync as unknown as jest.Mock).mockReturnValue(false);
 
         await expect(
             service.login({username: 'alice', password: 'wrong'}),

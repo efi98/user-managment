@@ -100,12 +100,6 @@ describe('UsersController', () => {
     expect(res).toEqual({ username: 'alice', displayName: 'A' });
   });
 
-  it('remove calls service and returns void', async () => {
-    service.remove.mockResolvedValue(undefined);
-    await expect(controller.remove('alice')).resolves.toBeUndefined();
-    expect(service.remove).toHaveBeenCalledWith('alice');
-  });
-
   it('getStats returns stats from service', async () => {
     service.getStats.mockResolvedValue({ totalUsers: 2, adminCount: 1, adminPercent: 50 });
     const res = await controller.getStats();

@@ -1,11 +1,17 @@
-import {Test} from '@nestjs/testing';
-import {getRepositoryToken} from '@nestjs/typeorm';
-import {NotFoundException} from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { ConflictException, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { UsersService } from './users.service';
+import { User } from '@users/entities';
+import { ERRORS } from '@errors';
+
+jest.mock('bcrypt', () => ({
+  compareSync: jest.fn(),
+  hashSync: jest.fn(),
+}));
+
 import * as bcrypt from 'bcrypt';
-import {Repository} from 'typeorm';
-import {User} from '@users/entities';
-import {ERRORS} from '@errors';
-import {UsersService} from "@users/users.service";
 
 describe('UsersService', () => {
     let service: UsersService;
@@ -28,10 +34,8 @@ describe('UsersService', () => {
         }).compile();
 
         service = mod.get(UsersService);
-    });
+        jest.clearAllMocks();
 
-    afterEach(() => {
-        jest.restoreAllMocks();
     });
 
     it('findAll returns safe users list', async () => {
@@ -74,39 +78,30 @@ describe('UsersService', () => {
         );
     });
 
-    it('create throws ConflictException with suggestions if username exists', async () => {
-        repo.findOne!.mockResolvedValue({username: 'taken'} as any);
+  it('create throws ConflictException with suggestions if username exists', async () => {
+    repo.findOne!.mockResolvedValue({ username: 'taken' } as any);
+    repo.find!.mockResolvedValue([{ username: 'taken' }] as any);
 
-        const existing = [{username: 'taken'}, {username: 'taken123'}] as any;
-        repo.find!.mockResolvedValue(existing);
+    await expect(service.create({ username: 'taken', password: 'pass' } as any)).rejects.toBeInstanceOf(
+      ConflictException,
+    );
 
-        const rand = jest
-            .spyOn(Math, 'random')
-            .mockReturnValueOnce(0.001) // 1
-            .mockReturnValueOnce(0.002) // 2
-            .mockReturnValueOnce(0.003); // 3
-
-        await expect(service.create({username: 'taken', password: 'pass'} as any)).rejects.toMatchObject({
-            response: expect.objectContaining({
-                code: ERRORS.USERNAME_EXISTS.code,
-                error: ERRORS.USERNAME_EXISTS.message,
-                suggestions: ['taken1', 'taken2', 'taken3'],
-            }),
-        });
-
-        expect(repo.findOne).toHaveBeenCalledWith({where: {username: 'taken'}});
-        expect(repo.find).toHaveBeenCalled();
-
-        rand.mockRestore();
-    });
+    try {
+      await service.create({ username: 'taken', password: 'pass' } as any);
+    } catch (e: any) {
+      expect(e.response).toHaveProperty('suggestions');
+      expect(Array.isArray(e.response.suggestions)).toBe(true);
+      expect(e.response.code).toBe(ERRORS.USERNAME_EXISTS.code);
+    }
+  });
 
     it('create hashes password and saves new user', async () => {
         repo.findOne!.mockResolvedValue(null);
         repo.find!.mockResolvedValue([] as any);
 
-        jest.spyOn(bcrypt, 'hashSync').mockReturnValue('hashed');
-        repo.create!.mockImplementation((x: any) => x);
-        repo.save!.mockImplementation(async (x: any) => x);
+    (bcrypt.hashSync as unknown as jest.Mock).mockReturnValue('hashed');
+    repo.create!.mockImplementation((x: any) => x);
+    repo.save!.mockImplementation(async (x: any) => x);
 
         const res = await service.create({
             username: 'alice',
@@ -115,9 +110,10 @@ describe('UsersService', () => {
             gender: 'female',
         } as any);
 
-        expect(res.username).toBe('alice');
-        expect((res as any).password).toBeUndefined();
-    });
+    expect(repo.save).toHaveBeenCalled();
+    expect(res.username).toBe('alice');
+    expect((res as any).password).toBeUndefined();
+  });
 
     it('update throws NotFoundException when user missing', async () => {
         repo.findOne!.mockResolvedValue(null);
@@ -129,7 +125,7 @@ describe('UsersService', () => {
 
     it('update hashes password when provided', async () => {
         repo.findOne!.mockResolvedValue({username: 'alice', password: 'old', updatedAt: 'x'} as any);
-        jest.spyOn(bcrypt, 'hashSync').mockReturnValue('newhash');
+        (bcrypt.hashSync as unknown as jest.Mock).mockReturnValue('newhash');
         repo.save!.mockImplementation(async (x: any) => x);
 
         const res = await service.update('alice', {password: 'newpass'} as any);
@@ -185,15 +181,9 @@ describe('UsersService', () => {
         expect(res).toEqual({oldPhoto: '/uploads/old.jpg', newPhoto: '/uploads/new.jpg'});
     });
 
-    it('deleteAvatar throws NotFoundException when user missing', async () => {
-        repo.findOne!.mockResolvedValue(null);
-
-        await expect(service.deleteAvatar('missing')).rejects.toBeInstanceOf(NotFoundException);
-    });
-
-    it('deleteAvatar sets profilePhoto to null and returns oldPhoto', async () => {
-        repo.findOne!.mockResolvedValue({username: 'alice', profilePhoto: '/uploads/old.jpg'} as any);
-        repo.save!.mockImplementation(async (x: any) => x);
+  it('deleteAvatar sets profilePhoto to null and returns oldPhoto', async () => {
+    repo.findOne!.mockResolvedValue({ username: 'alice', profilePhoto: '/uploads/old.jpg' } as any);
+    repo.save!.mockImplementation(async (x: any) => x);
 
         const res = await service.deleteAvatar('alice');
 

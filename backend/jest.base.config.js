@@ -22,6 +22,7 @@ module.exports = {
     '^@common/(.*)$': '<rootDir>/src/common/$1',
     '^@types/(.*)$': '<rootDir>/src/types/$1',
     '^@assets/(.*)$': '<rootDir>/assets/$1',
+    '^@tests/(.*)$': '<rootDir>/test/$1',
     '^@consts$': '<rootDir>/src/common/consts.constants.ts',
     '^@errors$': '<rootDir>/src/common/errors.constants.ts',
   },
