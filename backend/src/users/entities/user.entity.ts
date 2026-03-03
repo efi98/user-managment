@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import {Entity, Column, PrimaryColumn, UpdateDateColumn, CreateDateColumn} from 'typeorm';
 
 @Entity('users')
 export class User {
@@ -23,10 +23,10 @@ export class User {
   @Column({ default: false })
   isAdmin: boolean;
 
-  @Column()
+  @CreateDateColumn({ type: 'datetime' })
   createdAt: string;
 
-  @Column()
+  @UpdateDateColumn({ type: 'datetime' })
   updatedAt: string;
 
   constructor(partial?: Partial<User>) {

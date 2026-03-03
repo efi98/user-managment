@@ -19,9 +19,13 @@ export async function seedUser(
 }
 
 export async function loginUser(agent: Agent, creds: { username: string; password: string }): Promise<void> {
-    await agent.post('/login').send(creds).expect(200);
+    const res = await agent.post('/login').send(creds).expect(200);
+    const setCookie = res.headers['set-cookie'];
+    expect(setCookie).toBeDefined();
+    expect(Array.isArray(setCookie)).toBe(true);
+    expect(String(setCookie?.[0] || '')).toMatch(/=/);
 }
 
 export async function logoutUser(agent: Agent): Promise<void> {
-    await agent.post('/logout').expect(204);
+    await agent.post('/logout').expect(204).then(() => undefined);
 }
