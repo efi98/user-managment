@@ -24,7 +24,7 @@
             <div class="grid-item">
                 <label for="birthdate">Birthdate</label>
                 @if (mode === Mode.View) {
-                    <input id="birthdate-view" [value]="(user()?.birthdate ? (computeAgeFromBirthdate(user()?.birthdate) + ' yrs') : 'EMPTY')" readonly
+                    <input id="birthdate-view" type="date" [value]="(user()?.birthdate ? user()?.birthdate : 'EMPTY')" readonly
                            [class.empty-field]="!user()?.birthdate">
                 } @else {
                     <input id="birthdate-edit" type="date" formControlName="birthdate"

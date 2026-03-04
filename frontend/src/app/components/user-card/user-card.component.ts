@@ -108,18 +108,6 @@ export class UserCardComponent {
         return false;
     }
 
-    // make public so template can call it
-    public computeAgeFromBirthdate = (birthdate?: string | Date | null): number | null => {
-        if (!birthdate) return null;
-        const b = typeof birthdate === 'string' ? new Date(birthdate) : birthdate;
-        if (Number.isNaN(b.getTime())) return null;
-        const today = new Date();
-        let age = today.getFullYear() - b.getFullYear();
-        const m = today.getMonth() - b.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < b.getDate())) age--;
-        return Math.max(age, 0);
-    }
-
     isEditRole(mode: Mode) {
         return (mode === Mode.Edit && (!!this.selectedUser() && !this.authStore.isSelectedIsCurrent()))
     }
