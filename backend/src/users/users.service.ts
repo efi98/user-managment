@@ -6,7 +6,7 @@ import {User} from '@users/entities';
 import {CreateUserDto, UpdateUserDto} from '@users/dto';
 import {SafeUser, UserStats} from '@users/interfaces';
 import {ageFromBirthdate, toSafeUser, toSafeUsers} from '@common/helpers';
-import {ERRORS} from '@errors';
+import {API_RESPONSES} from '@api-res';
 
 const SALT_ROUNDS = 10;
 
@@ -26,7 +26,7 @@ export class UsersService {
     async findOne(username: string) {
         const user = await this.usersRepository.findOne({where: {username}});
         if (!user) {
-            const {code, message} = ERRORS.USER_NOT_FOUND;
+            const {code, message} = API_RESPONSES.USER_NOT_FOUND;
             throw new NotFoundException({code, message});
         }
         return toSafeUser(user);
@@ -50,7 +50,7 @@ export class UsersService {
                     suggestions.push(suggestion);
                 }
             }
-            const {code, message: error} = ERRORS.USERNAME_EXISTS;
+            const {code, message: error} = API_RESPONSES.USERNAME_EXISTS;
             throw new ConflictException({error, code, suggestions});
         }
 
@@ -71,7 +71,7 @@ export class UsersService {
     async update(username: string, updateUserDto: UpdateUserDto) {
         const user = await this.usersRepository.findOne({where: {username}});
         if (!user) {
-            const {code, message} = ERRORS.USER_NOT_FOUND;
+            const {code, message} = API_RESPONSES.USER_NOT_FOUND;
             throw new NotFoundException({code, message});
         }
 
@@ -93,7 +93,7 @@ export class UsersService {
     async remove(username: string) {
         const user = await this.usersRepository.findOne({where: {username}});
         if (!user) {
-            const {code, message} = ERRORS.USER_NOT_FOUND;
+            const {code, message} = API_RESPONSES.USER_NOT_FOUND;
             throw new NotFoundException({code, message});
         }
         await this.usersRepository.remove(user);
@@ -158,7 +158,7 @@ export class UsersService {
     async updateAvatar(username: string, profilePhoto: string) {
         const user = await this.usersRepository.findOne({where: {username}});
         if (!user) {
-            const {code, message} = ERRORS.USER_NOT_FOUND;
+            const {code, message} = API_RESPONSES.USER_NOT_FOUND;
             throw new NotFoundException({code, message});
         }
 
@@ -172,7 +172,7 @@ export class UsersService {
     async deleteAvatar(username: string) {
         const user = await this.usersRepository.findOne({where: {username}});
         if (!user) {
-            const {code, message} = ERRORS.USER_NOT_FOUND;
+            const {code, message} = API_RESPONSES.USER_NOT_FOUND;
             throw new NotFoundException({code, message});
         }
 

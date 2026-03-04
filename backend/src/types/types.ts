@@ -1,0 +1,1 @@
+export type ApiRes = { message: string, code: any, status: number }

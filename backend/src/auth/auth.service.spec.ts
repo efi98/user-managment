@@ -4,7 +4,7 @@ import {NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {Repository} from 'typeorm';
 import {AuthService} from './auth.service';
 import {User} from '@users/entities';
-import {ERRORS} from '@errors';
+import {API_RESPONSES} from '@api-res';
 
 jest.mock('bcrypt', () => ({
   compareSync: jest.fn(),
@@ -67,8 +67,8 @@ describe('AuthService', () => {
             service.login({username: 'missing', password: 'pass'}),
         ).rejects.toMatchObject(
             new NotFoundException({
-                code: ERRORS.USER_NOT_FOUND.code,
-                message: ERRORS.USER_NOT_FOUND.message,
+                code: API_RESPONSES.USER_NOT_FOUND.code,
+                message: API_RESPONSES.USER_NOT_FOUND.message,
             }),
         );
     });
@@ -81,8 +81,8 @@ describe('AuthService', () => {
             service.login({username: 'alice', password: 'wrong'}),
         ).rejects.toMatchObject(
             new UnauthorizedException({
-                code: ERRORS.INCORRECT_PASSWORD.code,
-                message: ERRORS.INCORRECT_PASSWORD.message,
+                code: API_RESPONSES.INCORRECT_PASSWORD.code,
+                message: API_RESPONSES.INCORRECT_PASSWORD.message,
             }),
         );
     });

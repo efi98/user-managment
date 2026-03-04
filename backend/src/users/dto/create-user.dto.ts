@@ -1,7 +1,7 @@
 import {IsIn, IsNotEmpty, IsOptional, IsString, Matches, MinLength,} from 'class-validator';
-import {GENDER} from '@consts';
-import {ERRORS} from "@errors";
 import {IsNotFutureDate, MaxAge, MinAge} from '@common/validators';
+import {API_RESPONSES} from "@api-res";
+import {GENDER} from "@enums";
 
 export class CreateUserDto {
     @IsString()
@@ -10,7 +10,7 @@ export class CreateUserDto {
 
     @IsString()
     @IsNotEmpty()
-    @MinLength(4, {message: ERRORS.PASSWORD_MIN_LENGTH.message})
+    @MinLength(4, {message: API_RESPONSES.PASSWORD_MIN_LENGTH.message})
     password: string;
 
     @IsOptional()
@@ -27,7 +27,7 @@ export class CreateUserDto {
     @IsOptional()
     @IsString()
     @IsIn([GENDER.male, GENDER.female, GENDER.other], {
-        message: ERRORS.GENDER_INVALID.message
+        message: API_RESPONSES.GENDER_INVALID.message
     })
     gender?: string;
 }

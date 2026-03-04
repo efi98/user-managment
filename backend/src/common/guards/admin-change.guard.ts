@@ -5,7 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { ERRORS } from '@errors';
+import { API_RESPONSES } from '@api-res';
 
 @Injectable()
 export class AdminChangeGuard implements CanActivate {
@@ -22,7 +22,7 @@ export class AdminChangeGuard implements CanActivate {
 
     // Only admins can change isAdmin
     if (!sessionUser.isAdmin) {
-      throw new ForbiddenException(ERRORS.PERMISSION_DENIED.message);
+      throw new ForbiddenException(API_RESPONSES.PERMISSION_DENIED.message);
     }
 
     // Admins cannot change their own isAdmin status

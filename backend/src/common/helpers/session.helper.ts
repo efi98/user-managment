@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ERRORS } from '@errors';
+import { API_RESPONSES } from '@api-res';
 
 /**
  * Destroys the session and clears the auth cookie, sending the
@@ -8,7 +8,7 @@ import { ERRORS } from '@errors';
 export function destroySessionAndClearCookie(req: Request, res: Response): void {
   req.session.destroy((err) => {
     if (err) {
-      const errConst = ERRORS.FAILED_LOGOUT;
+      const errConst = API_RESPONSES.FAILED_LOGOUT;
       res
         .status(errConst.status)
         .json({ error: errConst.message, code: errConst.code });

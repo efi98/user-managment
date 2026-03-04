@@ -1,11 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
-import { CONSTS } from '@consts';
+import {WELCOME_MESSAGE} from '@consts';
 
 @Controller()
 export class AppController {
   @Get()
   getRoot() {
-    return CONSTS.WELCOME_MESSAGE;
+    return WELCOME_MESSAGE;
   }
 
   @Get('health')

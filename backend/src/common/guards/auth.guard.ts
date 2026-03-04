@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { ERRORS } from '@errors';
+import { API_RESPONSES } from '@api-res';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -13,7 +13,7 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
 
     if (!request.session?.user) {
-      throw new UnauthorizedException(ERRORS.UNAUTHENTICATED.message);
+      throw new UnauthorizedException(API_RESPONSES.UNAUTHENTICATED.message);
     }
 
     return true;

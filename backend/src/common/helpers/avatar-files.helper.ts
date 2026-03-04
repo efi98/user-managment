@@ -1,27 +1,27 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs';
-import { promisify } from 'node:util';
-import { CONSTS } from '@consts';
+import {promisify} from 'node:util';
+import {DEFAULT_AVATAR_FILENAME} from '@consts';
 
 const unlink = promisify(fs.unlink);
 
 export async function deleteAvatarIfExists(
-  profilePhoto: string,
-  avatarsDir: string,
+    profilePhoto: string,
+    avatarsDir: string,
 ): Promise<void> {
-  if (!profilePhoto) return;
+    if (!profilePhoto) return;
 
-  const filename = path.basename(profilePhoto);
+    const filename = path.basename(profilePhoto);
 
-  if (filename === CONSTS.DEFAULT_AVATAR_FILENAME) return;
+    if (filename === DEFAULT_AVATAR_FILENAME) return;
 
-  const filePath = path.join(avatarsDir, filename);
+    const filePath = path.join(avatarsDir, filename);
 
-  try {
-    await unlink(filePath);
-  } catch (err: any) {
-    if (err.code !== 'ENOENT') {
-      throw err;
+    try {
+        await unlink(filePath);
+    } catch (err: any) {
+        if (err.code !== 'ENOENT') {
+            throw err;
+        }
     }
-  }
 }

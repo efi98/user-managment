@@ -1,7 +1,7 @@
 import {SafeUser} from '@src/users';
-import {CONSTS} from "@consts";
+import {DEFAULT_AVATAR_FILENAME} from "@consts";
 
-const DEFAULT_AVATAR = `/uploads/avatars/${CONSTS.DEFAULT_AVATAR_FILENAME}`;
+const DEFAULT_AVATAR = `/uploads/avatars/${DEFAULT_AVATAR_FILENAME}`;
 
 export function toSafeUser(user: any): SafeUser | null {
     if (!user) return null;

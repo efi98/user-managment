@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from '@users/entities/user.entity';
 import { LoginDto } from '@auth/dto';
 import { SafeUser } from '@users/interfaces/safe-user.interface';
-import { ERRORS } from '@errors';
+import { API_RESPONSES } from '@api-res';
 import {toSafeUser} from "@src/common";
 
 @Injectable()
@@ -24,13 +24,13 @@ export class AuthService {
         });
 
         if (!user) {
-            const {code, message} = ERRORS.USER_NOT_FOUND;
+            const {code, message} = API_RESPONSES.USER_NOT_FOUND;
             throw new NotFoundException({code, message});
         }
 
         const isMatch = bcrypt.compareSync(password, user.password);
         if (!isMatch) {
-            const {code, message} = ERRORS.INCORRECT_PASSWORD;
+            const {code, message} = API_RESPONSES.INCORRECT_PASSWORD;
             throw new UnauthorizedException({code, message});
         }
 

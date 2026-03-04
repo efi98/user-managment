@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { ERRORS } from '@errors';
+import { API_RESPONSES } from '@api-res';
 import {AuthController} from "@auth/auth.controller";
 import {AuthService} from "@auth/auth.service";
 
@@ -64,10 +64,10 @@ describe('AuthController', () => {
 
         controller.logout(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(ERRORS.FAILED_LOGOUT.status);
+        expect(res.status).toHaveBeenCalledWith(API_RESPONSES.FAILED_LOGOUT.status);
         expect(res.json).toHaveBeenCalledWith({
-            error: ERRORS.FAILED_LOGOUT.message,
-            code: ERRORS.FAILED_LOGOUT.code,
+            error: API_RESPONSES.FAILED_LOGOUT.message,
+            code: API_RESPONSES.FAILED_LOGOUT.code,
         });
     });
 

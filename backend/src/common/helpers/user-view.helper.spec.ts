@@ -1,5 +1,5 @@
 import {ageFromBirthdate, toSafeUser, toSafeUsers} from '@src/common';
-import {CONSTS} from '@consts';
+import {DEFAULT_AVATAR_FILENAME} from '@consts';
 
 describe('user-view.helper', () => {
     it('toSafeUser returns null for null input', () => {
@@ -32,7 +32,7 @@ describe('user-view.helper', () => {
         };
 
         const s = toSafeUser(u)!;
-        expect(s.profilePhoto).toBe(`/uploads/avatars/${CONSTS.DEFAULT_AVATAR_FILENAME}`);
+        expect(s.profilePhoto).toBe(`/uploads/avatars/${DEFAULT_AVATAR_FILENAME}`);
     });
 
     it('toSafeUser keeps existing profilePhoto', () => {

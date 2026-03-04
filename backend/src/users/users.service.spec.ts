@@ -4,7 +4,7 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { UsersService } from './users.service';
 import { User } from '@users/entities';
-import { ERRORS } from '@errors';
+import { API_RESPONSES } from '@api-res';
 
 jest.mock('bcrypt', () => ({
   compareSync: jest.fn(),
@@ -72,8 +72,8 @@ describe('UsersService', () => {
 
         await expect(service.findOne('missing')).rejects.toMatchObject(
             new NotFoundException({
-                code: ERRORS.USER_NOT_FOUND.code,
-                message: ERRORS.USER_NOT_FOUND.message,
+                code: API_RESPONSES.USER_NOT_FOUND.code,
+                message: API_RESPONSES.USER_NOT_FOUND.message,
             }),
         );
     });
@@ -91,7 +91,7 @@ describe('UsersService', () => {
     } catch (e: any) {
       expect(e.response).toHaveProperty('suggestions');
       expect(Array.isArray(e.response.suggestions)).toBe(true);
-      expect(e.response.code).toBe(ERRORS.USERNAME_EXISTS.code);
+      expect(e.response.code).toBe(API_RESPONSES.USERNAME_EXISTS.code);
     }
   });
 

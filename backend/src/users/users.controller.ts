@@ -28,8 +28,8 @@ import {CreateUserDto, UpdateUserDto} from '@users/dto';
 import {UserStats} from '@users/interfaces';
 import {AdminChangeGuard, AuthGuard, SelfOrAdminGuard} from '@common/guards';
 import {deleteAvatarIfExists, destroySessionAndClearCookie} from '@common/helpers';
-import {ERRORS} from '@errors';
-import {CONSTS} from "@consts";
+import {API_RESPONSES} from '@api-res';
+import {DEFAULT_AVATAR_FILENAME} from "@consts";
 
 const avatarsDir = process.env.AVATARS_DIR
     ? path.resolve(process.env.AVATARS_DIR)
@@ -50,7 +50,7 @@ const multerOptions = {
     fileFilter: (req: any, file: any, cb: any) => {
         if (file.mimetype?.startsWith('image/')) return cb(null, true)
 
-        req.fileValidationError = ERRORS.AVATAR_INVALID_FORMAT.message
+        req.fileValidationError = API_RESPONSES.AVATAR_INVALID_FORMAT.message
         return cb(null, false)
     },
     limits: {fileSize: 2 * 1024 * 1024},
@@ -152,7 +152,7 @@ export class UsersController {
         }
 
         if (!file) {
-            throw new BadRequestException({error: ERRORS.NO_FILE_UPLOADED.message});
+            throw new BadRequestException({error: API_RESPONSES.NO_FILE_UPLOADED.message});
         }
 
   const user = await this.usersService.findOne(username);
@@ -168,7 +168,7 @@ export class UsersController {
   }
 
   return {
-    message: ERRORS.AVATAR_UPLOADED.message,
+    message: API_RESPONSES.AVATAR_UPLOADED.message,
     profilePhoto: publicPath,
   };
 }
@@ -187,9 +187,9 @@ async deleteAvatar(
   }
 
   if (req.session?.user?.username === username) {
-    req.session.user.profilePhoto = `/uploads/avatars/${CONSTS.DEFAULT_AVATAR_FILENAME}`;
+    req.session.user.profilePhoto = `/uploads/avatars/${DEFAULT_AVATAR_FILENAME}`;
   }
 
-  return { message: ERRORS.AVATAR_DELETED.message };
+  return { message: API_RESPONSES.AVATAR_DELETED.message };
 }
 }

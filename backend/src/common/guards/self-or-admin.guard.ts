@@ -5,7 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { ERRORS } from '@errors';
+import { API_RESPONSES } from '@api-res';
 
 @Injectable()
 export class SelfOrAdminGuard implements CanActivate {
@@ -15,11 +15,11 @@ export class SelfOrAdminGuard implements CanActivate {
     const targetUsername = request.params.username;
 
     if (!sessionUser) {
-      throw new ForbiddenException(ERRORS.PERMISSION_DENIED.message);
+      throw new ForbiddenException(API_RESPONSES.PERMISSION_DENIED.message);
     }
 
     if (sessionUser.username !== targetUsername && !sessionUser.isAdmin) {
-      throw new ForbiddenException(ERRORS.PERMISSION_DENIED.message);
+      throw new ForbiddenException(API_RESPONSES.PERMISSION_DENIED.message);
     }
 
     return true;

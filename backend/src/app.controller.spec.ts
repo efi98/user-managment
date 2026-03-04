@@ -1,6 +1,6 @@
 import {Test} from '@nestjs/testing';
 import {AppController} from './app.controller';
-import {CONSTS} from '@consts';
+import {WELCOME_MESSAGE} from '@consts';
 
 describe('AppController', () => {
     let controller: AppController;
@@ -14,7 +14,7 @@ describe('AppController', () => {
     });
 
     it('GET / returns welcome message', () => {
-        expect(controller.getRoot()).toBe(CONSTS.WELCOME_MESSAGE);
+        expect(controller.getRoot()).toBe(WELCOME_MESSAGE);
     });
 
     it('GET /health returns ok', () => {
