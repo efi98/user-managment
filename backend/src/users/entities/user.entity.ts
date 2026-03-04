@@ -28,6 +28,7 @@ export class User {
 
   @UpdateDateColumn({ type: 'datetime' })
   updatedAt: string;
+  //todo
 
   constructor(partial?: Partial<User>) {
     if (partial) {

@@ -1,18 +1,24 @@
 import {
     ArgumentsHost,
     BadRequestException,
-    Body, Catch,
+    Body,
+    Catch,
     Controller,
-    Delete, ExceptionFilter,
+    Delete,
+    ExceptionFilter,
     Get,
     HttpCode,
     Param,
     Patch,
-    Post, Req,
-    UploadedFile, UseFilters,
+    Post,
+    Req,
+    Res,
+    UploadedFile,
+    UseFilters,
     UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
+import {Request, Response} from 'express';
 import {FileInterceptor} from '@nestjs/platform-express';
 import {diskStorage, MulterError} from 'multer';
 import * as path from 'node:path';
@@ -21,8 +27,9 @@ import {UsersService} from './users.service';
 import {CreateUserDto, UpdateUserDto} from '@users/dto';
 import {UserStats} from '@users/interfaces';
 import {AdminChangeGuard, AuthGuard, SelfOrAdminGuard} from '@common/guards';
-import {deleteAvatarIfExists} from '@common/helpers';
+import {deleteAvatarIfExists, destroySessionAndClearCookie} from '@common/helpers';
 import {ERRORS} from '@errors';
+import {CONSTS} from "@consts";
 
 const avatarsDir = process.env.AVATARS_DIR
     ? path.resolve(process.env.AVATARS_DIR)
@@ -86,27 +93,47 @@ export class UsersController {
     }
 
     @Post()
-    create(@Body() createUserDto: CreateUserDto) {
-        return this.usersService.create(createUserDto);
+    async create(
+        @Body() createUserDto: CreateUserDto,
+        @Req() req: Request,
+    ) {
+        const userSafe = await this.usersService.create(createUserDto);
+        req.session.user = userSafe;
+        return userSafe;
     }
 
     @Patch(':username')
     @UseGuards(AuthGuard, AdminChangeGuard, SelfOrAdminGuard)
-    update(
+    async update(
         @Param('username') username: string,
         @Body() updateUserDto: UpdateUserDto,
+        @Req() req: Request,
     ) {
-        return this.usersService.update(username, updateUserDto);
+        const userSafe = await this.usersService.update(username, updateUserDto);
+        if (req.session?.user?.username === username) {
+            req.session.user = userSafe;
+        }
+        return userSafe;
     }
 
     @Delete(':username')
     @UseGuards(AuthGuard, SelfOrAdminGuard)
     @HttpCode(204)
-    async remove(@Param('username') username: string) {
+    async remove(
+        @Param('username') username: string,
+        @Req() req: Request,
+        @Res() res: Response,
+    ) {
         const user = await this.usersService.findOne(username);
+
         await this.usersService.remove(username);
+
         if (user.profilePhoto) {
             await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
+        }
+
+        if (req.session?.user?.username === username) {
+            destroySessionAndClearCookie(req, res);
         }
     }
 
@@ -121,36 +148,48 @@ export class UsersController {
         @UploadedFile() file?: Express.Multer.File,
     ) {
         if (req.fileValidationError) {
-            throw new BadRequestException({ error: req.fileValidationError })
+            throw new BadRequestException({error: req.fileValidationError})
         }
 
         if (!file) {
             throw new BadRequestException({error: ERRORS.NO_FILE_UPLOADED.message});
         }
 
-        // Get the old photo and delete it
-        const user = await this.usersService.findOne(username);
-        if (user.profilePhoto) {
-            await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
-        }
+  const user = await this.usersService.findOne(username);
+  if (user.profilePhoto) {
+    await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
+  }
 
         const publicPath = `/uploads/avatars/${file.filename}`;
         await this.usersService.updateAvatar(username, publicPath);
 
-        return {
-            message: ERRORS.AVATAR_UPLOADED.message,
-            profilePhoto: publicPath,
-        };
-    }
+  if (req.session?.user?.username === username) {
+    req.session.user.profilePhoto = publicPath;
+  }
 
-    @Delete(':username/avatar')
-    @UseGuards(AuthGuard, SelfOrAdminGuard)
-    @HttpCode(200)
-    async deleteAvatar(@Param('username') username: string) {
-        const {oldPhoto} = await this.usersService.deleteAvatar(username);
-        if (oldPhoto) {
-            await deleteAvatarIfExists(oldPhoto, avatarsDir);
-        }
-        return {message: ERRORS.AVATAR_DELETED.message};
-    }
+  return {
+    message: ERRORS.AVATAR_UPLOADED.message,
+    profilePhoto: publicPath,
+  };
+}
+
+@Delete(':username/avatar')
+@UseGuards(AuthGuard, SelfOrAdminGuard)
+@HttpCode(200)
+async deleteAvatar(
+  @Param('username') username: string,
+  @Req() req: Request,
+) {
+  const { oldPhoto } = await this.usersService.deleteAvatar(username);
+
+  if (oldPhoto) {
+    await deleteAvatarIfExists(oldPhoto, avatarsDir);
+  }
+
+  if (req.session?.user?.username === username) {
+    req.session.user.profilePhoto = `/uploads/avatars/${CONSTS.DEFAULT_AVATAR_FILENAME}`;
+  }
+
+  return { message: ERRORS.AVATAR_DELETED.message };
+}
 }

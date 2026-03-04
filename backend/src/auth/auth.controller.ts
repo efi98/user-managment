@@ -12,7 +12,7 @@ import { Request, Response } from 'express';
 import { AuthService } from '@auth/auth.service';
 import { LoginDto } from '@auth/dto';
 import { AuthGuard } from '@common/guards';
-import { ERRORS } from '@errors';
+import { destroySessionAndClearCookie } from '@common/helpers/session.helper';
 
 @Controller()
 export class AuthController {
@@ -33,16 +33,7 @@ export class AuthController {
   @Post('logout')
   @HttpCode(204)
   logout(@Req() req: Request, @Res() res: Response) {
-    req.session.destroy((err) => {
-      if (err) {
-        const errConst = ERRORS.FAILED_LOGOUT;
-        return res
-          .status(errConst.status)
-          .json({ error: errConst.message, code: errConst.code });
-      }
-      res.clearCookie(process.env.COOKIE_NAME);
-      res.status(204).send();
-    });
+    destroySessionAndClearCookie(req, res);
   }
 
   @Get('me')

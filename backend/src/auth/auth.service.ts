@@ -6,6 +6,7 @@ import { User } from '@users/entities/user.entity';
 import { LoginDto } from '@auth/dto';
 import { SafeUser } from '@users/interfaces/safe-user.interface';
 import { ERRORS } from '@errors';
+import {toSafeUser} from "@src/common";
 
 @Injectable()
 export class AuthService {
@@ -33,7 +34,6 @@ export class AuthService {
             throw new UnauthorizedException({code, message});
         }
 
-        const {password: _, ...userSafe} = user;
-        return userSafe;
+        return toSafeUser(user);
     }
 }
