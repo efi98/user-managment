@@ -23,20 +23,17 @@ export class User {
   @Column({ default: false })
   isAdmin: boolean;
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn()
   createdAt: string;
 
-  @UpdateDateColumn({ type: 'datetime' })
+  @UpdateDateColumn()
   updatedAt: string;
-  //todo
 
   constructor(partial?: Partial<User>) {
     if (partial) {
       Object.assign(this, partial);
-      this.displayName = this.displayName ?? this.username;
-      this.isAdmin = this.isAdmin ?? false;
-      this.createdAt = this.createdAt ?? new Date().toISOString();
-      this.updatedAt = this.updatedAt ?? new Date().toISOString();
+      this.displayName ??= this.username;
+      this.isAdmin ??= false;
     }
   }
 }

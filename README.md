@@ -1,13 +1,11 @@
 ## todo:
-- replace age with birthdate, Client side:
-    - TYPES: string (1998-04-23)
-- unify error handling
+1: unify error handling (move messages from errors file)
 
-
-
-- AVATAR:
+2:AVATAR:
   - add a photo profile (in the frontend)
   - handle errors for an avatar in the frontend (like file size and format)
-- smart queries instead of find all and then filter
-- customization on stats
-- add logs in the backend
+
+3: Implement datepicker in the frontend
+
+4: customization on stats
+5: add logs in the backend

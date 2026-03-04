@@ -61,9 +61,7 @@ export class UsersService {
             displayName: rest.displayName ?? username,
             birthdate: rest.birthdate,
             gender: rest.gender,
-            isAdmin: false,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+            isAdmin: false
         });
 
         const savedUser = await this.usersRepository.save(newUser);
@@ -86,10 +84,7 @@ export class UsersService {
         }
 
         // Update fields
-        Object.assign(user, {
-            ...updateUserDto,
-            updatedAt: new Date().toISOString(),
-        });
+        Object.assign(user, {...updateUserDto});
 
         const updatedUser = await this.usersRepository.save(user);
         return toSafeUser(updatedUser);
@@ -169,7 +164,6 @@ export class UsersService {
 
         const oldPhoto = user.profilePhoto;
         user.profilePhoto = profilePhoto;
-        user.updatedAt = new Date().toISOString();
         await this.usersRepository.save(user);
 
         return {oldPhoto, newPhoto: profilePhoto};
@@ -184,7 +178,6 @@ export class UsersService {
 
         const oldPhoto = user.profilePhoto;
         user.profilePhoto = null;
-        user.updatedAt = new Date().toISOString();
         await this.usersRepository.save(user);
 
         return {oldPhoto};
