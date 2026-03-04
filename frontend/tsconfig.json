@@ -16,7 +16,17 @@
     "module": "preserve",
     "baseUrl": "./src",
     "paths": {
-      "@environments": ["environments/environment.ts"]
+      "@environments": [
+        "environments/environment.ts"
+      ],
+      "@components/*": ["app/components/*"],
+      "@guards/*": ["app/guards/*"],
+      "@interceptors/*": ["app/interceptors/*"],
+      "@services/*": ["app/services/*"],
+      "@store/*": ["app/store/*"],
+      "@utils/*": ["app/utils/*"],
+      "@consts": ["app/consts"],
+      "@interfaces": ["app/interfaces"]
     }
   },
   "angularCompilerOptions": {
@@ -32,10 +42,7 @@
       "path": "./tsconfig.app.json"
     },
     {
-      "path": "./projects/other-app/tsconfig.app.json"
-    },
-    {
-      "path": "./projects/other-app/tsconfig.spec.json"
+      "path": "./tsconfig.spec.json"
     }
   ]
 }

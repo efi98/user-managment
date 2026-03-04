@@ -1,19 +1,19 @@
-import { Component, computed, effect, inject, Signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Mode, PasswordValidation, User } from '../../interfaces';
-import { UserService } from '../../services/user.service';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
-import { PasswordStrengthComponent } from '../password-strength/password-strength';
-import { PasswordPolicyService } from '../../services/password-policy.service';
-import { GENDERS_LIST } from '../../consts';
-import { passwordValidatorFactory } from '../../utils/validators';
-import { getRelativeTime } from '../../utils/utilities';
-import { AuthStore } from '../../store/auth.store';
-import { DialogService } from "../../services/dialog.service";
-import { filter } from "rxjs";
-import { ToastService } from '../../services/toast.service';
+import {Component, computed, effect, inject, Signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {Mode, PasswordValidation, User} from '@interfaces';
+import {GENDERS_LIST} from '@consts';
+import {UserService} from '@services/user.service';
+import {AuthService} from '@services/auth.service';
+import {Router} from '@angular/router';
+import {PasswordStrengthComponent} from '@components/password-strength/password-strength';
+import {PasswordPolicyService} from '@services/password-policy.service';
+import {passwordValidatorFactory} from '@utils/validators';
+import {getRelativeTime} from '@utils/utilities';
+import {AuthStore} from '@store/auth.store';
+import {DialogService} from "@services/dialog.service";
+import {filter} from "rxjs";
+import {ToastService} from '@services/toast.service';
 
 @Component({
     selector: 'app-user-card',
@@ -27,7 +27,7 @@ export class UserCardComponent {
         username: FormControl<string | null>;
         displayName: FormControl<string | null>;
         password: FormControl<string | null>;
-        age: FormControl<number | null>;
+        birthdate: FormControl<string | null>;
         gender: FormControl<string | null>;
         isAdmin: FormControl<boolean | null>;
     }>;
@@ -67,11 +67,7 @@ export class UserCardComponent {
                     }),
                 ],
             ],
-            age: new FormControl<number | null>(null, [
-                Validators.min(1),
-                Validators.max(120),
-                Validators.pattern(/^[0-9]+$/),
-            ]),
+            birthdate: new FormControl<string | null>(null, []),
             gender: [''],
             isAdmin: [false],
         });
@@ -79,7 +75,16 @@ export class UserCardComponent {
         effect(() => {
             const user = this.user();
             if (user) {
-                this.userForm.patchValue(user);
+                // prepare patch with only fields that exist on the form
+                const formattedBirthdate = this.formatBirthdateForInput(user.birthdate);
+                const patch: any = {
+                    username: user.username,
+                    displayName: user.displayName ?? null,
+                    birthdate: formattedBirthdate,
+                    gender: user.gender ?? null,
+                    isAdmin: user.isAdmin ?? false,
+                };
+                this.userForm.patchValue(patch);
             }
         });
     }
@@ -197,9 +202,12 @@ export class UserCardComponent {
             this.toastService.show('Changes cancelled', 'info');
         }
         this.userForm.reset({
-            ...user,
-            age: user.age ?? null,
-        });
+            username: user.username,
+            displayName: user.displayName ?? null,
+            birthdate: this.formatBirthdateForInput(user.birthdate),
+            gender: user.gender ?? null,
+            isAdmin: user.isAdmin ?? false,
+        } as any);
         this.mode = Mode.View;
     }
 
@@ -208,5 +216,13 @@ export class UserCardComponent {
             this.userForm.patchValue({isAdmin: !this.userForm.value.isAdmin});
             this.userForm.get('isAdmin')?.markAsDirty();
         }
+    }
+
+    private formatBirthdateForInput(birthdate?: string | Date | null): string | null {
+        if (!birthdate) return null;
+        const b = typeof birthdate === 'string' ? new Date(birthdate) : birthdate;
+        if (Number.isNaN(b.getTime())) return null;
+        // YYYY-MM-DD
+        return b.toISOString().substring(0, 10);
     }
 }

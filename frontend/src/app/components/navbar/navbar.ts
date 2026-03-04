@@ -1,8 +1,8 @@
 import { Component, ElementRef, HostListener, inject, Signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { User } from "../../interfaces";
-import { AuthStore } from "../../store/auth.store";
+import { AuthService } from '@services/auth.service';
+import { User } from "@interfaces";
+import { AuthStore } from "@store/auth.store";
 
 @Component({
     selector: 'app-navbar',

@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { NewUser, UpdatedUser, User } from '../interfaces';
-import { BASE_URL } from "../consts";
-import { AuthStore } from "../store/auth.store";
+import { NewUser, UpdatedUser, User } from '@interfaces';
+import { BASE_URL } from "@consts";
+import { AuthStore } from "@store/auth.store";
 import { ToastService } from "./toast.service";
 
 @Injectable({providedIn: 'root'})

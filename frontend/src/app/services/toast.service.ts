@@ -1,13 +1,13 @@
 import { Injectable, signal } from '@angular/core';
 import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { Toast, ToastSeverity } from '../interfaces';
+import { Toast, ToastSeverity } from '@interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToastService {
-  private toastSignal = signal<Toast | null>(null);
+  private readonly toastSignal = signal<Toast | null>(null);
   toast = this.toastSignal.asReadonly();
 
   show(message: string, severity: ToastSeverity) {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import zxcvbn from 'zxcvbn';
-import { PasswordValidation } from '../interfaces';
+import { PasswordValidation } from '@interfaces';
 
 @Injectable({
     providedIn: 'root',

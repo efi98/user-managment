@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { DialogService } from '../../services/dialog.service';
-import { CommonModule } from '@angular/common';
+import {Component, inject} from '@angular/core';
+import {DialogService} from '@services/dialog.service';
+import {CommonModule} from '@angular/common';
 
 @Component({
     selector: 'app-confirm-dialog',

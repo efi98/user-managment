@@ -1,9 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import type { CellClickedEvent, ColDef } from 'ag-grid-community';
 import { AgGridAngular } from "ag-grid-angular";
-import { UserService } from "../../services/user.service";
-import { AuthStore } from "../../store/auth.store";
-import { getRelativeTime } from "../../utils/utilities";
+import { UserService } from "@services/user.service";
+import { AuthStore } from "@store/auth.store";
+import {computeAgeFromBirthdate, getRelativeTime} from "@utils/utilities";
 import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
@@ -25,7 +25,13 @@ export class AdminPanelComponent implements OnInit {
             pinned: "left"
         },
         {field: "displayName", filter: true},
-        {field: "age", filter: true, minWidth: 70, maxWidth: 100,},
+        {
+            headerName: 'Age',
+            valueGetter: (params: any) => computeAgeFromBirthdate(params.data?.birthdate),
+            filter: true,
+            minWidth: 70,
+            maxWidth: 100,
+        },
         {
             field: "gender",
             filter: true,

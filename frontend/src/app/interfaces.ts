@@ -17,7 +17,7 @@ export interface User {
     username: string;
     displayName: string;
     password: string;
-    age?: number;
+    birthdate?: string | Date;
     gender?: Gender;
     isAdmin: boolean;
     createdAt: Date;
@@ -26,9 +26,9 @@ export interface User {
 
 export type NewUser =
     Pick<User, 'username' | 'password'>
-    & Partial<Pick<User, 'displayName' | 'age' | 'gender'>>;
+    & Partial<Pick<User, 'displayName' | 'birthdate' | 'gender'>>;
 
-export type UpdatedUser = Partial<Pick<User, 'displayName' | 'password' | 'age' | 'gender' | 'isAdmin'>>;
+export type UpdatedUser = Partial<Pick<User, 'displayName' | 'password' | 'birthdate' | 'gender' | 'isAdmin'>>;
 
 // Password
 export interface PasswordValidation {

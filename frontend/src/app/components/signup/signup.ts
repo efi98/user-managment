@@ -2,13 +2,13 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { Gender, NewUser, PasswordValidation } from '../../interfaces';
-import { AuthService } from '../../services/auth.service';
-import { PasswordPolicyService } from '../../services/password-policy.service';
-import { PasswordStrengthComponent } from '../password-strength/password-strength';
-import { GENDERS_LIST } from "../../consts";
-import { passwordValidatorFactory } from '../../utils/validators';
-import { ToastService } from '../../services/toast.service';
+import { Gender, NewUser, PasswordValidation } from '@interfaces';
+import { AuthService } from '@services/auth.service';
+import { PasswordPolicyService } from '@services/password-policy.service';
+import { PasswordStrengthComponent } from '@components/password-strength/password-strength';
+import { GENDERS_LIST } from "@consts";
+import { passwordValidatorFactory } from '@utils/validators';
+import { ToastService } from '@services/toast.service';
 
 @Component({
     selector: 'app-signup',
@@ -40,7 +40,7 @@ export class SignupComponent {
                     }
                 )
             ]],
-            age: [null, [Validators.min(1), Validators.max(120), Validators.pattern(/^[0-9]+$/)]],
+            birthdate: [null, []],
             gender: ['']
         });
     }
@@ -57,8 +57,8 @@ export class SignupComponent {
             password: formValue.password!,
             displayName: formValue.displayName!,
         };
-        if (formValue.age) {
-            newUser.age = parseInt(formValue.age);
+        if (formValue.birthdate) {
+            newUser.birthdate = formValue.birthdate;
         }
         if (formValue.gender) {
             newUser.gender = formValue.gender as Gender;
