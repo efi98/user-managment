@@ -1,5 +1,6 @@
 import {IsIn, IsNotEmpty, IsOptional, IsString, Matches, MinLength,} from 'class-validator';
-import {CONSTS, GENDER} from '@consts';
+import {GENDER} from '@consts';
+import {ERRORS} from "@errors";
 import {IsNotFutureDate, MaxAge, MinAge} from '@common/validators';
 
 export class CreateUserDto {
@@ -9,7 +10,7 @@ export class CreateUserDto {
 
     @IsString()
     @IsNotEmpty()
-    @MinLength(4, {message: CONSTS.PASSWORD_MIN_LENGTH_MSG})
+    @MinLength(4, {message: ERRORS.PASSWORD_MIN_LENGTH.message})
     password: string;
 
     @IsOptional()
@@ -26,7 +27,7 @@ export class CreateUserDto {
     @IsOptional()
     @IsString()
     @IsIn([GENDER.male, GENDER.female, GENDER.other], {
-        message: CONSTS.GENDER_INVALID_MSG,
+        message: ERRORS.GENDER_INVALID.message
     })
     gender?: string;
 }

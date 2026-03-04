@@ -15,6 +15,16 @@ export const ERRORS = {
         message: 'No file uploaded (field name should be "avatar")',
         status: 400 as const,
     },
+    GENDER_INVALID: {
+        code: 'GENDER_INVALID',
+        message: 'Gender must be male, female, or other',
+        status: 400 as const,
+    },
+    PASSWORD_MIN_LENGTH: {
+        code: 'PASSWORD_MIN_LENGTH',
+        message: 'Password must be 4 characters or more',
+        status: 400 as const,
+    },
     AVATAR_INVALID_FORMAT: {
         code: 'AVATAR_INVALID_FORMAT',
         message: 'Only image files are allowed',
