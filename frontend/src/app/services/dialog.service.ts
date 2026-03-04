@@ -5,11 +5,11 @@ import { Subject } from 'rxjs';
     providedIn: 'root',
 })
 export class DialogService {
-    private isVisible = signal(false);
+    private readonly isVisible = signal(false);
     isVisible$ = this.isVisible.asReadonly();
-    private message = signal('');
+    private readonly message = signal('');
     message$ = this.message.asReadonly();
-    private action = new Subject<boolean>();
+    private readonly action = new Subject<boolean>();
     action$ = this.action.asObservable();
 
     show(message: string) {

@@ -18,7 +18,15 @@
     "paths": {
       "@environments": [
         "environments/environment.ts"
-      ]
+      ],
+      "@components/*": ["app/components/*"],
+      "@guards/*": ["app/guards/*"],
+      "@interceptors/*": ["app/interceptors/*"],
+      "@services/*": ["app/services/*"],
+      "@store/*": ["app/store/*"],
+      "@utils/*": ["app/utils/*"],
+      "@consts": ["app/consts"],
+      "@interfaces": ["app/interfaces"]
     }
   },
   "angularCompilerOptions": {

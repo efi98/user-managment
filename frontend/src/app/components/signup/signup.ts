@@ -2,13 +2,13 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { Gender, NewUser, PasswordValidation } from '../../interfaces';
-import { AuthService } from '../../services/auth.service';
-import { PasswordPolicyService } from '../../services/password-policy.service';
-import { PasswordStrengthComponent } from '../password-strength/password-strength';
-import { GENDERS_LIST } from "../../consts";
-import { passwordValidatorFactory } from '../../utils/validators';
-import { ToastService } from '../../services/toast.service';
+import { Gender, NewUser, PasswordValidation } from '@interfaces';
+import { AuthService } from '@services/auth.service';
+import { PasswordPolicyService } from '@services/password-policy.service';
+import { PasswordStrengthComponent } from '@components/password-strength/password-strength';
+import { GENDERS_LIST } from "@consts";
+import { passwordValidatorFactory } from '@utils/validators';
+import { ToastService } from '@services/toast.service';
 
 @Component({
     selector: 'app-signup',

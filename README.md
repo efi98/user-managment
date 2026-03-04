@@ -1,8 +1,7 @@
 ## todo:
-- replace age with birthdate:
-  
-  - Client side:
-    - TYPES: string (1998-04-23);
+- replace age with birthdate, Client side:
+    - TYPES: string (1998-04-23)
+- unify error handling
 
 
 

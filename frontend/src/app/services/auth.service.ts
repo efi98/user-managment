@@ -1,21 +1,21 @@
 import { inject, Injectable } from '@angular/core';
 import { UserService } from './user.service';
 import { catchError, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
-import { NewUser, ToastSeverity, User } from '../interfaces';
+import { NewUser, ToastSeverity, User } from '@interfaces';
 import { Router } from '@angular/router';
-import { AuthStore } from '../store/auth.store';
+import { AuthStore } from '@store/auth.store';
 import { ToastService } from "./toast.service";
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
-    private userService = inject(UserService);
-    private router = inject(Router);
-    private authStore = inject(AuthStore);
+    private readonly userService = inject(UserService);
+    private readonly router = inject(Router);
+    private readonly authStore = inject(AuthStore);
     readonly currentUser = this.authStore.currentUser;
     readonly isLoggedIn = this.authStore.isLoggedIn;
     readonly isAdmin = this.authStore.isAdmin;
-    private toastService = inject(ToastService);
-    private sessionExpiryTimeoutId: any = null;
+    private readonly toastService = inject(ToastService);
+    private readonly sessionExpiryTimeoutId: any = null;
 
     /**
      * Checks session by calling userService.me(). Updates AuthStore and redirects to /login if not logged in.

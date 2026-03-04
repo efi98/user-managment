@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Navbar } from './components/navbar/navbar';
+import { Navbar } from '@components/navbar/navbar';
 import { CommonModule } from '@angular/common';
-import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog';
-import { ToastComponent } from './components/toast/toast.component';
+import { ConfirmDialogComponent } from '@components/confirm-dialog/confirm-dialog';
+import { ToastComponent } from '@components/toast/toast.component';
 
 @Component({
     selector: 'app-root',

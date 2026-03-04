@@ -1,4 +1,4 @@
-import { Gender } from "./interfaces";
+import { Gender } from "@interfaces";
 import { environment } from "@environments";
 
 export const BASE_URL = environment.apiBaseUrl;

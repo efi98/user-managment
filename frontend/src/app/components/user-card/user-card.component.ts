@@ -1,19 +1,19 @@
-import { Component, computed, effect, inject, Signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Mode, PasswordValidation, User } from '../../interfaces';
-import { UserService } from '../../services/user.service';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
-import { PasswordStrengthComponent } from '../password-strength/password-strength';
-import { PasswordPolicyService } from '../../services/password-policy.service';
-import { GENDERS_LIST } from '../../consts';
-import { passwordValidatorFactory } from '../../utils/validators';
-import { getRelativeTime } from '../../utils/utilities';
-import { AuthStore } from '../../store/auth.store';
-import { DialogService } from "../../services/dialog.service";
-import { filter } from "rxjs";
-import { ToastService } from '../../services/toast.service';
+import {Component, computed, effect, inject, Signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {Mode, PasswordValidation, User} from '@interfaces';
+import {GENDERS_LIST} from '@consts';
+import {UserService} from '@services/user.service';
+import {AuthService} from '@services/auth.service';
+import {Router} from '@angular/router';
+import {PasswordStrengthComponent} from '@components/password-strength/password-strength';
+import {PasswordPolicyService} from '@services/password-policy.service';
+import {passwordValidatorFactory} from '@utils/validators';
+import {getRelativeTime} from '@utils/utilities';
+import {AuthStore} from '@store/auth.store';
+import {DialogService} from "@services/dialog.service";
+import {filter} from "rxjs";
+import {ToastService} from '@services/toast.service';
 
 @Component({
     selector: 'app-user-card',
@@ -89,26 +89,6 @@ export class UserCardComponent {
         });
     }
 
-    // make public so template can call it
-    public computeAgeFromBirthdate = (birthdate?: string | Date | null): number | null => {
-        if (!birthdate) return null;
-        const b = typeof birthdate === 'string' ? new Date(birthdate) : birthdate;
-        if (Number.isNaN(b.getTime())) return null;
-        const today = new Date();
-        let age = today.getFullYear() - b.getFullYear();
-        const m = today.getMonth() - b.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < b.getDate())) age--;
-        return Math.max(age, 0);
-    }
-
-    private formatBirthdateForInput(birthdate?: string | Date | null): string | null {
-        if (!birthdate) return null;
-        const b = typeof birthdate === 'string' ? new Date(birthdate) : birthdate;
-        if (Number.isNaN(b.getTime())) return null;
-        // YYYY-MM-DD
-        return b.toISOString().substring(0, 10);
-    }
-
     get isSaveDisabled(): boolean {
         if (!this.userForm.dirty || this.userForm.invalid) {
             return true;
@@ -126,6 +106,18 @@ export class UserCardComponent {
         }
 
         return false;
+    }
+
+    // make public so template can call it
+    public computeAgeFromBirthdate = (birthdate?: string | Date | null): number | null => {
+        if (!birthdate) return null;
+        const b = typeof birthdate === 'string' ? new Date(birthdate) : birthdate;
+        if (Number.isNaN(b.getTime())) return null;
+        const today = new Date();
+        let age = today.getFullYear() - b.getFullYear();
+        const m = today.getMonth() - b.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < b.getDate())) age--;
+        return Math.max(age, 0);
     }
 
     isEditRole(mode: Mode) {
@@ -236,5 +228,13 @@ export class UserCardComponent {
             this.userForm.patchValue({isAdmin: !this.userForm.value.isAdmin});
             this.userForm.get('isAdmin')?.markAsDirty();
         }
+    }
+
+    private formatBirthdateForInput(birthdate?: string | Date | null): string | null {
+        if (!birthdate) return null;
+        const b = typeof birthdate === 'string' ? new Date(birthdate) : birthdate;
+        if (Number.isNaN(b.getTime())) return null;
+        // YYYY-MM-DD
+        return b.toISOString().substring(0, 10);
     }
 }

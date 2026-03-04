@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardComponent } from "../dashboard/dashboard.component";
+import { DashboardComponent } from "@components/dashboard/dashboard.component";
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

@@ -1,21 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import type { CellClickedEvent, ColDef } from 'ag-grid-community';
 import { AgGridAngular } from "ag-grid-angular";
-import { UserService } from "../../services/user.service";
-import { AuthStore } from "../../store/auth.store";
-import { getRelativeTime } from "../../utils/utilities";
+import { UserService } from "@services/user.service";
+import { AuthStore } from "@store/auth.store";
+import {computeAgeFromBirthdate, getRelativeTime} from "@utils/utilities";
 import { ActivatedRoute, Router } from "@angular/router";
-
-function computeAgeFromBirthdate(birthdate?: string | Date | null): string {
-    if (!birthdate) return '';
-    const b = typeof birthdate === 'string' ? new Date(birthdate) : birthdate;
-    if (Number.isNaN(b.getTime())) return '';
-    const today = new Date();
-    let age = today.getFullYear() - b.getFullYear();
-    const m = today.getMonth() - b.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < b.getDate())) age--;
-    return age >= 0 ? `${age}` : '';
-}
 
 @Component({
     selector: 'app-admin-panel',

@@ -1,6 +1,6 @@
 import { computed } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { User } from '../interfaces';
+import { User } from '@interfaces';
 
 export interface AuthState {
     users: User[];
