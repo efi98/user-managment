@@ -58,13 +58,17 @@ export class UsersService {
         }
 
         const passwordHash = bcrypt.hashSync(password, SALT_ROUNDS);
+
+        const users = await this.usersRepository.find();
+        const isAdmin = users.length === 0;
+
         const newUser = this.usersRepository.create({
             username,
             password: passwordHash,
             displayName: rest.displayName ?? username,
             birthdate: rest.birthdate,
             gender: rest.gender,
-            isAdmin: false
+            isAdmin
         });
 
         const savedUser = await this.usersRepository.save(newUser);
@@ -168,6 +172,7 @@ export class UsersService {
 
         return {oldPhoto, newPhoto: profilePhoto};
     }
+
 // todo - move findOne into helper
     async deleteAvatar(username: string) {
         const user = await this.usersRepository.findOne({where: {username}});
