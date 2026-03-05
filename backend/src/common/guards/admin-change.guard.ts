@@ -11,9 +11,9 @@ import { API_RESPONSES } from '@api-res';
 export class AdminChangeGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
-    const sessionUser = request.session?.user;
-    const targetUsername = request.params.username;
-    const body = request.body;
+    const {body, session, params} = request;
+    const sessionUser = session?.user;
+    const targetUsername = params.username;
 
     // If isAdmin is not being changed, allow
     if (body.isAdmin === undefined) {
@@ -22,12 +22,12 @@ export class AdminChangeGuard implements CanActivate {
 
     // Only admins can change isAdmin
     if (!sessionUser.isAdmin) {
-      throw new ForbiddenException(API_RESPONSES.PERMISSION_DENIED.message);
+      throw new ForbiddenException(API_RESPONSES.CANNOT_CHANGE_ISADMIN_NOT_ADMIN);
     }
 
     // Admins cannot change their own isAdmin status
     if (sessionUser.username === targetUsername) {
-      throw new ForbiddenException('Admins cannot change their own isAdmin');
+      throw new ForbiddenException(API_RESPONSES.CANNOT_CHANGE_ISADMIN_SELF);
     }
 
     return true;

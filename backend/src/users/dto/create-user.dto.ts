@@ -10,7 +10,7 @@ export class CreateUserDto {
 
     @IsString()
     @IsNotEmpty()
-    @MinLength(4, {message: API_RESPONSES.PASSWORD_MIN_LENGTH.message})
+    @MinLength(4, {message: API_RESPONSES.PASSWORD_MIN_LENGTH})
     password: string;
 
     @IsOptional()
@@ -18,7 +18,7 @@ export class CreateUserDto {
     displayName?: string;
 
     @IsOptional()
-    @Matches(/^\d{4}-\d{2}-\d{2}$/, {message: 'birthdate must be YYYY-MM-DD'})
+    @Matches(/^\d{4}-\d{2}-\d{2}$/, {message: API_RESPONSES.BIRTHDAY_FORMAT})
     @IsNotFutureDate()
     @MinAge(18)
     @MaxAge(120)
@@ -27,7 +27,7 @@ export class CreateUserDto {
     @IsOptional()
     @IsString()
     @IsIn([GENDER.male, GENDER.female, GENDER.other], {
-        message: API_RESPONSES.GENDER_INVALID.message
+        message: API_RESPONSES.GENDER_INVALID
     })
     gender?: string;
 }

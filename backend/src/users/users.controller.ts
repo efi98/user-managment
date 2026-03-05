@@ -35,7 +35,6 @@ const avatarsDir = process.env.AVATARS_DIR
     ? path.resolve(process.env.AVATARS_DIR)
     : path.join(process.cwd(), 'assets/uploads/avatars');
 
-// Ensure avatars directory exists
 fs.mkdirSync(avatarsDir, {recursive: true});
 
 const multerOptions = {
@@ -50,7 +49,7 @@ const multerOptions = {
     fileFilter: (req: any, file: any, cb: any) => {
         if (file.mimetype?.startsWith('image/')) return cb(null, true)
 
-        req.fileValidationError = API_RESPONSES.AVATAR_INVALID_FORMAT.message
+        req.fileValidationError = API_RESPONSES.UPLOAD_AVATAR_INVALID_FORMAT
         return cb(null, false)
     },
     limits: {fileSize: 2 * 1024 * 1024},
@@ -62,10 +61,7 @@ class MulterExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const res = ctx.getResponse();
 
-        return res.status(400).json({
-            error: exception.message,
-            code: exception.code,
-        });
+        return res.status(400).json({...exception, test: 'w'});
     }
 }
 
@@ -148,48 +144,48 @@ export class UsersController {
         @UploadedFile() file?: Express.Multer.File,
     ) {
         if (req.fileValidationError) {
-            throw new BadRequestException({error: req.fileValidationError})
+            throw new BadRequestException(req.fileValidationError)
         }
 
         if (!file) {
-            throw new BadRequestException({error: API_RESPONSES.NO_FILE_UPLOADED.message});
+            throw new BadRequestException(API_RESPONSES.UPLOAD_AVATAR_REQ_FILE);
         }
 
-  const user = await this.usersService.findOne(username);
-  if (user.profilePhoto) {
-    await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
-  }
+        const user = await this.usersService.findOne(username);
+        if (user.profilePhoto) {
+            await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
+        }
 
         const publicPath = `/uploads/avatars/${file.filename}`;
         await this.usersService.updateAvatar(username, publicPath);
 
-  if (req.session?.user?.username === username) {
-    req.session.user.profilePhoto = publicPath;
-  }
+        if (req.session?.user?.username === username) {
+            req.session.user.profilePhoto = publicPath;
+        }
 
-  return {
-    message: API_RESPONSES.AVATAR_UPLOADED.message,
-    profilePhoto: publicPath,
-  };
-}
+        return {
+            message: API_RESPONSES.UPLOAD_AVATAR_SUCCESS,
+            profilePhoto: publicPath,
+        };
+    }
 
-@Delete(':username/avatar')
-@UseGuards(AuthGuard, SelfOrAdminGuard)
-@HttpCode(200)
-async deleteAvatar(
-  @Param('username') username: string,
-  @Req() req: Request,
-) {
-  const { oldPhoto } = await this.usersService.deleteAvatar(username);
+    @Delete(':username/avatar')
+    @UseGuards(AuthGuard, SelfOrAdminGuard)
+    @HttpCode(200)
+    async deleteAvatar(
+        @Param('username') username: string,
+        @Req() req: Request,
+    ) {
+        const {oldPhoto} = await this.usersService.deleteAvatar(username);
 
-  if (oldPhoto) {
-    await deleteAvatarIfExists(oldPhoto, avatarsDir);
-  }
+        if (oldPhoto) {
+            await deleteAvatarIfExists(oldPhoto, avatarsDir);
+        }
 
-  if (req.session?.user?.username === username) {
-    req.session.user.profilePhoto = `/uploads/avatars/${DEFAULT_AVATAR_FILENAME}`;
-  }
+        if (req.session?.user?.username === username) {
+            req.session.user.profilePhoto = `/uploads/avatars/${DEFAULT_AVATAR_FILENAME}`;
+        }
 
-  return { message: API_RESPONSES.AVATAR_DELETED.message };
-}
+        return {message: API_RESPONSES.DELETE_AVATAR_SUCCESS};
+    }
 }

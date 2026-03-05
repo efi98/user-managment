@@ -1,67 +1,25 @@
 export const API_RESPONSES = {
-    AVATAR_UPLOADED: {
-        code: 'AVATAR_UPLOADED',
-        message: 'Profile image uploaded successfully',
-        status: 200,
-    },
-    AVATAR_DELETED: {
-        code: 'AVATAR_DELETED',
-        message: 'Avatar deleted',
-        status: 200,
-    },
-    NO_FILE_UPLOADED: {
-        code: 'NO_FILE_UPLOADED',
-        message: 'No file uploaded (field name should be "avatar")',
-        status: 400,
-    },
-    GENDER_INVALID: {
-        code: 'GENDER_INVALID',
-        message: 'Gender must be male, female, or other',
-        status: 400,
-    },
-    PASSWORD_MIN_LENGTH: {
-        code: 'PASSWORD_MIN_LENGTH',
-        message: 'Password must be 4 characters or more',
-        status: 400,
-    },
-    AVATAR_INVALID_FORMAT: {
-        code: 'AVATAR_INVALID_FORMAT',
-        message: 'Only image files are allowed',
-        status: 400,
-    },
-
-    INCORRECT_PASSWORD: {
-        code: 'INCORRECT_PASSWORD',
-        message: 'Incorrect password',
-        status: 401,
-    },
-    UNAUTHENTICATED: {
-        code: 'UNAUTHENTICATED',
-        message: 'Not logged in',
-        status: 401,
-    },
-
-    PERMISSION_DENIED: {
-        code: 'PERMISSION_DENIED',
-        message: 'Only admins can change isAdmin',
-        status: 403,
-    },
-
-    USER_NOT_FOUND: {
-        code: 'USER_NOT_FOUND',
-        message: 'User not found',
-        status: 404,
-    },
-
-    USERNAME_EXISTS: {
-        code: 'USERNAME_EXISTS',
-        message: 'Username already exists',
-        status: 409,
-    },
-
-    FAILED_LOGOUT: {
-        code: 'FAILED_LOGOUT',
-        message: 'Failed to logout',
-        status: 500,
-    }
+    // 200
+    UPLOAD_AVATAR_SUCCESS: 'Avatar uploaded successfully',
+    DELETE_AVATAR_SUCCESS: 'Avatar deleted successfully',
+    // 400
+    UPLOAD_AVATAR_REQ_FILE: 'No file uploaded',
+    UPLOAD_AVATAR_INVALID_FORMAT: 'Only image files are allowed',
+    PASSWORD_MIN_LENGTH: 'Password must be 4 characters or more',
+    GENDER_INVALID: 'Gender must be male, female, or other',
+    BIRTHDAY_FORMAT: 'birthdate must be YYYY-MM-DD',
+    BIRTHDAY_NOT_IN_FUTURE: 'birthdate cannot be in the future',
+    BIRTHDAY_MIN_AGE: (min: number) => `age must be at least ${min}`,
+    BIRTHDAY_MAX_AGE: (max: number) => `age must be at most ${max}`,
+    //401
+    UNAUTHORIZED: 'Not logged in',
+    INCORRECT_PASSWORD: 'Incorrect password',
+    //403
+    CANNOT_CHANGE_ISADMIN_NOT_ADMIN: 'Only admins can change isAdmin',
+    CANNOT_CHANGE_ISADMIN_SELF: 'Admins cannot change their own isAdmin',
+    NOT_OWNER_OR_ADMIN: 'You can only modify your own account unless you are an admin',
+    // 404
+    USER_NOT_FOUND: 'User not found',
+    // 409
+    USERNAME_EXISTS: 'Username already exists',
 };

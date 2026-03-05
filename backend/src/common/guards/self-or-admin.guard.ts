@@ -11,15 +11,12 @@ import { API_RESPONSES } from '@api-res';
 export class SelfOrAdminGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
-    const sessionUser = request.session?.user;
-    const targetUsername = request.params.username;
-
-    if (!sessionUser) {
-      throw new ForbiddenException(API_RESPONSES.PERMISSION_DENIED.message);
-    }
+    const {session, params} = request;
+    const sessionUser = session?.user;
+    const targetUsername = params.username;
 
     if (sessionUser.username !== targetUsername && !sessionUser.isAdmin) {
-      throw new ForbiddenException(API_RESPONSES.PERMISSION_DENIED.message);
+      throw new ForbiddenException(API_RESPONSES.NOT_OWNER_OR_ADMIN);
     }
 
     return true;

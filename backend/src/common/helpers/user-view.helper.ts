@@ -1,7 +1,5 @@
 import {SafeUser} from '@src/users';
-import {DEFAULT_AVATAR_FILENAME} from "@consts";
-
-const DEFAULT_AVATAR = `/uploads/avatars/${DEFAULT_AVATAR_FILENAME}`;
+import {DEFAULT_AVATAR} from "@consts";
 
 export function toSafeUser(user: any): SafeUser | null {
     if (!user) return null;
@@ -24,7 +22,7 @@ export function toSafeUsers(users: any[]): SafeUser[] {
     return users.map((u) => toSafeUser(u));
 }
 
-export function ageFromBirthdate( birthdate: string | Date | null, now = new Date()): number | null {
+export function ageFromBirthdate(birthdate: string | Date | null, now = new Date()): number | null {
     if (!birthdate) return null;
 
     let by: number;

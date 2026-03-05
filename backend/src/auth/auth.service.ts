@@ -24,14 +24,12 @@ export class AuthService {
         });
 
         if (!user) {
-            const {code, message} = API_RESPONSES.USER_NOT_FOUND;
-            throw new NotFoundException({code, message});
+            throw new NotFoundException(API_RESPONSES.USER_NOT_FOUND);
         }
 
         const isMatch = bcrypt.compareSync(password, user.password);
         if (!isMatch) {
-            const {code, message} = API_RESPONSES.INCORRECT_PASSWORD;
-            throw new UnauthorizedException({code, message});
+            throw new UnauthorizedException(API_RESPONSES.INCORRECT_PASSWORD);
         }
 
         return toSafeUser(user);

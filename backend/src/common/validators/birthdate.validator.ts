@@ -1,5 +1,5 @@
 import {registerDecorator, ValidationArguments, ValidationOptions} from "class-validator";
-import {ageFromBirthdate} from "@src/common";
+import {ageFromBirthdate, API_RESPONSES} from "@src/common";
 
 // Checks if the given birthdate is not in the future
 export function IsNotFutureDate(validationOptions?: ValidationOptions): PropertyDecorator {
@@ -32,7 +32,7 @@ export function IsNotFutureDate(validationOptions?: ValidationOptions): Property
 
           return birthDateOnly.getTime() <= today.getTime();
         },
-        defaultMessage: () => 'birthdate cannot be in the future',
+        defaultMessage: () => API_RESPONSES.BIRTHDAY_NOT_IN_FUTURE,
       },
     });
   };
@@ -56,7 +56,7 @@ export function MinAge(min: number, validationOptions?: ValidationOptions): Prop
           return age >= args.constraints[0];
         },
         defaultMessage: (args) =>
-            `age must be at least ${args.constraints[0]}`,
+            API_RESPONSES.BIRTHDAY_MIN_AGE(args.constraints[0]),
       },
     });
   };
@@ -81,7 +81,7 @@ export function MaxAge(max: number, validationOptions?: ValidationOptions): Prop
           return age <= args.constraints[0];
         },
         defaultMessage: (args) =>
-            `age must be at most ${args.constraints[0]}`,
+            API_RESPONSES.BIRTHDAY_MAX_AGE(args.constraints[0]),
       },
     });
   };
