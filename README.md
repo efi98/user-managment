@@ -1,7 +1,9 @@
 ## todo:
-1: unify error handling (move messages from errors file)
+1: update tests
 
 2: add docks
+
+BUG: display name in the top bar
 
 3: AVATAR:
   - add a photo profile (in the frontend)
