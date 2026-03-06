@@ -10,7 +10,7 @@ export class CreateUserDto {
 
     @IsString()
     @IsNotEmpty()
-    @MinLength(4, {message: API_RESPONSES.PASSWORD_MIN_LENGTH})
+    @MinLength(4, {message: API_RESPONSES.PASSWORD_MIN_LENGTH(4)})
     password: string;
 
     @IsOptional()

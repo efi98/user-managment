@@ -6,12 +6,14 @@ export interface AuthState {
     users: User[];
     currentUser: User | null;
     selectedUser: User | null;
+    usernameSuggestions: string[];
 }
 
 export const initialAuthState: AuthState = {
     users: [],
     currentUser: null,
     selectedUser: null,
+    usernameSuggestions: [],
 };
 
 export const AuthStore = signalStore(
@@ -41,7 +43,10 @@ export const AuthStore = signalStore(
             } else {
                 patchState(store, {selectedUser: null});
             }
-        }
+        },
+        setUsernameSuggestions(suggestions: string[]) {
+            patchState(store, {usernameSuggestions: suggestions});
+        },
     }))
 );
 

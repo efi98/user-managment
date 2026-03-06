@@ -1,4 +1,5 @@
 import {Component, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
@@ -10,6 +11,7 @@ import {GENDERS_LIST, MESSAGES} from "@consts";
 import {passwordValidatorFactory} from '@utils/validators';
 import {ToastService} from '@services/toast.service';
 import {finalize} from "rxjs";
+import {AuthStore} from "@store/auth.store";
 
 @Component({
     selector: 'app-signup',
@@ -23,9 +25,11 @@ export class SignupComponent {
     fb = inject(FormBuilder);
     router = inject(Router);
     authService = inject(AuthService);
+    authStore = inject(AuthStore);
     toastService = inject(ToastService);
     passwordPolicyService = inject(PasswordPolicyService);
     passwordValidationResult!: PasswordValidation;
+    usernameSuggestions = this.authService.usernameSuggestions;
     protected readonly GENDERS_LIST = GENDERS_LIST;
 
     constructor() {
@@ -44,6 +48,13 @@ export class SignupComponent {
             birthdate: [null, []],
             gender: ['']
         });
+
+        this.signupForm.get('username')?.valueChanges.pipe(
+            takeUntilDestroyed()
+        ).subscribe(() => {
+            this.authStore.setUsernameSuggestions([]);
+        });
+
     }
 
     submit() {

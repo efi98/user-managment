@@ -20,7 +20,7 @@ export class UsersService {
 
     async getByUsernameOrThrow(username: string): Promise<User> {
         const user = await this.usersRepository.findOne({ where: { username } });
-        if (!user) throw new NotFoundException(API_RESPONSES.USER_NOT_FOUND);
+        if (!user) throw new NotFoundException(API_RESPONSES.USER_NOT_FOUND(username));
         return user;
     }
 
@@ -55,7 +55,7 @@ export class UsersService {
             throw new ConflictException({
                 statusCode: 409,
                 error: 'Conflict',
-                message: API_RESPONSES.USERNAME_EXISTS,
+                message: API_RESPONSES.USERNAME_EXISTS(username),
                 suggestions,
             });
         }

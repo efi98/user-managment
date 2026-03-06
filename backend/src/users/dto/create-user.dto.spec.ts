@@ -21,7 +21,7 @@ describe('CreateUserDto validation', () => {
         const dto = Object.assign(new CreateUserDto(), { username: 'alice', password: '123' });
         const res = await validate(dto);
         const msg = Object.values(res[0].constraints || {})[0];
-        expect(msg).toBe(API_RESPONSES.PASSWORD_MIN_LENGTH.message);
+        expect(msg).toBe(API_RESPONSES.PASSWORD_MIN_LENGTH(4));
     });
 
     it('birthdate pattern fails on bad format', async () => {

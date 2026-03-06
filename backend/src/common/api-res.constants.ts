@@ -5,7 +5,7 @@ export const API_RESPONSES = {
     // 400
     UPLOAD_AVATAR_REQ_FILE: 'No file uploaded',
     UPLOAD_AVATAR_INVALID_FORMAT: 'Only image files are allowed',
-    PASSWORD_MIN_LENGTH: 'Password must be 4 characters or more',
+    PASSWORD_MIN_LENGTH: (min: number) => `Password must be ${min} characters or more`,
     GENDER_INVALID: 'Gender must be male, female, or other',
     BIRTHDAY_FORMAT: 'birthdate must be YYYY-MM-DD',
     BIRTHDAY_NOT_IN_FUTURE: 'birthdate cannot be in the future',
@@ -19,7 +19,7 @@ export const API_RESPONSES = {
     CANNOT_CHANGE_ISADMIN_SELF: 'Admins cannot change their own isAdmin',
     NOT_OWNER_OR_ADMIN: 'You can only modify your own account unless you are an admin',
     // 404
-    USER_NOT_FOUND: 'User not found',
+    USER_NOT_FOUND: (username: string) => `User '${username}' not found`,
     // 409
-    USERNAME_EXISTS: 'Username already exists',
+    USERNAME_EXISTS: (username: string) => `Username '${username}' already exists`,
 };
