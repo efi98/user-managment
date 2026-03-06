@@ -1,15 +1,21 @@
 ## todo:
-1: update tests
+** Update tests, and add docks (add package for generating docks) [server and front]
 
-2: add docks
+* NOTIFICATIONS:
+  - display error messages from server [front]
 
-BUG: display name in the top bar
+* SUGGESTIONS:
+  - Display them to the user [front]
+  - fix error SignUp dont get color after change the form [front]
 
-3: AVATAR:
-  - add a photo profile (in the frontend)
-  - handle errors for an avatar in the frontend (like file size and format)
+* BIRTHDATE:
+  - handle date errors on create/uptade [front]
+  - Implement datepicker [front]
 
-4: Implement datepicker in the frontend
+* AVATAR:
+  - add a photo profile [front]
+  - handle errors for an avatar (see server) [front]
 
-5: customization on stats
-6: add logs in the backend
+[Future dev]
+* customization on stats
+* add logs in the backend (Winston)

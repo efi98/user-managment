@@ -1,8 +1,8 @@
 import {Component, computed, effect, inject, Signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
-import {Mode, PasswordValidation, User} from '@interfaces';
-import {GENDERS_LIST} from '@consts';
+import {Mode, PasswordValidation, Severity, User} from '@interfaces';
+import {GENDERS_LIST, MESSAGES} from '@consts';
 import {UserService} from '@services/user.service';
 import {AuthService} from '@services/auth.service';
 import {Router} from '@angular/router';
@@ -154,11 +154,11 @@ export class UserCardComponent {
                     }
                     this.mode = Mode.View;
                     this.userForm.markAsPristine();
-                    this.toastService.show('User updated successfully', 'success');
+                    this.toastService.show(MESSAGES.USER_UPDATED, Severity.Success);
                 }
             },
             error: (err) => {
-                this.toastService.show(`Update failed: ${err.message}`, 'error');
+                this.toastService.show(err.error.message, Severity.Error);
             }
         });
     }
@@ -180,14 +180,14 @@ export class UserCardComponent {
         ).subscribe(() => {
             this.userService.deleteUser(user.username).subscribe({
                 next: () => {
-                    this.toastService.show('User deleted successfully', 'success');
+                    this.toastService.show(MESSAGES.USER_DELETED, Severity.Success);
                     if (!(this.selectedUser() && !this.authStore.isSelectedIsCurrent())) {
                         this.authService.logout();
                         this.router.navigate(['/login']);
                     }
                 },
                 error: (err) => {
-                    this.toastService.show(`Delete failed: ${err.message}`, 'error');
+                    this.toastService.show(err.error.message, Severity.Error);
                 }
             });
         });
@@ -199,7 +199,7 @@ export class UserCardComponent {
             return;
         }
         if (this.userForm.dirty) {
-            this.toastService.show('Changes cancelled', 'info');
+            this.toastService.show(MESSAGES.CHANGES_CANCELLED, Severity.Info);
         }
         this.userForm.reset({
             username: user.username,

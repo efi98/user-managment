@@ -1,14 +1,14 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { Gender, NewUser, PasswordValidation } from '@interfaces';
-import { AuthService } from '@services/auth.service';
-import { PasswordPolicyService } from '@services/password-policy.service';
-import { PasswordStrengthComponent } from '@components/password-strength/password-strength';
-import { GENDERS_LIST } from "@consts";
-import { passwordValidatorFactory } from '@utils/validators';
-import { ToastService } from '@services/toast.service';
+import {Component, inject} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router, RouterLink} from '@angular/router';
+import {Gender, NewUser, PasswordValidation, Severity} from '@interfaces';
+import {AuthService} from '@services/auth.service';
+import {PasswordPolicyService} from '@services/password-policy.service';
+import {PasswordStrengthComponent} from '@components/password-strength/password-strength';
+import {GENDERS_LIST, MESSAGES} from "@consts";
+import {passwordValidatorFactory} from '@utils/validators';
+import {ToastService} from '@services/toast.service';
 
 @Component({
     selector: 'app-signup',
@@ -67,12 +67,12 @@ export class SignupComponent {
         this.authService.signup(newUser).subscribe({
             next: (user) => {
                 if (user) {
-                    this.toastService.show('Signup successful!', 'success');
+                    this.toastService.show(MESSAGES.SIGNUP_SUCCESS, Severity.Success);
                     this.router.navigateByUrl('/');
                 }
             },
             error: (err) => {
-                this.toastService.show(`Signup failed: ${err.message}`, 'error');
+                this.toastService.show(err, Severity.Error);
             },
             complete: () => {
                 this.loading = false;

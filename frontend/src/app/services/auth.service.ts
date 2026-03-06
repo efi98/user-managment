@@ -1,10 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { UserService } from './user.service';
 import { catchError, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
-import { NewUser, ToastSeverity, User } from '@interfaces';
+import {NewUser, Severity, ToastSeverity, User} from '@interfaces';
 import { Router } from '@angular/router';
 import { AuthStore } from '@store/auth.store';
 import { ToastService } from "./toast.service";
+import {MESSAGES} from "@consts";
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -15,7 +16,6 @@ export class AuthService {
     readonly isLoggedIn = this.authStore.isLoggedIn;
     readonly isAdmin = this.authStore.isAdmin;
     private readonly toastService = inject(ToastService);
-    private readonly sessionExpiryTimeoutId: any = null;
 
     /**
      * Checks session by calling userService.me(). Updates AuthStore and redirects to /login if not logged in.
@@ -47,8 +47,7 @@ export class AuthService {
         return this.userService.login(credentials).pipe(
             map(res => this.handleAuthSuccess(res)),
             catchError((err) => {
-                const error = err.error?.error || 'Login failed';
-                return throwError(() => error);
+                return throwError(() => err.error.message);
             })
         );
     }
@@ -70,8 +69,7 @@ export class AuthService {
                 );
             }),
             catchError((err) => {
-                const error = err.error?.error || 'Signup failed';
-                return throwError(() => error);
+                return throwError(() => err.error.message);
             })
         );
     }
@@ -82,8 +80,8 @@ export class AuthService {
      */
     logout(): void {
         this.userService.logout().subscribe({
-            next: () => this.finishLogout({message: 'Logged out successfully'}),
-            error: () => this.finishLogout({message: 'Logged out successfully'})
+            next: () => this.finishLogout({message: MESSAGES.LOGOUT_SUCCESS}),
+            error: () => this.finishLogout({message: MESSAGES.LOGOUT_SUCCESS})
         });
     }
 
@@ -92,16 +90,15 @@ export class AuthService {
      * Do NOT show toast if there is no user in store.
      */
     sessionExpiredLogout(): void {
-
         const toastOptions: { message: string, severity: ToastSeverity } = {
-            message: 'Your session has expired. Please log in again.',
-            severity: 'warning'
+            message: MESSAGES.SESSION_EXPIRED,
+            severity: Severity.Warning
         };
         this.finishLogout(toastOptions);
     }
 
     private finishLogout(toastOptions: { message: string, severity?: ToastSeverity }): void {
-        const {message, severity = 'info'} = toastOptions;
+        const {message, severity = Severity.Info} = toastOptions;
 
         this.authStore.setCurrentUser(null);
 
@@ -118,7 +115,7 @@ export class AuthService {
     private handleAuthFailure(): void {
         this.authStore.setCurrentUser(null);
         this.router.navigate(['/login']).then(() => {
-            this.toastService.show('not logged in.', 'warning');
+            this.toastService.show(MESSAGES.NOT_LOGGED_IN, Severity.Warning);
         });
     }
 }

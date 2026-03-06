@@ -12,6 +12,13 @@ export enum Mode {
     Edit = 'Edit'
 }
 
+export enum Severity {
+    Success = 'success',
+    Error = 'error',
+    Info = 'info',
+    Warning = 'warning'
+}
+
 // User
 export interface User {
     username: string;

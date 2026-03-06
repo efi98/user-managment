@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { NewUser, UpdatedUser, User } from '@interfaces';
+import {NewUser, Severity, UpdatedUser, User} from '@interfaces';
 import { BASE_URL } from "@consts";
 import { AuthStore } from "@store/auth.store";
 import { ToastService } from "./toast.service";
@@ -19,8 +19,8 @@ export class UserService {
             }),
             catchError(error => {
                 this.toastService.show(
-                    'Error fetching users' + (error.status === 0 ? ': Server Is Down' : ''),
-                    'error'
+                    error.error?.message,
+                    Severity.Error
                 );
                 return of([]);
             })
@@ -41,11 +41,7 @@ export class UserService {
     }
 
     updateUser(username: string, updates: UpdatedUser): Observable<User | null> {
-        return this.http.patch<User>(`${BASE_URL}/users/${username}`, updates, { withCredentials: true }).pipe(
-            catchError(() => {
-                return of(null);
-            })
-        );
+        return this.http.patch<User>(`${BASE_URL}/users/${username}`, updates, { withCredentials: true });
     }
 
     deleteUser(username: string): Observable<any> {
