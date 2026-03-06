@@ -8,7 +8,7 @@ export function toSafeUser(user: any): SafeUser | null {
 
     return {
         username: safeUser.username,
-        displayName: safeUser.displayName || safeUser.username,
+        displayName: safeUser.displayName || null,
         birthdate: safeUser.birthdate ?? null,
         profilePhoto: safeUser.profilePhoto || DEFAULT_AVATAR,
         gender: safeUser.gender ?? null,

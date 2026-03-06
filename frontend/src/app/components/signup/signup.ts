@@ -9,6 +9,7 @@ import {PasswordStrengthComponent} from '@components/password-strength/password-
 import {GENDERS_LIST, MESSAGES} from "@consts";
 import {passwordValidatorFactory} from '@utils/validators';
 import {ToastService} from '@services/toast.service';
+import {finalize} from "rxjs";
 
 @Component({
     selector: 'app-signup',
@@ -64,7 +65,11 @@ export class SignupComponent {
             newUser.gender = formValue.gender as Gender;
         }
 
-        this.authService.signup(newUser).subscribe({
+        this.authService.signup(newUser).pipe(
+            finalize(() => {
+                this.loading = false;
+            })
+        ).subscribe({
             next: (user) => {
                 if (user) {
                     this.toastService.show(MESSAGES.SIGNUP_SUCCESS, Severity.Success);
@@ -73,9 +78,6 @@ export class SignupComponent {
             },
             error: (err) => {
                 this.toastService.show(err, Severity.Error);
-            },
-            complete: () => {
-                this.loading = false;
             }
         });
     }

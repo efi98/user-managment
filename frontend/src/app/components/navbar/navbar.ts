@@ -17,6 +17,7 @@ export class Navbar {
     isLoggedIn = this.authService.isLoggedIn;
     isAdmin = this.authService.isAdmin;
     selectedUser: Signal<User | null> = this.authStore.selectedUser;
+    selectedDisplayName = this.authStore.selectedDisplayName;
     showUserDropdown = false;
     private readonly elementRef = inject(ElementRef);
 
