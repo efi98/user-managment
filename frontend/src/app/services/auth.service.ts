@@ -27,13 +27,8 @@ export class AuthService {
                 if (res) {
                     this.handleAuthSuccess(res);
                 } else {
-                    //todo unify error handling
                     this.handleAuthFailure();
                 }
-            }),
-            catchError(() => {
-                this.handleAuthFailure();
-                return of(null);
             })
         );
     }

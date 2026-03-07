@@ -7,8 +7,8 @@ import { SessionTimer } from "@services/session-timer";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-    private authService = inject(AuthService);
-    private sessionTimerService = inject(SessionTimer);
+    private readonly authService = inject(AuthService);
+    private readonly sessionTimerService = inject(SessionTimer);
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
@@ -21,9 +21,6 @@ export class AuthInterceptor implements HttpInterceptor {
             }),
             catchError(error => {
                 console.error('[AuthInterceptor] Error intercepted:', error);
-                if (error.status === 401) {
-                    this.authService.sessionExpiredLogout();
-                }
                 throw error;
             })
         );
