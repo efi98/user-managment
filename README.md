@@ -1,12 +1,11 @@
 ## todo:
 ** Update tests, and add docks (add package for generating docks) [server and front]
 
-* SUGGESTIONS:
-  - Display them to the user [front]
+* USER_FORM:
+  - unify signup and settings forms [front]
 
 * BIRTHDATE:
-  - handle date errors on create/uptade [front]
-  - Implement datepicker [front]
+  - Implement datepicker component (block invalid dates) [front]
 
 * AVATAR:
   - add a photo profile [front]

@@ -3,12 +3,12 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } fr
 import { catchError, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuthService } from '@services/auth.service';
-import { SessionTimer } from "@services/session-timer";
+import { SessionTimerService } from "@services/session-timer.service";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
     private readonly authService = inject(AuthService);
-    private readonly sessionTimerService = inject(SessionTimer);
+    private readonly sessionTimerService = inject(SessionTimerService);
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
