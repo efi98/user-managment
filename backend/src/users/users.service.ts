@@ -96,7 +96,7 @@ export class UsersService {
         return toSafeUser(updatedUser);
     }
 
-    async remove(username: string) {
+    async deleteUser(username: string) {
         const user = await this.getByUsernameOrThrow(username);
         await this.usersRepository.remove(user);
     }

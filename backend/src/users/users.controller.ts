@@ -115,14 +115,14 @@ export class UsersController {
     @Delete(':username')
     @UseGuards(AuthGuard, SelfOrAdminGuard)
     @HttpCode(204)
-    async remove(
+    async deleteUser(
         @Param('username') username: string,
         @Req() req: Request,
         @Res() res: Response,
     ) {
         const user = await this.usersService.findOne(username);
 
-        await this.usersService.remove(username);
+        await this.usersService.deleteUser(username);
 
         if (user.profilePhoto) {
             await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
@@ -131,6 +131,7 @@ export class UsersController {
         if (req.session?.user?.username === username) {
             destroySessionAndClearCookie(req, res);
         }
+        res.status(204).send();
     }
 
     @Post(':username/avatar')

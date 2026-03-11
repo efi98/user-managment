@@ -23,7 +23,6 @@ import {startWith} from "rxjs";
 
 @Component({
     selector: 'app-user-card',
-    standalone: true,
     imports: [CommonModule, ReactiveFormsModule, PasswordStrengthComponent],
     templateUrl: './user-card.component.html',
     styleUrls: ['./user-card.component.scss'],

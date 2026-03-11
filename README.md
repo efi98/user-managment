@@ -2,7 +2,6 @@
 ** Update tests, and add docks (add package for generating docks) [server and front]
 
 * USER_FORM: [front]
-  - edit users is broken
   - unify signin form too
   - add to userCard the loading state for submit button
   - add to loading icon to submit button

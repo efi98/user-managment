@@ -1,5 +1,5 @@
 import {Component, computed, inject} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {filter} from 'rxjs';
 import {MESSAGES} from '@consts';
 import {UserCardComponent} from '@components/user-card/user-card.component';
@@ -9,6 +9,7 @@ import {DialogService} from '@services/dialog.service';
 import {ToastService} from '@services/toast.service';
 import {UserService} from '@services/user.service';
 import {AuthStore} from '@store/auth.store';
+import {take} from "rxjs/operators";
 
 @Component({
     selector: 'app-settings',
@@ -40,6 +41,11 @@ export class SettingsComponent {
     private readonly dialogService = inject(DialogService);
     private readonly toastService = inject(ToastService);
     private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
+    protected header = computed(() => {
+        const username = this.route.snapshot.paramMap.get('username');
+        return username ? `'${username}' Details` : 'User Settings';
+    });
 
     onSubmitted(payload: Partial<User>) {
         const user = this.user();
@@ -75,7 +81,8 @@ export class SettingsComponent {
         this.dialogService.show(message);
 
         this.dialogService.action$.pipe(
-            filter((confirmed: boolean) => confirmed)
+            filter((confirmed: boolean) => confirmed),
+            take(1)
         ).subscribe(() => {
             this.userService.deleteUser(user.username).subscribe({
                 next: () => {
@@ -83,6 +90,7 @@ export class SettingsComponent {
 
                     if (isForeignSelectedUser) {
                         this.authStore.setSelectedUser(null);
+                        this.router.navigate(['/admin-panel']);
                     } else {
                         this.authStore.setCurrentUser(null);
                         this.authService.logout();

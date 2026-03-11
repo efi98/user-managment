@@ -28,12 +28,7 @@ export class UserService {
     }
 
     getUserByUsername(username: string): Observable<User | undefined> {
-        return this.http.get<User>(`${BASE_URL}/users/${username}`, { withCredentials: true }).pipe(
-            map(user => user),
-            catchError(() => {
-                return of(undefined);
-            })
-        );
+        return this.http.get<User>(`${BASE_URL}/users/${username}`, { withCredentials: true });
     }
 
     addUser(user: NewUser): Observable<User | null> {
@@ -45,11 +40,7 @@ export class UserService {
     }
 
     deleteUser(username: string): Observable<any> {
-        return this.http.delete(`${BASE_URL}/users/${username}`, { withCredentials: true }).pipe(
-            catchError(() => {
-                return of(null);
-            })
-        );
+        return this.http.delete(`${BASE_URL}/users/${username}`, { withCredentials: true });
     }
 
     /**
