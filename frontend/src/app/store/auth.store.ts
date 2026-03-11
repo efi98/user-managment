@@ -25,6 +25,7 @@ export const AuthStore = signalStore(
         isSelectedIsCurrent: computed(() => currentUser()?.username === selectedUser()?.username),
         selectedUsername: computed(() => selectedUser()?.username),
         selectedDisplayName: computed(() => currentUser()?.displayName ?? currentUser()?.username),
+        activeUser: computed(() => selectedUser() || currentUser()),
     })),
     withMethods((store) => ({
         setUsers(users: User[]) {

@@ -1,36 +1,7 @@
-@use '../../../styles';
-
-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  align-items: start;
-}
-
-.form-group {
-  margin-bottom: 0;
-}
-
-button[type="submit"] {
-  grid-column: 1 / -1;
-}
-
-:not(input).error {
-  grid-column: 1 / -1;
-  color: var(--error-color);
-  font-size: 0.7em;
-
-  &.required-asterisk {
-    font-size: inherit;
+.settings-container {
+  padding: 1rem;
+  h2 {
+    margin: 0;
   }
 }
 
-.username-suggestions {
-  color: var(--error-color);
-  font-size: 0.7em;
-
-  ul {
-    margin: 0.25rem 0 0;
-    padding-left: 1.25rem;
-  }
-}

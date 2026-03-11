@@ -31,18 +31,19 @@
 .empty-field {
   font-style: italic;
   color: color.adjust(styles.$text-color-secondary, $lightness: 40%);
-
 }
 
 .view-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.25rem;
 }
 
 .grid-item {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    min-width: 0;
 }
 
 .grid-item label {
@@ -101,4 +102,24 @@
     margin-right: 0.5rem;
   }
 }
+
+.username-suggestions {
+  color: var(--error-color);
+  font-size: 0.7em;
+}
+
+button[type="submit"] {
+  flex: 1;
+}
+
+:not(input).error {
+  grid-column: 1 / -1;
+  color: var(--error-color);
+  font-size: 0.7em;
+
+  &.required-asterisk {
+    font-size: inherit;
+  }
+}
+
 
