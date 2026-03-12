@@ -4,7 +4,7 @@ import {AuthService} from '@services/auth.service';
 import {ToastService} from '@services/toast.service';
 import {AuthStore} from "@store/auth.store";
 import {UserCardComponent} from "@components/user-card/user-card.component";
-import {NewUser, Severity, User, UserFormConfig} from "@interfaces";
+import {NewUser, Severity, User, UserFormConfig, UserFormField} from "@interfaces";
 import {finalize} from "rxjs";
 import {MESSAGES} from "@consts";
 
@@ -15,14 +15,7 @@ import {MESSAGES} from "@consts";
     styleUrl: './signup.scss'
 })
 export class SignupComponent {
-    private readonly router = inject(Router);
-    private readonly authService = inject(AuthService);
-    private readonly authStore = inject(AuthStore);
-    private readonly toastService = inject(ToastService);
-
     loading = false;
-    usernameSuggestions = this.authService.usernameSuggestions;
-
     formConfig: UserFormConfig = {
         visibleFields: ['username', 'displayName', 'password', 'birthdate', 'gender'],
         requiredFields: ['username', 'password'],
@@ -37,6 +30,10 @@ export class SignupComponent {
         submitLabel: 'Sign Up',
         emptyLabel: 'EMPTY',
     };
+    private readonly router = inject(Router);
+    private readonly authService = inject(AuthService);
+    private readonly authStore = inject(AuthStore);
+    private readonly toastService = inject(ToastService);
 
     onSubmitted(payload: Partial<User>) {
         this.loading = true;
@@ -57,7 +54,7 @@ export class SignupComponent {
         });
     }
 
-    onFieldValueChanged(event: { field: string; value: unknown }) {
+    onFieldValueChanged(event: { field: UserFormField; value: unknown }) {
         if (event.field === 'username') {
             this.authStore.setUsernameSuggestions([]);
         }
