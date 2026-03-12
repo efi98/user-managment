@@ -22,10 +22,10 @@
                             <div class="error">{{ error }}</div>
                         }
 
-                        @if (usernameSuggestions.length) {
+                        @if (usernameSuggestions().length) {
                             <div class="username-suggestions">
                                 <span>Available:&nbsp;</span>
-                                <b>{{ usernameSuggestions.join(', ') }}.</b>
+                                <b>{{ usernameSuggestions().join(', ') }}.</b>
                             </div>
                         }
                     } @else {

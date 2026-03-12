@@ -28,7 +28,6 @@ import {startWith} from "rxjs";
     styleUrls: ['./user-card.component.scss'],
 })
 export class UserCardComponent implements OnChanges {
-    @Input() usernameSuggestions: string[] = [];
     @Input() config: UserFormConfig = {
         visibleFields: ['username', 'displayName', 'password', 'birthdate', 'gender'],
         requiredFields: [],
@@ -71,6 +70,8 @@ export class UserCardComponent implements OnChanges {
     private readonly authStore = inject(AuthStore);
     private readonly usernameValue;
     private readonly activeUser = this.authStore.activeUser;
+    readonly usernameSuggestions = this.authStore.usernameSuggestions;
+
     createdRelative = computed(() => {
         const activeUser = this.activeUser();
         if (!activeUser?.createdAt) return '';
@@ -175,7 +176,7 @@ export class UserCardComponent implements OnChanges {
 
         const errors = control.errors;
         if (errors['required']) {
-            return 'This field is required.';
+            return `${field} is required.`;
         }
 
         if (errors['birthdate']) {
@@ -257,7 +258,6 @@ export class UserCardComponent implements OnChanges {
         this.userForm.patchValue({isAdmin: !current});
         this.userForm.get('isAdmin')?.markAsDirty();
         this.userForm.get('isAdmin')?.markAsTouched();
-        this.fieldValueChanged.emit({field: 'isAdmin', value: !current});
     }
 
     submit() {
