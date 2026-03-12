@@ -1,5 +1,6 @@
 <h2>Login</h2>
 <app-user-card
+        [loading]="loading()"
         [config]="formConfig"
         (submitted)="onSubmitted($event)">
 </app-user-card>

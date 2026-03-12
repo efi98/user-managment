@@ -4,7 +4,7 @@ import {
     computed,
     effect,
     EventEmitter,
-    inject,
+    inject, input,
     Input,
     OnChanges,
     Output,
@@ -28,6 +28,7 @@ import {startWith} from "rxjs";
     styleUrls: ['./user-card.component.scss'],
 })
 export class UserCardComponent implements OnChanges {
+    loading = input(false);
     @Input() config: UserFormConfig = {
         visibleFields: ['username', 'displayName', 'password', 'birthdate', 'gender'],
         requiredFields: [],
@@ -68,10 +69,11 @@ export class UserCardComponent implements OnChanges {
 
     private readonly passwordPolicyService = inject(PasswordPolicyService);
     private readonly authStore = inject(AuthStore);
+    readonly usernameSuggestions = this.authStore.usernameSuggestions;
     private readonly usernameValue;
     private readonly activeUser = this.authStore.activeUser;
-    readonly usernameSuggestions = this.authStore.usernameSuggestions;
-
+    private waitingForLoadingStart = false;
+    private waitingForLoadingEnd = false
     createdRelative = computed(() => {
         const activeUser = this.activeUser();
         if (!activeUser?.createdAt) return '';
@@ -106,6 +108,24 @@ export class UserCardComponent implements OnChanges {
         effect(() => {
             this.patchForm(this.authStore.activeUser());
         });
+
+        effect(() => {
+            const isLoading = this.loading();
+
+            if (this.waitingForLoadingStart && isLoading) {
+                this.waitingForLoadingStart = false;
+                this.waitingForLoadingEnd = true;
+                return;
+            }
+
+            if (this.waitingForLoadingEnd && !isLoading) {
+                this.waitingForLoadingEnd = false;
+
+                if (this.config.canToggleEdit) {
+                    this.isEditing = false;
+                }
+            }
+        });
     }
 
     get submitLabel(): string {
@@ -136,7 +156,6 @@ export class UserCardComponent implements OnChanges {
         if (this.userForm.invalid) {
             return true;
         }
-
         const current: any = this.userForm.getRawValue();
 
         const hasRealChange = Object.keys(current).some(key => {
@@ -246,8 +265,10 @@ export class UserCardComponent implements OnChanges {
     }
 
     cancel() {
+        if (this.userForm.dirty || this.userForm.touched) {
+            this.cancelled.emit();
+        }
         this.patchForm(this.authStore.activeUser());
-        this.cancelled.emit();
     }
 
     toggleRole() {
@@ -266,40 +287,60 @@ export class UserCardComponent implements OnChanges {
             return;
         }
 
+        const payload = this.buildSubmitPayload();
+
+       this.waitingForLoadingStart = true;
+        this.waitingForLoadingEnd = false;
+
+        this.submitted.emit(payload);
+    }
+
+    private buildSubmitPayload(): Partial<User> {
         const payload: Partial<User> = {};
         const raw = this.userForm.getRawValue();
 
         for (const field of this.config.visibleFields) {
-            const control = this.userForm.get(field);
-            if (!control) continue;
-
-            if (this.config.emitOnlyDirtyFields && !control.dirty) {
+            if (!this.shouldIncludeField(field)) {
                 continue;
             }
 
             const value = raw[field];
+            const normalizedValue = this.normalizeFieldValue(field, value);
 
-            if (field === 'password' && !value) {
-                continue;
-            }
-
-            if ((field === 'birthdate' || field === 'gender' || field === 'displayName') && (value === '' || value === null)) {
-                if (this.config.emitOnlyDirtyFields) {
-                    (payload as any)[field] = null;
-                }
-                continue;
-            }
-
-            if (value !== '' && value !== null && value !== undefined) {
-                (payload as any)[field] = value;
+            if (normalizedValue !== undefined) {
+                (payload as any)[field] = normalizedValue;
             }
         }
 
-        this.submitted.emit(payload);
+        return payload;
+    }
 
-        if (this.config.canToggleEdit) {
-            this.isEditing = false;
+    private shouldIncludeField(field: UserFormField): boolean {
+        const control = this.userForm.get(field);
+        if (!control) {
+            return false;
         }
+        return !(this.config.emitOnlyDirtyFields && !control.dirty);
+    }
+
+    private normalizeFieldValue(field: UserFormField, value: unknown): unknown {
+        if (field === 'password' && !value) {
+            return undefined;
+        }
+
+        if (this.isNullableEmptyField(field, value)) {
+            return this.config.emitOnlyDirtyFields ? null : undefined;
+        }
+
+        if (value === '' || value === null || value === undefined) {
+            return undefined;
+        }
+
+        return value;
+    }
+
+    private isNullableEmptyField(field: UserFormField, value: unknown): boolean {
+        return ['birthdate', 'gender', 'displayName'].includes(field) && (value === '' || value === null);
     }
 
     private applyConfig() {

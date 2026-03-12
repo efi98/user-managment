@@ -1,9 +1,6 @@
 ## todo:
 ** Update tests, and add docks (add package for generating docks) [server and front]
-
-* USER_FORM: [front]
-  - add to userCard the loading state for submit button
-  - add to loading icon to submit button
+** add logs in the backend (Winston) [server]
 
 * BIRTHDATE:
   - Implement datepicker component (block invalid dates) [front]
@@ -14,4 +11,3 @@
 
 [Future dev]
 * customization on stats
-* add logs in the backend (Winston)

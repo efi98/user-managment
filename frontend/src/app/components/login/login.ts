@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
@@ -7,6 +7,7 @@ import {ToastService} from '@services/toast.service';
 import {Severity, User, UserFormConfig} from "@interfaces";
 import {MESSAGES} from "@consts";
 import {UserCardComponent} from "@components/user-card/user-card.component";
+import {finalize} from "rxjs";
 
 @Component({
     selector: 'app-login',
@@ -15,6 +16,7 @@ import {UserCardComponent} from "@components/user-card/user-card.component";
     styleUrl: './login.scss',
 })
 export class LoginComponent {
+    loading = signal(false);
     readonly formConfig: UserFormConfig = {
         visibleFields: ['username', 'password'],
         requiredFields: ['username', 'password'],
@@ -37,12 +39,17 @@ export class LoginComponent {
     private readonly route = inject(ActivatedRoute);
 
     onSubmitted(payload: Partial<User>) {
+        this.loading.set(true);
         const {username, password} = payload;
 
         this.authService.login({
             username: username!,
             password: password!,
-        }).subscribe({
+        }).pipe(
+            finalize(() => {
+                this.loading.set(false);
+            })
+        ).subscribe({
             next: (user) => {
                 if (!user) return;
 

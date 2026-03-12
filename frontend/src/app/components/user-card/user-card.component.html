@@ -170,20 +170,22 @@
                         }
                     </label>
                     <div class="role-card" [class.edit-mode]="canEditRole()">
-                        <div class="role-option"
-                             (click)="toggleRole()"
-                             [class.edit-mode]="canEditRole()"
-                             [class.active]="userForm.get('isAdmin')?.value">
+                        <button class="role-option"
+                                type="button"
+                                (click)="toggleRole()"
+                                [class.edit-mode]="canEditRole()"
+                                [class.active]="userForm.get('isAdmin')?.value">
                             <span>👑</span>
                             <span>Admin</span>
-                        </div>
-                        <div class="role-option"
-                             (click)="toggleRole()"
-                             [class.edit-mode]="canEditRole()"
-                             [class.active]="!userForm.get('isAdmin')?.value">
+                        </button>
+                        <button class="role-option"
+                                type="button"
+                                (click)="toggleRole()"
+                                [class.edit-mode]="canEditRole()"
+                                [class.active]="!userForm.get('isAdmin')?.value">
                             <span>👤</span>
                             <span>User</span>
-                        </div>
+                        </button>
                     </div>
                 </div>
             }
@@ -211,9 +213,14 @@
                     <button type="button" class="delete" (click)="deleted.emit()">{{ deleteLabel }}</button>
                 }
                 @if (config.showCancel) {
-                    <button type="button" class="cancel" (click)="cancel()">Cancel</button>
+                    <button type="button" (click)="cancel()">Cancel</button>
                 }
-                <button type="submit" class="save" [disabled]="isSubmitDisabled">{{ submitLabel }}</button>
+                <button type="submit" class="submit" [disabled]="isSubmitDisabled || loading()">
+                    @if (loading()) {
+                        <span class="button-spinner" aria-hidden="true"></span>
+                    }
+                    {{ submitLabel }}
+                </button>
             </div>
         }
     </form>

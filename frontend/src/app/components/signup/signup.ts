@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '@services/auth.service';
 import {ToastService} from '@services/toast.service';
@@ -15,7 +15,7 @@ import {MESSAGES} from "@consts";
     styleUrl: './signup.scss'
 })
 export class SignupComponent {
-    loading = false;
+    loading = signal(false);
     formConfig: UserFormConfig = {
         visibleFields: ['username', 'displayName', 'password', 'birthdate', 'gender'],
         requiredFields: ['username', 'password'],
@@ -36,11 +36,11 @@ export class SignupComponent {
     private readonly toastService = inject(ToastService);
 
     onSubmitted(payload: Partial<User>) {
-        this.loading = true;
+        this.loading.set(true);
 
         this.authService.signup(payload as NewUser).pipe(
             finalize(() => {
-                this.loading = false;
+                this.loading.set(false);
             })
         ).subscribe({
             next: (user) => {

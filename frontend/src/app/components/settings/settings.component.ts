@@ -1,6 +1,6 @@
-import {Component, computed, inject} from '@angular/core';
+import {Component, computed, inject, signal} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {filter} from 'rxjs';
+import {filter, finalize} from 'rxjs';
 import {MESSAGES} from '@consts';
 import {UserCardComponent} from '@components/user-card/user-card.component';
 import {Severity, UpdatedUser, User, UserFormConfig} from '@interfaces';
@@ -18,6 +18,7 @@ import {take} from "rxjs/operators";
     styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent {
+    loading = signal(false);
     formConfig: UserFormConfig = {
         visibleFields: ['username', 'displayName', 'password', 'birthdate', 'gender', 'isAdmin'],
         requiredFields: [],
@@ -48,10 +49,15 @@ export class SettingsComponent {
     });
 
     onSubmitted(payload: Partial<User>) {
+        this.loading.set(true);
         const user = this.user();
         if (!user) return;
 
-        this.userService.updateUser(user.username, payload as UpdatedUser).subscribe({
+        this.userService.updateUser(user.username, payload as UpdatedUser).pipe(
+            finalize(() => {
+                this.loading.set(false);
+            })
+        ).subscribe({
             next: (updatedUser) => {
                 if (!updatedUser) return;
 

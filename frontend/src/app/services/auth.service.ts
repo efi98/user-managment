@@ -98,6 +98,7 @@ export class AuthService {
         const {message, severity = Severity.Info} = toastOptions;
 
         this.authStore.setCurrentUser(null);
+        this.authStore.setSelectedUser(null);
 
         this.router.navigate(['/login']).then(() => {
             this.toastService.show(message, severity);
