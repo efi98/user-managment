@@ -77,4 +77,7 @@ export interface UserFormConfig {
     editLabel?: string;
     deleteLabel?: string;
     emptyLabel?: string;
+    hidePasswordStrength?: boolean;
+    validatePassword?: boolean;
+    showRequiredMarkers?: boolean;
 }

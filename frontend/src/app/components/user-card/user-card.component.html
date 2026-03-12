@@ -82,8 +82,10 @@
                                formControlName="password"
                                autocomplete="new-password"
                                [class.error]="isInvalid('password')">
-                        <app-password-strength
-                                [passwordValidationResult]="passwordValidationResult"></app-password-strength>
+                        @if (!config.hidePasswordStrength) {
+                            <app-password-strength
+                                    [passwordValidationResult]="passwordValidationResult"></app-password-strength>
+                        }
                     } @else {
                         <input id="password-view"
                                [value]="displayValue('password')"

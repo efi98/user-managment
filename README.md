@@ -2,7 +2,7 @@
 ** Update tests, and add docks (add package for generating docks) [server and front]
 
 * USER_FORM: [front]
-  - unify signin form too
+  - username suggestions - move into the form
   - add to userCard the loading state for submit button
   - add to loading icon to submit button
 

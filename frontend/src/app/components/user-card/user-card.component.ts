@@ -44,6 +44,9 @@ export class UserCardComponent implements OnChanges {
         editLabel: 'Edit',
         deleteLabel: 'Delete',
         emptyLabel: 'EMPTY',
+        hidePasswordStrength: false,
+        validatePassword: true,
+        showRequiredMarkers: true,
     };
 
     @Output() submitted = new EventEmitter<Partial<User>>();
@@ -171,7 +174,6 @@ export class UserCardComponent implements OnChanges {
         }
 
         const errors = control.errors;
-        console.log({errors});
         if (errors['required']) {
             return 'This field is required.';
         }
@@ -193,7 +195,7 @@ export class UserCardComponent implements OnChanges {
             && !this.authStore.isSelectedIsCurrent();
     }
 
-    shouldShowRequired(field: UserFormField): boolean {
+    isFieldRequired(field: UserFormField): boolean {
         return !!this.config.requiredFields?.includes(field);
     }
 
@@ -232,6 +234,10 @@ export class UserCardComponent implements OnChanges {
     isInvalid(field: string): boolean {
         const control = this.userForm.get(field);
         return !!(control && control.touched && control.invalid);
+    }
+
+    shouldShowRequired(field: UserFormField): boolean {
+        return this.config.showRequiredMarkers !== false && this.isFieldRequired(field);
     }
 
     switchToEditMode() {
@@ -308,11 +314,11 @@ export class UserCardComponent implements OnChanges {
         for (const field of allFields) {
             const validators = [];
 
-            if (this.shouldShowRequired(field)) {
+            if (this.isFieldRequired(field)) {
                 validators.push(Validators.required);
             }
 
-            if (field === 'password') {
+            if (field === 'password' && this.config.validatePassword !== false) {
                 validators.push(
                     passwordValidatorFactory(this.passwordPolicyService, (result) => {
                         this.passwordValidationResult = result;
