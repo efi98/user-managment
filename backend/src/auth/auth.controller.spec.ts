@@ -1,5 +1,4 @@
 import { Test } from '@nestjs/testing';
-import { API_RESPONSES } from '@api-res';
 import {AuthController} from "@auth/auth.controller";
 import {AuthService} from "@auth/auth.service";
 
@@ -63,12 +62,10 @@ describe('AuthController', () => {
         };
 
         controller.logout(req, res);
-
-        // expect(res.status).toHaveBeenCalledWith(API_RESPONSES.FAILED_LOGOUT);
-        // expect(res.json).toHaveBeenCalledWith({
-        //     error: API_RESPONSES.FAILED_LOGOUT.message,
-        //     code: API_RESPONSES.FAILED_LOGOUT.code,
-        // });
+        expect(res.status).toHaveBeenCalledWith(500);
+        // when destroy fails the function returns after setting status(500)
+        // ensure it did not attempt to clear cookie or send 204
+        expect(res.clearCookie).not.toHaveBeenCalledWith(process.env.COOKIE_NAME);
     });
 
     it('me returns session user', () => {

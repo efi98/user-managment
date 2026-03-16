@@ -16,6 +16,7 @@ import {
     HttpCode,
     Param,
     Patch,
+    PayloadTooLargeException,
     Post,
     Req,
     Res,
@@ -26,7 +27,7 @@ import {
 } from '@nestjs/common';
 import {Request, Response} from 'express';
 import {FileInterceptor} from '@nestjs/platform-express';
-import {diskStorage, MulterError} from 'multer';
+import {diskStorage} from 'multer';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import {UsersService} from './users.service';
@@ -64,13 +65,23 @@ const multerOptions = {
 /**
  * Exception filter for multer errors so uploads return a JSON 400.
  */
-@Catch(MulterError)
-class MulterExceptionFilter implements ExceptionFilter {
-    catch(exception: MulterError, host: ArgumentsHost) {
+@Catch(PayloadTooLargeException, BadRequestException)
+export class MulterExceptionFilter implements ExceptionFilter {
+    catch(exception: PayloadTooLargeException | BadRequestException, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
-        const res = ctx.getResponse();
+        const response = ctx.getResponse<Response>();
+        const res = exception.getResponse() as any;
 
-        return res.status(400).json({...exception, test: 'w'});
+        if (exception instanceof PayloadTooLargeException) {
+            return response.status(exception.getStatus()).json({
+                ...res,
+                message: API_RESPONSES.UPLOAD_AVATAR_FILE_TOO_LARGE,
+            });
+        }
+
+        return response.status(400).json({
+            message: exception.message,
+        });
     }
 }
 
@@ -170,6 +181,7 @@ export class UsersController {
 
         if (req.session?.user?.username === username) {
             destroySessionAndClearCookie(req, res);
+            return;
         }
         res.status(204).send();
     }

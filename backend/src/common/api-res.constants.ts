@@ -5,6 +5,7 @@ export const API_RESPONSES = {
     // 400
     UPLOAD_AVATAR_REQ_FILE: 'No file uploaded',
     UPLOAD_AVATAR_INVALID_FORMAT: 'Only image files are allowed',
+    UPLOAD_AVATAR_FILE_TOO_LARGE: 'Uploaded file is too large',
     PASSWORD_MIN_LENGTH: (min: number) => `Password must be ${min} characters or more`,
     GENDER_INVALID: 'Gender must be male, female, or other',
     BIRTHDAY_FORMAT: 'birthdate must be YYYY-MM-DD',

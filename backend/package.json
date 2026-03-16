@@ -22,9 +22,6 @@
     "test:unit:cov": "pnpm run test:base jest --config=jest.unit.config.js --coverage",
     "test:integration:cov": "pnpm run test:base jest --config=jest.integration.config.js --runInBand --coverage",
     "test:e2e:cov": "pnpm run test:base jest --config=jest.e2e.config.js --runInBand --coverage",
-    "test:watch": "pnpm run test:base jest --config=jest.unit.config.js --watch",
-    "test:debug": "pnpm run test:base node --inspect-brk ./node_modules/jest/bin/jest.js --config=jest.unit.config.js --runInBand",
-    "test:e2e:debug": "pnpm run test:base node --inspect-brk ./node_modules/jest/bin/jest.js --config=jest.e2e.config.js --runInBand",
 
     "docs": "typedoc --options typedoc.json"
   },
