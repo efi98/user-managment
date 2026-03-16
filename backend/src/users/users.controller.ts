@@ -1,3 +1,9 @@
+/**
+ * Users controller: endpoints to manage users, avatars, and user statistics.
+ *
+ * Exposes REST endpoints under `/users` and uses guards to protect routes.
+ */
+
 import {
     ArgumentsHost,
     BadRequestException,
@@ -55,6 +61,9 @@ const multerOptions = {
     limits: {fileSize: 2 * 1024 * 1024},
 }
 
+/**
+ * Exception filter for multer errors so uploads return a JSON 400.
+ */
 @Catch(MulterError)
 class MulterExceptionFilter implements ExceptionFilter {
     catch(exception: MulterError, host: ArgumentsHost) {
@@ -65,29 +74,52 @@ class MulterExceptionFilter implements ExceptionFilter {
     }
 }
 
+/**
+ * Controller that manages user CRUD, avatars and statistics.
+ */
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {
     }
 
+    /**
+     * Return all users (safe representation).
+     * Protected by authentication.
+     */
     @Get()
     @UseGuards(AuthGuard)
     findAll() {
         return this.usersService.findAll();
     }
 
+    /**
+     * Return aggregated user statistics.
+     * Protected by authentication.
+     */
     @Get('stats')
     @UseGuards(AuthGuard)
     getStats(): Promise<UserStats> {
         return this.usersService.getStats();
     }
 
+    /**
+     * Return a single user by username (safe representation).
+     * Protected by authentication.
+     *
+     * @param username - requested username from route param
+     */
     @Get(':username')
     @UseGuards(AuthGuard)
     findOne(@Param('username') username: string) {
         return this.usersService.findOne(username);
     }
 
+    /**
+     * Create a new user and store the safe user in the session.
+     *
+     * @param createUserDto - validated payload for user creation
+     * @param req - Express request to set the session user
+     */
     @Post()
     async create(
         @Body() createUserDto: CreateUserDto,
@@ -98,6 +130,10 @@ export class UsersController {
         return userSafe;
     }
 
+    /**
+     * Update an existing user. Returns the updated safe user.
+     * Guards ensure only authorized users or admins may update.
+     */
     @Patch(':username')
     @UseGuards(AuthGuard, AdminChangeGuard, SelfOrAdminGuard)
     async update(
@@ -112,6 +148,10 @@ export class UsersController {
         return userSafe;
     }
 
+    /**
+     * Delete a user by username. Also removes avatar file and destroys session
+     * when a user deletes their own account.
+     */
     @Delete(':username')
     @UseGuards(AuthGuard, SelfOrAdminGuard)
     @HttpCode(204)
@@ -134,6 +174,10 @@ export class UsersController {
         res.status(204).send();
     }
 
+    /**
+     * Upload or replace a user's avatar image.
+     * Validates file type/size via multer options and returns the public path.
+     */
     @Post(':username/avatar')
     @HttpCode(200)
     @UseGuards(AuthGuard, SelfOrAdminGuard)
@@ -170,6 +214,9 @@ export class UsersController {
         };
     }
 
+    /**
+     * Delete a user's avatar and reset to the default avatar for their session.
+     */
     @Delete(':username/avatar')
     @UseGuards(AuthGuard, SelfOrAdminGuard)
     @HttpCode(200)

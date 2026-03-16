@@ -67,8 +67,8 @@ describe('AuthService', () => {
             service.login({username: 'missing', password: 'pass'}),
         ).rejects.toMatchObject(
             new NotFoundException({
-                code: API_RESPONSES.USER_NOT_FOUND.code,
-                message: API_RESPONSES.USER_NOT_FOUND.message,
+                code: API_RESPONSES.USER_NOT_FOUND,
+                message: API_RESPONSES.USER_NOT_FOUND,
             }),
         );
     });
@@ -81,8 +81,8 @@ describe('AuthService', () => {
             service.login({username: 'alice', password: 'wrong'}),
         ).rejects.toMatchObject(
             new UnauthorizedException({
-                code: API_RESPONSES.INCORRECT_PASSWORD.code,
-                message: API_RESPONSES.INCORRECT_PASSWORD.message,
+                code: API_RESPONSES.INCORRECT_PASSWORD,
+                message: API_RESPONSES.INCORRECT_PASSWORD,
             }),
         );
     });

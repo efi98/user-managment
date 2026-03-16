@@ -126,7 +126,7 @@ describe('UsersController', () => {
     });
 
     it('uploadAvatar rejects invalid mime via fileValidationError', async () => {
-        const req: any = {fileValidationError: API_RESPONSES.AVATAR_INVALID_FORMAT.message};
+        const req: any = {fileValidationError: API_RESPONSES.UPLOAD_AVATAR_INVALID_FORMAT};
         await expect(controller.uploadAvatar('alice', req, undefined as any)).rejects.toBeInstanceOf(
             BadRequestException,
         );
@@ -135,7 +135,7 @@ describe('UsersController', () => {
     it('uploadAvatar rejects when no file provided', async () => {
         const req: any = {};
         await expect(controller.uploadAvatar('alice', req, undefined as any)).rejects.toMatchObject({
-            response: {error: API_RESPONSES.NO_FILE_UPLOADED.message},
+            response: {error: API_RESPONSES.UPLOAD_AVATAR_REQ_FILE},
         });
     });
 
@@ -154,7 +154,7 @@ describe('UsersController', () => {
         expect(deleteAvatarIfExists).toHaveBeenCalledWith('/uploads/avatars/old.jpg', expect.any(String));
         expect(service.updateAvatar).toHaveBeenCalledWith('alice', '/uploads/avatars/alice-123.jpg');
         expect(res).toEqual({
-            message: API_RESPONSES.AVATAR_UPLOADED.message,
+            message: API_RESPONSES.UPLOAD_AVATAR_SUCCESS,
             profilePhoto: '/uploads/avatars/alice-123.jpg',
         });
     });
@@ -179,7 +179,7 @@ describe('UsersController', () => {
         const res = await controller.deleteAvatar('alice', req);
 
         expect(deleteAvatarIfExists).toHaveBeenCalledWith('/uploads/avatars/old.jpg', expect.any(String));
-        expect(res).toEqual({message: API_RESPONSES.AVATAR_DELETED.message});
+        expect(res).toEqual({message: API_RESPONSES.DELETE_AVATAR_SUCCESS});
     });
 
     it('deleteAvatar does not delete when oldPhoto is null', async () => {
@@ -189,7 +189,7 @@ describe('UsersController', () => {
         const res = await controller.deleteAvatar('alice', req);
 
         expect(deleteAvatarIfExists).not.toHaveBeenCalled();
-        expect(res).toEqual({message: API_RESPONSES.AVATAR_DELETED.message});
+        expect(res).toEqual({message: API_RESPONSES.DELETE_AVATAR_SUCCESS});
     });
 
     it('deleteAvatar resets session profilePhoto when deleting self avatar', async () => {

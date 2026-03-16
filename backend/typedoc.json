@@ -1,0 +1,14 @@
+{
+  "entryPoints": ["src"],
+  "tsconfig": "tsconfig.json",
+  "out": "../docs/backend",
+  "name": "User Management — Backend",
+  "entryPointStrategy": "expand",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true,
+  "disableSources": true,
+  "hideGenerator": true,
+  "includeVersion": true,
+  "readme": "README.md"
+}

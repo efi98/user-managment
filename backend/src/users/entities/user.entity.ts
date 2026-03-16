@@ -1,5 +1,8 @@
 import {Entity, Column, PrimaryColumn, UpdateDateColumn, CreateDateColumn} from 'typeorm';
 
+/**
+ * User entity stored in the database.
+ */
 @Entity('users')
 export class User {
   @PrimaryColumn()

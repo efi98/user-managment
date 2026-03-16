@@ -1,3 +1,9 @@
+/**
+ * Validators related to birthdate fields used by DTOs.
+ *
+ * Exports decorator factories: IsNotFutureDate, MinAge, MaxAge.
+ */
+
 import {registerDecorator, ValidationArguments, ValidationOptions} from "class-validator";
 import {ageFromBirthdate, API_RESPONSES} from "@src/common";
 

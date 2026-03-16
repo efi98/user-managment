@@ -1,3 +1,9 @@
+/**
+ * DTO used when creating a user.
+ *
+ * Validation rules enforce username/password presence and birthdate/gender constraints.
+ */
+
 import {IsIn, IsNotEmpty, IsOptional, IsString, Matches, MinLength,} from 'class-validator';
 import {IsNotFutureDate, MaxAge, MinAge} from '@common/validators';
 import {API_RESPONSES} from "@api-res";

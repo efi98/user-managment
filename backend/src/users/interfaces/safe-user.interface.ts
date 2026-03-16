@@ -1,3 +1,6 @@
+/**
+ * Public-safe representation of a user returned by API endpoints.
+ */
 export interface SafeUser {
   username: string;
   displayName: string;

@@ -1,3 +1,5 @@
+// Users module service
+
 import {ConflictException, Injectable, NotFoundException,} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
@@ -10,6 +12,12 @@ import {API_RESPONSES} from '@api-res';
 
 const SALT_ROUNDS = 10;
 
+/**
+ * Service responsible for user persistence and business rules.
+ *
+ * Provides methods to create, read, update and delete users, manage avatars
+ * and compute basic statistics.
+ */
 @Injectable()
 export class UsersService {
     constructor(
@@ -18,22 +26,42 @@ export class UsersService {
     ) {
     }
 
+    /**
+     * Get a User entity by username or throw NotFoundException.
+     *
+     * @param username - username to look up
+     */
     async getByUsernameOrThrow(username: string): Promise<User> {
         const user = await this.usersRepository.findOne({ where: { username } });
         if (!user) throw new NotFoundException(API_RESPONSES.USER_NOT_FOUND(username));
         return user;
     }
 
+    /**
+     * Return all users in a safe representation.
+     */
     async findAll() {
         const users = await this.usersRepository.find();
         return toSafeUsers(users);
     }
 
+    /**
+     * Return a single user in a safe representation.
+     *
+     * @param username - username to fetch
+     */
     async findOne(username: string) {
         const user = await this.getByUsernameOrThrow(username);
         return toSafeUser(user);
     }
 
+    /**
+     * Create a new user, hashing the password and assigning admin to first user.
+     *
+     * Returns the safe representation of the created user.
+     *
+     * @param createUserDto - DTO with creation payload
+     */
     async create(createUserDto: CreateUserDto) {
         const {username, password, ...rest} = createUserDto;
 
@@ -78,6 +106,9 @@ export class UsersService {
         return toSafeUser(savedUser);
     }
 
+    /**
+     * Update a user's data (hashes password when provided) and return safe user.
+     */
     async update(username: string, updateUserDto: UpdateUserDto) {
         const user = await this.getByUsernameOrThrow(username);
 
@@ -96,11 +127,17 @@ export class UsersService {
         return toSafeUser(updatedUser);
     }
 
+    /**
+     * Remove a user from the repository.
+     */
     async deleteUser(username: string) {
         const user = await this.getByUsernameOrThrow(username);
         await this.usersRepository.remove(user);
     }
 
+    /**
+     * Compute statistics about users including counts, recent signups, and age/gender breakdowns.
+     */
     async getStats(): Promise<UserStats> {
         const users = await this.usersRepository.find();
         const totalUsers = users.length;
@@ -157,6 +194,9 @@ export class UsersService {
         };
     }
 
+    /**
+     * Update the user's stored avatar path and return the old and new path.
+     */
     async updateAvatar(username: string, profilePhoto: string) {
         const user = await this.getByUsernameOrThrow(username);
 
@@ -167,6 +207,9 @@ export class UsersService {
         return {oldPhoto, newPhoto: profilePhoto};
     }
 
+    /**
+     * Remove user's avatar entry (sets to null) and return the old path.
+     */
     async deleteAvatar(username: string) {
         const user = await this.getByUsernameOrThrow(username);
 

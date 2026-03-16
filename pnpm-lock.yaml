@@ -53,8 +53,8 @@ importers:
         specifier: ^1.18.2
         version: 1.18.2
       multer:
-        specifier: ^2.0.2
-        version: 2.0.2
+        specifier: 2.1.1
+        version: 2.1.1
       redis:
         specifier: ^5.10.0
         version: 5.10.0
@@ -146,6 +146,9 @@ importers:
       tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0
+      typedoc:
+        specifier: ^0.28.17
+        version: 0.28.17(typescript@5.9.3)
       typescript:
         specifier: ^5.3.3
         version: 5.9.3
@@ -203,7 +206,7 @@ importers:
     devDependencies:
       '@angular/build':
         specifier: ^20.3.7
-        version: 20.3.13(@angular/compiler-cli@20.3.16(@angular/compiler@20.3.16)(typescript@5.9.3))(@angular/compiler@20.3.16)(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.16(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(@types/node@25.0.3)(chokidar@4.0.3)(karma@6.4.4)(postcss@8.5.6)(terser@5.46.0)(tslib@2.8.1)(typescript@5.9.3)
+        version: 20.3.13(@angular/compiler-cli@20.3.16(@angular/compiler@20.3.16)(typescript@5.9.3))(@angular/compiler@20.3.16)(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.16(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(@types/node@25.0.3)(chokidar@4.0.3)(karma@6.4.4)(postcss@8.5.6)(terser@5.46.0)(tslib@2.8.1)(typescript@5.9.3)(yaml@2.8.2)
       '@angular/cli':
         specifier: ^20.3.7
         version: 20.3.13(@types/node@25.0.3)(chokidar@4.0.3)
@@ -837,6 +840,9 @@ packages:
 
   '@gar/promisify@1.1.3':
     resolution: {integrity: sha1-VVGTqy47s7atw9VRycAw2ehg2vY=}
+
+  '@gerrit0/mini-shiki@3.23.0':
+    resolution: {integrity: sha1-2UFPMIC4gwOxjzoxGEbjfkJNgAw=}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha1-F8Vcp9Qmcz/jxWGQa4Fzwza0Cnc=}
@@ -1745,6 +1751,21 @@ packages:
     resolution: {integrity: sha1-/g8prTJxzcDraOcN5GUq3qg8b3c=}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
 
+  '@shikijs/engine-oniguruma@3.23.0':
+    resolution: {integrity: sha1-eJQhBI1mrBszYTFp1tGLnMbjQO0=}
+
+  '@shikijs/langs@3.23.0':
+    resolution: {integrity: sha1-AJWdixbH9nEiGuebOtjN5+alwRI=}
+
+  '@shikijs/themes@3.23.0':
+    resolution: {integrity: sha1-/ZbKWtUmOQV5lbwgk2gohOGEbyc=}
+
+  '@shikijs/types@3.23.0':
+    resolution: {integrity: sha1-1EFXGgWGQZJgGK496Zhm855bvfI=}
+
+  '@shikijs/vscode-textmate@10.0.2':
+    resolution: {integrity: sha1-qQqzHQzB37VMZqaeUVv2JPp7IiQ=}
+
   '@sigstore/bundle@3.1.0':
     resolution: {integrity: sha1-dPjzeHFIQA3dNkvoqakhIXTGZkY=}
     engines: {node: ^18.17.0 || >=20.5.0}
@@ -1866,6 +1887,9 @@ packages:
   '@types/graceful-fs@4.1.9':
     resolution: {integrity: sha1-Kga8D2iiCrN7PjaqI4vmq99J6LQ=}
 
+  '@types/hast@3.0.4':
+    resolution: {integrity: sha1-HWs5mTuCzqateDlFsFCMJZA+Fao=}
+
   '@types/http-errors@2.0.5':
     resolution: {integrity: sha1-W3SasrFroRNCP+saZKldzTA5hHI=}
 
@@ -1928,6 +1952,9 @@ packages:
 
   '@types/supertest@6.0.3':
     resolution: {integrity: sha1-1zbw6ZSxlbY+HJPoAnGi+vknOIw=}
+
+  '@types/unist@3.0.3':
+    resolution: {integrity: sha1-rKqw+RnOaczmKcLU7S60rcG2wgw=}
 
   '@types/validator@13.15.10':
     resolution: {integrity: sha1-dCt37DTVhVS5SnahTO8w1Z48Frk=}
@@ -3820,6 +3847,9 @@ packages:
   lines-and-columns@1.2.4:
     resolution: {integrity: sha1-7KKE910pZQeTCdwK2SVauy68FjI=}
 
+  linkify-it@5.0.0:
+    resolution: {integrity: sha1-nvI4v6bccL2Of5VytS02mvVptCE=}
+
   listr2@9.0.1:
     resolution: {integrity: sha1-PK0S2B2Zj4AkYh2bNclp26XaQQM=}
     engines: {node: '>=20.0.0'}
@@ -3882,6 +3912,9 @@ packages:
     resolution: {integrity: sha1-bW/mVw69lqr5D8rR2vo7JWbbOpQ=}
     engines: {node: '>=10'}
 
+  lunr@2.3.9:
+    resolution: {integrity: sha1-GLEjFCgyM33W6WTfGlp3B7JdNeE=}
+
   magic-string@0.30.17:
     resolution: {integrity: sha1-RQpElnPSRg5bvPupphkWoXFMdFM=}
 
@@ -3907,9 +3940,16 @@ packages:
   makeerror@1.0.12:
     resolution: {integrity: sha1-Pl3SB5qC6BLpg8xmEMSiyw6qgBo=}
 
+  markdown-it@14.1.1:
+    resolution: {integrity: sha1-hW+Qtm/DmucK/9JcGxi1gdfe7h8=}
+    hasBin: true
+
   math-intrinsics@1.1.0:
     resolution: {integrity: sha1-oN10voHiqlwvJ+Zc4oNgXuTit/k=}
     engines: {node: '>= 0.4'}
+
+  mdurl@2.0.0:
+    resolution: {integrity: sha1-gGduwEMwJd0+F+6YPQ/o3loiN+A=}
 
   media-typer@0.3.0:
     resolution: {integrity: sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=}
@@ -4072,6 +4112,10 @@ packages:
 
   multer@2.0.2:
     resolution: {integrity: sha1-CKiqglWGU4jDh6rwQUJrDIe/WN0=}
+    engines: {node: '>= 10.16.0'}
+
+  multer@2.1.1:
+    resolution: {integrity: sha1-Ei2BkkT73+4e/d2RR0JmkQFDhbc=}
     engines: {node: '>= 10.16.0'}
 
   mute-stream@0.0.8:
@@ -4461,6 +4505,10 @@ packages:
 
   pump@3.0.3:
     resolution: {integrity: sha1-FR2XnxopZo3AAl7FiaRVtTKCJo0=}
+
+  punycode.js@2.3.1:
+    resolution: {integrity: sha1-a1PlatdViCNOefSv+pCXLH3Yzbc=}
+    engines: {node: '>=6'}
 
   punycode@1.4.1:
     resolution: {integrity: sha1-wNWmOycYgArY4esPpSachN1BhF4=}
@@ -5104,6 +5152,13 @@ packages:
   typedarray@0.0.6:
     resolution: {integrity: sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=}
 
+  typedoc@0.28.17:
+    resolution: {integrity: sha1-6rfGZJSU0KeW4LL9LJpa6kGwp4E=}
+    engines: {node: '>= 18', pnpm: '>= 10'}
+    hasBin: true
+    peerDependencies:
+      typescript: 5.0.x || 5.1.x || 5.2.x || 5.3.x || 5.4.x || 5.5.x || 5.6.x || 5.7.x || 5.8.x || 5.9.x
+
   typeorm@0.3.28:
     resolution: {integrity: sha1-o6q+2O9kKH7mjaJ42P+h08bGuMo=}
     engines: {node: '>=16.13.0'}
@@ -5172,6 +5227,9 @@ packages:
   ua-parser-js@0.7.41:
     resolution: {integrity: sha1-n23uWMOJ6K+rq6YqSi3CLttppFI=}
     hasBin: true
+
+  uc.micro@2.1.0:
+    resolution: {integrity: sha1-+NP30OxMPeo1p+PI76TLi0XJ5+4=}
 
   uglify-js@3.19.3:
     resolution: {integrity: sha1-gjFem7xvKyWIiFis0f/4RBA1t38=}
@@ -5438,6 +5496,11 @@ packages:
     resolution: {integrity: sha1-AOLeRDY57Q14/YfeDSdGn7z/tTM=}
     engines: {node: '>=18'}
 
+  yaml@2.8.2:
+    resolution: {integrity: sha1-VpTyXsoM6cPnqdngDODdq72eNcU=}
+    engines: {node: '>= 14.6'}
+    hasBin: true
+
   yargs-parser@20.2.9:
     resolution: {integrity: sha1-LrfcOwKJcY/ClfNidThFxBoMlO4=}
     engines: {node: '>=10'}
@@ -5642,7 +5705,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular/build@20.3.13(@angular/compiler-cli@20.3.16(@angular/compiler@20.3.16)(typescript@5.9.3))(@angular/compiler@20.3.16)(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.16(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(@types/node@25.0.3)(chokidar@4.0.3)(karma@6.4.4)(postcss@8.5.6)(terser@5.46.0)(tslib@2.8.1)(typescript@5.9.3)':
+  '@angular/build@20.3.13(@angular/compiler-cli@20.3.16(@angular/compiler@20.3.16)(typescript@5.9.3))(@angular/compiler@20.3.16)(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.16(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(@types/node@25.0.3)(chokidar@4.0.3)(karma@6.4.4)(postcss@8.5.6)(terser@5.46.0)(tslib@2.8.1)(typescript@5.9.3)(yaml@2.8.2)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2003.13(chokidar@4.0.3)
@@ -5652,7 +5715,7 @@ snapshots:
       '@babel/helper-annotate-as-pure': 7.27.3
       '@babel/helper-split-export-declaration': 7.24.7
       '@inquirer/confirm': 5.1.14(@types/node@25.0.3)
-      '@vitejs/plugin-basic-ssl': 2.1.0(vite@7.1.11(@types/node@25.0.3)(sass@1.90.0)(terser@5.46.0))
+      '@vitejs/plugin-basic-ssl': 2.1.0(vite@7.1.11(@types/node@25.0.3)(sass@1.90.0)(terser@5.46.0)(yaml@2.8.2))
       beasties: 0.3.5
       browserslist: 4.28.1
       esbuild: 0.25.9
@@ -5672,7 +5735,7 @@ snapshots:
       tinyglobby: 0.2.14
       tslib: 2.8.1
       typescript: 5.9.3
-      vite: 7.1.11(@types/node@25.0.3)(sass@1.90.0)(terser@5.46.0)
+      vite: 7.1.11(@types/node@25.0.3)(sass@1.90.0)(terser@5.46.0)(yaml@2.8.2)
       watchpack: 2.4.4
     optionalDependencies:
       '@angular/core': 20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)
@@ -6135,6 +6198,14 @@ snapshots:
 
   '@gar/promisify@1.1.3':
     optional: true
+
+  '@gerrit0/mini-shiki@3.23.0':
+    dependencies:
+      '@shikijs/engine-oniguruma': 3.23.0
+      '@shikijs/langs': 3.23.0
+      '@shikijs/themes': 3.23.0
+      '@shikijs/types': 3.23.0
+      '@shikijs/vscode-textmate': 10.0.2
 
   '@humanfs/core@0.19.1': {}
 
@@ -7082,6 +7153,26 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
+  '@shikijs/engine-oniguruma@3.23.0':
+    dependencies:
+      '@shikijs/types': 3.23.0
+      '@shikijs/vscode-textmate': 10.0.2
+
+  '@shikijs/langs@3.23.0':
+    dependencies:
+      '@shikijs/types': 3.23.0
+
+  '@shikijs/themes@3.23.0':
+    dependencies:
+      '@shikijs/types': 3.23.0
+
+  '@shikijs/types@3.23.0':
+    dependencies:
+      '@shikijs/vscode-textmate': 10.0.2
+      '@types/hast': 3.0.4
+
+  '@shikijs/vscode-textmate@10.0.2': {}
+
   '@sigstore/bundle@3.1.0':
     dependencies:
       '@sigstore/protobuf-specs': 0.4.3
@@ -7233,6 +7324,10 @@ snapshots:
     dependencies:
       '@types/node': 20.19.31
 
+  '@types/hast@3.0.4':
+    dependencies:
+      '@types/unist': 3.0.3
+
   '@types/http-errors@2.0.5': {}
 
   '@types/istanbul-lib-coverage@2.0.6': {}
@@ -7305,6 +7400,8 @@ snapshots:
     dependencies:
       '@types/methods': 1.1.4
       '@types/superagent': 8.1.9
+
+  '@types/unist@3.0.3': {}
 
   '@types/validator@13.15.10': {}
 
@@ -7410,9 +7507,9 @@ snapshots:
   '@ungap/structured-clone@1.3.0':
     optional: true
 
-  '@vitejs/plugin-basic-ssl@2.1.0(vite@7.1.11(@types/node@25.0.3)(sass@1.90.0)(terser@5.46.0))':
+  '@vitejs/plugin-basic-ssl@2.1.0(vite@7.1.11(@types/node@25.0.3)(sass@1.90.0)(terser@5.46.0)(yaml@2.8.2))':
     dependencies:
-      vite: 7.1.11(@types/node@25.0.3)(sass@1.90.0)(terser@5.46.0)
+      vite: 7.1.11(@types/node@25.0.3)(sass@1.90.0)(terser@5.46.0)(yaml@2.8.2)
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -9700,6 +9797,10 @@ snapshots:
 
   lines-and-columns@1.2.4: {}
 
+  linkify-it@5.0.0:
+    dependencies:
+      uc.micro: 2.1.0
+
   listr2@9.0.1:
     dependencies:
       cli-truncate: 4.0.0
@@ -9785,6 +9886,8 @@ snapshots:
       yallist: 4.0.0
     optional: true
 
+  lunr@2.3.9: {}
+
   magic-string@0.30.17:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -9842,7 +9945,18 @@ snapshots:
     dependencies:
       tmpl: 1.0.5
 
+  markdown-it@14.1.1:
+    dependencies:
+      argparse: 2.0.1
+      entities: 4.5.0
+      linkify-it: 5.0.0
+      mdurl: 2.0.0
+      punycode.js: 2.3.1
+      uc.micro: 2.1.0
+
   math-intrinsics@1.1.0: {}
+
+  mdurl@2.0.0: {}
 
   media-typer@0.3.0: {}
 
@@ -9996,6 +10110,13 @@ snapshots:
       object-assign: 4.1.1
       type-is: 1.6.18
       xtend: 4.0.2
+
+  multer@2.1.1:
+    dependencies:
+      append-field: 1.0.0
+      busboy: 1.6.0
+      concat-stream: 2.0.0
+      type-is: 1.6.18
 
   mute-stream@0.0.8: {}
 
@@ -10410,6 +10531,8 @@ snapshots:
     dependencies:
       end-of-stream: 1.4.5
       once: 1.4.0
+
+  punycode.js@2.3.1: {}
 
   punycode@1.4.1: {}
 
@@ -11175,6 +11298,15 @@ snapshots:
 
   typedarray@0.0.6: {}
 
+  typedoc@0.28.17(typescript@5.9.3):
+    dependencies:
+      '@gerrit0/mini-shiki': 3.23.0
+      lunr: 2.3.9
+      markdown-it: 14.1.1
+      minimatch: 9.0.5
+      typescript: 5.9.3
+      yaml: 2.8.2
+
   typeorm@0.3.28(redis@5.10.0)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@20.19.31)(typescript@5.9.3)):
     dependencies:
       '@sqltools/formatter': 1.2.5
@@ -11205,6 +11337,8 @@ snapshots:
   typescript@5.9.3: {}
 
   ua-parser-js@0.7.41: {}
+
+  uc.micro@2.1.0: {}
 
   uglify-js@3.19.3:
     optional: true
@@ -11287,7 +11421,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@7.1.11(@types/node@25.0.3)(sass@1.90.0)(terser@5.46.0):
+  vite@7.1.11(@types/node@25.0.3)(sass@1.90.0)(terser@5.46.0)(yaml@2.8.2):
     dependencies:
       esbuild: 0.25.9
       fdir: 6.5.0(picomatch@4.0.3)
@@ -11300,6 +11434,7 @@ snapshots:
       fsevents: 2.3.3
       sass: 1.90.0
       terser: 5.46.0
+      yaml: 2.8.2
 
   void-elements@2.0.1: {}
 
@@ -11439,6 +11574,8 @@ snapshots:
   yallist@4.0.0: {}
 
   yallist@5.0.0: {}
+
+  yaml@2.8.2: {}
 
   yargs-parser@20.2.9: {}
 

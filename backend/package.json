@@ -5,11 +5,14 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+
     "seed": "ts-node scripts/seedUserdb.ts",
+
     "test:base": "cross-env NODE_ENV=test USE_REDIS_SESSION=false DB_PATH=assets/test.sqlite AVATARS_DIR=assets/test-uploads/avatars COOKIE_NAME=sid SESSION_SECRET=test-secret MAX_AGE_MS=3600000",
     "test": "pnpm run test:base jest --config=jest.projects.config.js --runInBand --verbose",
     "test:unit": "pnpm run test:base jest --config=jest.unit.config.js --verbose",
@@ -21,7 +24,9 @@
     "test:e2e:cov": "pnpm run test:base jest --config=jest.e2e.config.js --runInBand --coverage",
     "test:watch": "pnpm run test:base jest --config=jest.unit.config.js --watch",
     "test:debug": "pnpm run test:base node --inspect-brk ./node_modules/jest/bin/jest.js --config=jest.unit.config.js --runInBand",
-    "test:e2e:debug": "pnpm run test:base node --inspect-brk ./node_modules/jest/bin/jest.js --config=jest.e2e.config.js --runInBand"
+    "test:e2e:debug": "pnpm run test:base node --inspect-brk ./node_modules/jest/bin/jest.js --config=jest.e2e.config.js --runInBand",
+
+    "docs": "typedoc --options typedoc.json"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.0",
@@ -38,7 +43,7 @@
     "dotenv": "^17.2.3",
     "express": "4.22.1",
     "express-session": "^1.18.2",
-    "multer": "^2.0.2",
+    "multer": "2.1.1",
     "redis": "^5.10.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
@@ -71,6 +76,7 @@
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
+    "typedoc": "^0.28.17",
     "typescript": "^5.3.3"
   }
 }

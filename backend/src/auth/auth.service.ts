@@ -6,6 +6,9 @@ import {API_RESPONSES} from '@api-res';
 import {toSafeUser} from "@src/common";
 import {UsersService} from "@src/users";
 
+/**
+ * Authentication service: validates credentials and returns a safe user object.
+ */
 @Injectable()
 export class AuthService {
     constructor(
@@ -13,6 +16,13 @@ export class AuthService {
     ) {
     }
 
+    /**
+     * Validate a user's credentials and return a SafeUser.
+     *
+     * @param loginDto - Login credentials (username and password)
+     * @returns The sanitized SafeUser object on success
+     * @throws {UnauthorizedException} when the password is incorrect
+     */
     async login(loginDto: LoginDto): Promise<SafeUser> {
         const {username, password} = loginDto;
         const user = await this.usersService.getByUsernameOrThrow(username);
