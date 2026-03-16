@@ -1,6 +1,5 @@
 import {Test} from '@nestjs/testing';
 import {getRepositoryToken} from '@nestjs/typeorm';
-import {NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {Repository} from 'typeorm';
 import {AuthService} from './auth.service';
 import { UsersService } from '@users/users.service';

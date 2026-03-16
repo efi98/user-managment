@@ -173,16 +173,13 @@ describe('UsersController', () => {
     });
 
     it('uploadAvatar rejects when no file provided', async () => {
+        expect.assertions(2);
         const req: any = {};
-        try {
-            await controller.uploadAvatar('alice', req, undefined as any);
-            throw new Error('expected to throw');
-        } catch (e: any) {
+        return controller.uploadAvatar('alice', req, undefined as any).catch((e: any) => {
             expect(e).toBeInstanceOf(BadRequestException);
             const resp = e.response || {};
-            // Nest may put our message either on `response.message` or `response.error` depending on version
             expect([resp.message, resp.error]).toContain(API_RESPONSES.UPLOAD_AVATAR_REQ_FILE);
-        }
+        });
     });
 
     it('uploadAvatar updates profilePhoto and deletes old avatar when old exists', async () => {
@@ -228,7 +225,10 @@ describe('UsersController', () => {
         const res = await controller.uploadAvatar('alice', req, file);
 
         expect(req.session.user.profilePhoto).toBe('/uploads/avatars/alice-123.jpg');
-        expect(res).toEqual({message: API_RESPONSES.UPLOAD_AVATAR_SUCCESS, profilePhoto: '/uploads/avatars/alice-123.jpg'});
+        expect(res).toEqual({
+            message: API_RESPONSES.UPLOAD_AVATAR_SUCCESS,
+            profilePhoto: '/uploads/avatars/alice-123.jpg'
+        });
     });
 
     it('deleteAvatar deletes file when oldPhoto exists', async () => {

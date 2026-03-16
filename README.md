@@ -12,5 +12,5 @@
 * add language
 
 ### General
-* Update tests, and add docks (add package for generating docks) [server and front]
+* Update tests, and add docks (add package for generating docks) [front]
 * add logs in the backend (Winston) [server]
