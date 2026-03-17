@@ -6,13 +6,13 @@ import {Router} from '@angular/router';
 import {AuthStore} from '@store/auth.store';
 import {ToastService} from "./toast.service";
 import {MESSAGES} from "@consts";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
     private readonly userService = inject(UserService);
     private readonly router = inject(Router);
     private readonly authStore = inject(AuthStore);
-    readonly currentUser = this.authStore.currentUser;
     readonly isLoggedIn = this.authStore.isLoggedIn;
     readonly isAdmin = this.authStore.isAdmin;
     usernameSuggestions = this.authStore.usernameSuggestions;
@@ -24,11 +24,11 @@ export class AuthService {
     initUserSession$(): Observable<User | null> {
         return this.userService.me().pipe(
             tap((res) => {
-                if (res) {
-                    this.handleAuthSuccess(res);
-                } else {
-                    this.handleAuthFailure();
-                }
+                this.handleAuthSuccess(res);
+            }),
+            catchError((err) => {
+                this.handleAuthFailure(err);
+                return of(null);
             })
         );
     }
@@ -110,10 +110,15 @@ export class AuthService {
         return res;
     }
 
-    private handleAuthFailure(): void {
+    private handleAuthFailure(err: HttpErrorResponse): void {
         this.authStore.setCurrentUser(null);
+
+        const toastObj = {
+            message: err.status === 0 ? MESSAGES.SERVER_DOWN : MESSAGES.NOT_LOGGED_IN,
+            severity: err.status === 0 ? Severity.Error : Severity.Warning
+        }
         this.router.navigate(['/login']).then(() => {
-            this.toastService.show(MESSAGES.NOT_LOGGED_IN, Severity.Warning);
+            this.toastService.show(toastObj.message, toastObj.severity);
         });
     }
 }

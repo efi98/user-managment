@@ -56,10 +56,8 @@ export class UserService {
      * Expected response: { user: User | null; sessionExpiresAt?: number }
      * Returns null on error.
      */
-    me(): Observable<User | null> {
-        return this.http.get<User>(`${BASE_URL}/me`, { withCredentials: true }).pipe(
-            catchError(() => of(null))
-        );
+    me(): Observable<User> {
+        return this.http.get<User>(`${BASE_URL}/me`, { withCredentials: true });
     }
 
     /**
@@ -69,7 +67,7 @@ export class UserService {
         return this.http.post<void>(`${BASE_URL}/logout`, {}, { withCredentials: true });
     }
 
-    getStats() {
+    getStats(): Observable<any> {
         return this.http.get<any>(`${BASE_URL}/users/stats`, { withCredentials: true });
     }
 }

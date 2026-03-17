@@ -58,7 +58,9 @@ export class LoginComponent {
                 this.router.navigateByUrl(returnUrl);
             },
             error: (err) => {
-                this.toastService.show(err, Severity.Error);
+                if (err) {
+                    this.toastService.show(err, Severity.Error);
+                }
             },
         });
     }

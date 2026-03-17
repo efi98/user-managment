@@ -9,6 +9,7 @@ export const MESSAGES = {
     LOGIN_SUCCESS: 'Login successful!',
     SIGNUP_SUCCESS: 'Signup successful!',
     LOGOUT_SUCCESS: 'Logged out successfully',
+    SERVER_DOWN: 'Server is currently unavailable.\nPlease check your connection and try again.',
     SESSION_EXPIRED: 'Your session has expired. Please log in again.',
     CHANGES_CANCELLED: 'Changes cancelled',
     USER_DELETED: 'User deleted successfully',
