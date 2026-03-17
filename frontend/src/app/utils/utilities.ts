@@ -8,7 +8,6 @@ export function getRelativeTime(date: Date) {
 }
 
 export function getAvatar(imgUrl: any, value: any)  {
-    console.log(imgUrl, value);
     imgUrl = `${BASE_URL}${imgUrl}`;
     return `
             <div style="display:flex; align-items:center; gap:6px;">
