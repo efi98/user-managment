@@ -1,3 +1,9 @@
+/**
+ * Users controller: endpoints to manage users, avatars, and user statistics.
+ *
+ * Exposes REST endpoints under `/users` and uses guards to protect routes.
+ */
+
 import {
     ArgumentsHost,
     BadRequestException,
@@ -10,6 +16,7 @@ import {
     HttpCode,
     Param,
     Patch,
+    PayloadTooLargeException,
     Post,
     Req,
     Res,
@@ -20,7 +27,7 @@ import {
 } from '@nestjs/common';
 import {Request, Response} from 'express';
 import {FileInterceptor} from '@nestjs/platform-express';
-import {diskStorage, MulterError} from 'multer';
+import {diskStorage} from 'multer';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import {UsersService} from './users.service';
@@ -28,14 +35,13 @@ import {CreateUserDto, UpdateUserDto} from '@users/dto';
 import {UserStats} from '@users/interfaces';
 import {AdminChangeGuard, AuthGuard, SelfOrAdminGuard} from '@common/guards';
 import {deleteAvatarIfExists, destroySessionAndClearCookie} from '@common/helpers';
-import {ERRORS} from '@errors';
-import {CONSTS} from "@consts";
+import {API_RESPONSES} from '@api-res';
+import {DEFAULT_AVATAR_FILENAME} from "@consts";
 
 const avatarsDir = process.env.AVATARS_DIR
     ? path.resolve(process.env.AVATARS_DIR)
     : path.join(process.cwd(), 'assets/uploads/avatars');
 
-// Ensure avatars directory exists
 fs.mkdirSync(avatarsDir, {recursive: true});
 
 const multerOptions = {
@@ -50,48 +56,81 @@ const multerOptions = {
     fileFilter: (req: any, file: any, cb: any) => {
         if (file.mimetype?.startsWith('image/')) return cb(null, true)
 
-        req.fileValidationError = ERRORS.AVATAR_INVALID_FORMAT.message
+        req.fileValidationError = API_RESPONSES.UPLOAD_AVATAR_INVALID_FORMAT
         return cb(null, false)
     },
     limits: {fileSize: 2 * 1024 * 1024},
 }
 
-@Catch(MulterError)
-class MulterExceptionFilter implements ExceptionFilter {
-    catch(exception: MulterError, host: ArgumentsHost) {
+/**
+ * Exception filter for multer errors so uploads return a JSON 400.
+ */
+@Catch(PayloadTooLargeException, BadRequestException)
+export class MulterExceptionFilter implements ExceptionFilter {
+    catch(exception: PayloadTooLargeException | BadRequestException, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
-        const res = ctx.getResponse();
+        const response = ctx.getResponse<Response>();
+        const res = exception.getResponse() as any;
 
-        return res.status(400).json({
-            error: exception.message,
-            code: exception.code,
+        if (exception instanceof PayloadTooLargeException) {
+            return response.status(exception.getStatus()).json({
+                ...res,
+                message: API_RESPONSES.UPLOAD_AVATAR_FILE_TOO_LARGE,
+            });
+        }
+
+        return response.status(400).json({
+            message: exception.message,
         });
     }
 }
 
+/**
+ * Controller that manages user CRUD, avatars and statistics.
+ */
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {
     }
 
+    /**
+     * Return all users (safe representation).
+     * Protected by authentication.
+     */
     @Get()
     @UseGuards(AuthGuard)
     findAll() {
         return this.usersService.findAll();
     }
 
+    /**
+     * Return aggregated user statistics.
+     * Protected by authentication.
+     */
     @Get('stats')
     @UseGuards(AuthGuard)
     getStats(): Promise<UserStats> {
         return this.usersService.getStats();
     }
 
+    /**
+     * Return a single user by username (safe representation).
+     * Protected by authentication.
+     *
+     * @param username - requested username from route param
+     */
     @Get(':username')
     @UseGuards(AuthGuard)
     findOne(@Param('username') username: string) {
         return this.usersService.findOne(username);
     }
 
+    /**
+     * Create a new user and store the safe user in the session.
+     *
+     * @param createUserDto - validated payload for user creation
+     * @param req - Express request to set the session user
+     */
     @Post()
     async create(
         @Body() createUserDto: CreateUserDto,
@@ -102,6 +141,10 @@ export class UsersController {
         return userSafe;
     }
 
+    /**
+     * Update an existing user. Returns the updated safe user.
+     * Guards ensure only authorized users or admins may update.
+     */
     @Patch(':username')
     @UseGuards(AuthGuard, AdminChangeGuard, SelfOrAdminGuard)
     async update(
@@ -116,17 +159,21 @@ export class UsersController {
         return userSafe;
     }
 
+    /**
+     * Delete a user by username. Also removes avatar file and destroys session
+     * when a user deletes their own account.
+     */
     @Delete(':username')
     @UseGuards(AuthGuard, SelfOrAdminGuard)
     @HttpCode(204)
-    async remove(
+    async deleteUser(
         @Param('username') username: string,
         @Req() req: Request,
         @Res() res: Response,
     ) {
         const user = await this.usersService.findOne(username);
 
-        await this.usersService.remove(username);
+        await this.usersService.deleteUser(username);
 
         if (user.profilePhoto) {
             await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
@@ -134,9 +181,15 @@ export class UsersController {
 
         if (req.session?.user?.username === username) {
             destroySessionAndClearCookie(req, res);
+            return;
         }
+        res.status(204).send();
     }
 
+    /**
+     * Upload or replace a user's avatar image.
+     * Validates file type/size via multer options and returns the public path.
+     */
     @Post(':username/avatar')
     @HttpCode(200)
     @UseGuards(AuthGuard, SelfOrAdminGuard)
@@ -148,48 +201,51 @@ export class UsersController {
         @UploadedFile() file?: Express.Multer.File,
     ) {
         if (req.fileValidationError) {
-            throw new BadRequestException({error: req.fileValidationError})
+            throw new BadRequestException(req.fileValidationError)
         }
 
         if (!file) {
-            throw new BadRequestException({error: ERRORS.NO_FILE_UPLOADED.message});
+            throw new BadRequestException(API_RESPONSES.UPLOAD_AVATAR_REQ_FILE);
         }
 
-  const user = await this.usersService.findOne(username);
-  if (user.profilePhoto) {
-    await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
-  }
+        const user = await this.usersService.findOne(username);
+        if (user.profilePhoto) {
+            await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
+        }
 
         const publicPath = `/uploads/avatars/${file.filename}`;
         await this.usersService.updateAvatar(username, publicPath);
 
-  if (req.session?.user?.username === username) {
-    req.session.user.profilePhoto = publicPath;
-  }
+        if (req.session?.user?.username === username) {
+            req.session.user.profilePhoto = publicPath;
+        }
 
-  return {
-    message: ERRORS.AVATAR_UPLOADED.message,
-    profilePhoto: publicPath,
-  };
-}
+        return {
+            message: API_RESPONSES.UPLOAD_AVATAR_SUCCESS,
+            profilePhoto: publicPath,
+        };
+    }
 
-@Delete(':username/avatar')
-@UseGuards(AuthGuard, SelfOrAdminGuard)
-@HttpCode(200)
-async deleteAvatar(
-  @Param('username') username: string,
-  @Req() req: Request,
-) {
-  const { oldPhoto } = await this.usersService.deleteAvatar(username);
+    /**
+     * Delete a user's avatar and reset to the default avatar for their session.
+     */
+    @Delete(':username/avatar')
+    @UseGuards(AuthGuard, SelfOrAdminGuard)
+    @HttpCode(200)
+    async deleteAvatar(
+        @Param('username') username: string,
+        @Req() req: Request,
+    ) {
+        const {oldPhoto} = await this.usersService.deleteAvatar(username);
 
-  if (oldPhoto) {
-    await deleteAvatarIfExists(oldPhoto, avatarsDir);
-  }
+        if (oldPhoto) {
+            await deleteAvatarIfExists(oldPhoto, avatarsDir);
+        }
 
-  if (req.session?.user?.username === username) {
-    req.session.user.profilePhoto = `/uploads/avatars/${CONSTS.DEFAULT_AVATAR_FILENAME}`;
-  }
+        if (req.session?.user?.username === username) {
+            req.session.user.profilePhoto = `/uploads/avatars/${DEFAULT_AVATAR_FILENAME}`;
+        }
 
-  return { message: ERRORS.AVATAR_DELETED.message };
-}
+        return {message: API_RESPONSES.DELETE_AVATAR_SUCCESS};
+    }
 }

@@ -1,3 +1,9 @@
+/**
+ * Application root module.
+ *
+ * Bootstraps configuration, TypeORM (SQLite), static file serving for uploads and
+ * imports feature modules (Users, Auth).
+ */
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';

@@ -1,82 +1,62 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { Gender, NewUser, PasswordValidation } from '@interfaces';
-import { AuthService } from '@services/auth.service';
-import { PasswordPolicyService } from '@services/password-policy.service';
-import { PasswordStrengthComponent } from '@components/password-strength/password-strength';
-import { GENDERS_LIST } from "@consts";
-import { passwordValidatorFactory } from '@utils/validators';
-import { ToastService } from '@services/toast.service';
+import {Component, inject, signal} from '@angular/core';
+import {Router, RouterLink} from '@angular/router';
+import {AuthService} from '@services/auth.service';
+import {ToastService} from '@services/toast.service';
+import {AuthStore} from "@store/auth.store";
+import {UserCardComponent} from "@components/user-card/user-card.component";
+import {NewUser, Severity, User, UserFormConfig, UserFormField} from "@interfaces";
+import {finalize} from "rxjs";
+import {MESSAGES} from "@consts";
 
 @Component({
     selector: 'app-signup',
-    imports: [CommonModule, ReactiveFormsModule, RouterLink, PasswordStrengthComponent],
+    imports: [RouterLink, UserCardComponent],
     templateUrl: './signup.html',
     styleUrl: './signup.scss'
 })
 export class SignupComponent {
-    signupForm;
-    loading = false;
-    fb = inject(FormBuilder);
-    router = inject(Router);
-    authService = inject(AuthService);
-    toastService = inject(ToastService);
-    passwordPolicyService = inject(PasswordPolicyService);
-    passwordValidationResult!: PasswordValidation;
-    protected readonly GENDERS_LIST = GENDERS_LIST;
+    loading = signal(false);
+    formConfig: UserFormConfig = {
+        visibleFields: ['username', 'displayName', 'password', 'birthdate', 'gender'],
+        requiredFields: ['username', 'password'],
+        readonlyFields: [],
+        editable: true,
+        canToggleEdit: false,
+        startInEditMode: true,
+        showMeta: false,
+        showDelete: false,
+        showCancel: false,
+        emitOnlyDirtyFields: false,
+        submitLabel: 'Sign Up',
+        emptyLabel: 'EMPTY',
+    };
+    private readonly router = inject(Router);
+    private readonly authService = inject(AuthService);
+    private readonly authStore = inject(AuthStore);
+    private readonly toastService = inject(ToastService);
 
-    constructor() {
-        this.signupForm = this.fb.group({
-            username: ['', [Validators.required]],
-            displayName: [''],
-            password: ['', [
-                Validators.required,
-                passwordValidatorFactory(
-                    this.passwordPolicyService,
-                    (result) => {
-                        this.passwordValidationResult = result;
-                    }
-                )
-            ]],
-            birthdate: [null, []],
-            gender: ['']
+    onSubmitted(payload: Partial<User>) {
+        this.loading.set(true);
+
+        this.authService.signup(payload as NewUser).pipe(
+            finalize(() => {
+                this.loading.set(false);
+            })
+        ).subscribe({
+            next: (user) => {
+                if (!user) return;
+                this.toastService.show(MESSAGES.SIGNUP_SUCCESS, Severity.Success);
+                this.router.navigateByUrl('/');
+            },
+            error: (err) => {
+                this.toastService.show(err, Severity.Error);
+            }
         });
     }
 
-    submit() {
-        if (this.signupForm.invalid) {
-            return;
+    onFieldValueChanged(event: { field: UserFormField; value: unknown }) {
+        if (event.field === 'username') {
+            this.authStore.setUsernameSuggestions([]);
         }
-        this.loading = true;
-
-        const formValue = this.signupForm.value;
-        const newUser: NewUser = {
-            username: formValue.username!,
-            password: formValue.password!,
-            displayName: formValue.displayName!,
-        };
-        if (formValue.birthdate) {
-            newUser.birthdate = formValue.birthdate;
-        }
-        if (formValue.gender) {
-            newUser.gender = formValue.gender as Gender;
-        }
-
-        this.authService.signup(newUser).subscribe({
-            next: (user) => {
-                if (user) {
-                    this.toastService.show('Signup successful!', 'success');
-                    this.router.navigateByUrl('/');
-                }
-            },
-            error: (err) => {
-                this.toastService.show(`Signup failed: ${err.message}`, 'error');
-            },
-            complete: () => {
-                this.loading = false;
-            }
-        });
     }
 }

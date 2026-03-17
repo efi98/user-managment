@@ -1,11 +1,13 @@
 ## todo:
-1: unify error handling (move messages from errors file)
 
-2:AVATAR:
-  - add a photo profile (in the frontend)
-  - handle errors for an avatar in the frontend (like file size and format)
+* AVATAR:
+  - add a photo profile [front]
+  - handle errors for an avatar (see server) [front]
 
-3: Implement datepicker in the frontend
+[Future dev]
+* customization on stats
+* add language
 
-4: customization on stats
-5: add logs in the backend
+### General
+* Update tests, and add docks (add package for generating docks) [front]
+* add logs in the backend (Winston) [server]

@@ -24,7 +24,8 @@ module.exports = {
     '^@assets/(.*)$': '<rootDir>/assets/$1',
     '^@tests/(.*)$': '<rootDir>/test/$1',
     '^@consts$': '<rootDir>/src/common/consts.constants.ts',
-    '^@errors$': '<rootDir>/src/common/errors.constants.ts',
+    '^@api-res': '<rootDir>/src/common/api-res.constants.ts',
+    '^@enums': '<rootDir>/src/common/enums.constants.ts',
   },
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   coverageThreshold: {

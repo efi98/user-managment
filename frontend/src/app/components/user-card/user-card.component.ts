@@ -1,19 +1,25 @@
-import {Component, computed, effect, inject, Signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
-import {Mode, PasswordValidation, User} from '@interfaces';
+import {
+    Component,
+    computed,
+    effect,
+    EventEmitter,
+    inject, input,
+    Input,
+    OnChanges,
+    Output,
+    SimpleChanges
+} from '@angular/core';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {GENDERS_LIST} from '@consts';
-import {UserService} from '@services/user.service';
-import {AuthService} from '@services/auth.service';
-import {Router} from '@angular/router';
+import {PasswordValidation, User, UserFormConfig, UserFormField, UserFormModel} from '@interfaces';
 import {PasswordStrengthComponent} from '@components/password-strength/password-strength';
 import {PasswordPolicyService} from '@services/password-policy.service';
-import {passwordValidatorFactory} from '@utils/validators';
-import {getRelativeTime} from '@utils/utilities';
-import {AuthStore} from '@store/auth.store';
-import {DialogService} from "@services/dialog.service";
-import {filter} from "rxjs";
-import {ToastService} from '@services/toast.service';
+import {birthdateValidatorFactory, passwordValidatorFactory} from '@utils/validators';
+import {computeAgeFromBirthdate, formatDateInput, getRelativeTime, yearsAgo} from '@utils/utilities';
+import {toSignal} from "@angular/core/rxjs-interop";
+import {AuthStore} from "@store/auth.store";
+import {startWith} from "rxjs";
 
 @Component({
     selector: 'app-user-card',
@@ -21,208 +27,386 @@ import {ToastService} from '@services/toast.service';
     templateUrl: './user-card.component.html',
     styleUrls: ['./user-card.component.scss'],
 })
-export class UserCardComponent {
-    mode: Mode = Mode.View;
-    userForm: FormGroup<{
-        username: FormControl<string | null>;
-        displayName: FormControl<string | null>;
-        password: FormControl<string | null>;
-        birthdate: FormControl<string | null>;
-        gender: FormControl<string | null>;
-        isAdmin: FormControl<boolean | null>;
-    }>;
-    fb = inject(FormBuilder);
-    userService = inject(UserService);
-    authService = inject(AuthService);
-    router = inject(Router);
-    passwordPolicyService = inject(PasswordPolicyService);
-    authStore = inject(AuthStore);
-    dialogService = inject(DialogService);
-    toastService = inject(ToastService);
-    passwordValidationResult!: PasswordValidation;
-    currentUser: Signal<User | null> = this.authStore.currentUser;
-    selectedUser: Signal<User | null> = this.authStore.selectedUser;
-    user = computed(() => this.selectedUser() || this.currentUser());
-    createdRelative = computed(() => getRelativeTime(this.user()!.createdAt));
-    updatedRelative = computed(() => {
-        let createdAt = this.user()!.createdAt;
-        let updatedAt = this.user()!.updatedAt;
-        if (updatedAt.getTime() !== createdAt.getTime()) {
-            return getRelativeTime(this.user()!.updatedAt);
-        }
-        return '';
-    });
+export class UserCardComponent implements OnChanges {
+    loading = input(false);
+    @Input() config: UserFormConfig = {
+        visibleFields: ['username', 'displayName', 'password', 'birthdate', 'gender'],
+        requiredFields: [],
+        readonlyFields: [],
+        editable: true,
+        canToggleEdit: false,
+        startInEditMode: true,
+        showMeta: false,
+        showDelete: false,
+        showCancel: false,
+        emitOnlyDirtyFields: false,
+        submitLabel: 'Save',
+        editLabel: 'Edit',
+        deleteLabel: 'Delete',
+        emptyLabel: 'EMPTY',
+        hidePasswordStrength: false,
+        validatePassword: true,
+        showRequiredMarkers: true,
+    };
+
+    @Output() submitted = new EventEmitter<Partial<User>>();
+    @Output() cancelled = new EventEmitter<void>();
+    @Output() deleted = new EventEmitter<void>();
+    @Output() fieldValueChanged = new EventEmitter<{ field: UserFormField; value: unknown }>();
+
+    protected passwordValidationResult!: PasswordValidation;
     protected readonly GENDERS_LIST = GENDERS_LIST;
-    protected readonly Mode = Mode;
+    private isEditing = true;
+    private readonly fb = inject(FormBuilder);
+    userForm: UserFormModel = this.fb.group({
+        username: this.fb.control<string | null>(''),
+        displayName: this.fb.control<string | null>(''),
+        password: this.fb.control<string | null>(''),
+        birthdate: this.fb.control<string | null>(null),
+        gender: this.fb.control<string | null>(''),
+        isAdmin: this.fb.control<boolean | null>(false),
+    });
+
+    private readonly passwordPolicyService = inject(PasswordPolicyService);
+    private readonly authStore = inject(AuthStore);
+    readonly usernameSuggestions = this.authStore.usernameSuggestions;
+    private readonly usernameValue;
+    private readonly activeUser = this.authStore.activeUser;
+    private waitingForLoadingStart = false;
+    private waitingForLoadingEnd = false
+    createdRelative = computed(() => {
+        const activeUser = this.activeUser();
+        if (!activeUser?.createdAt) return '';
+        return getRelativeTime(this.toDate(activeUser.createdAt)!);
+    });
+    updatedRelative = computed(() => {
+        const activeUser = this.activeUser();
+        const createdAt = this.toDate(activeUser?.createdAt);
+        const updatedAt = this.toDate(activeUser?.updatedAt);
+        if (!createdAt || !updatedAt) return '';
+        if (createdAt.getTime() === updatedAt.getTime()) return '';
+        return getRelativeTime(updatedAt);
+    });
+    private initialFormValue: any;
 
     constructor() {
-        this.userForm = this.fb.group({
-            username: [''],
-            displayName: [''],
-            password: [
-                '',
-                [
-                    passwordValidatorFactory(this.passwordPolicyService, (result) => {
-                        this.passwordValidationResult = result;
-                    }),
-                ],
-            ],
-            birthdate: new FormControl<string | null>(null, []),
-            gender: [''],
-            isAdmin: [false],
+        this.usernameValue = toSignal(
+            this.userForm.controls.username.valueChanges.pipe(
+                startWith(this.userForm.controls.username.value ?? '')
+            ),
+            {
+                initialValue: this.userForm.controls.username.value ?? ''
+            }
+        );
+
+        effect(() => {
+            const username = this.usernameValue();
+            this.fieldValueChanged.emit({field: 'username', value: username});
+            this.authStore.setUsernameSuggestions([]);
         });
 
         effect(() => {
-            const user = this.user();
-            if (user) {
-                // prepare patch with only fields that exist on the form
-                const formattedBirthdate = this.formatBirthdateForInput(user.birthdate);
-                const patch: any = {
-                    username: user.username,
-                    displayName: user.displayName ?? null,
-                    birthdate: formattedBirthdate,
-                    gender: user.gender ?? null,
-                    isAdmin: user.isAdmin ?? false,
-                };
-                this.userForm.patchValue(patch);
+            this.patchForm(this.authStore.activeUser());
+        });
+
+        effect(() => {
+            const isLoading = this.loading();
+
+            if (this.waitingForLoadingStart && isLoading) {
+                this.waitingForLoadingStart = false;
+                this.waitingForLoadingEnd = true;
+                return;
+            }
+
+            if (this.waitingForLoadingEnd && !isLoading) {
+                this.waitingForLoadingEnd = false;
+
+                if (this.config.canToggleEdit) {
+                    this.isEditing = false;
+                }
             }
         });
     }
 
-    get isSaveDisabled(): boolean {
-        if (!this.userForm.dirty || this.userForm.invalid) {
-            return true;
-        }
-
-        const controls = this.userForm.controls;
-        for (const key in controls) {
-            if (controls.hasOwnProperty(key)) {
-                const control = controls[key as keyof typeof controls];
-                if (control.dirty && (control.value === '' || control.value === null)) {
-                    // A field is dirty and has been emptied
-                    return true;
-                }
-            }
-        }
-
-        return false;
+    get submitLabel(): string {
+        return this.config.submitLabel!;
     }
 
-    isEditRole(mode: Mode) {
-        return (mode === Mode.Edit && (!!this.selectedUser() && !this.authStore.isSelectedIsCurrent()))
+    get editLabel(): string {
+        return this.config.editLabel!;
+    }
+
+    get deleteLabel(): string {
+        return this.config.deleteLabel!;
+    }
+
+    get emptyLabel(): string {
+        return this.config.emptyLabel!;
+    }
+
+    get showActions(): boolean {
+        return this.config.editable !== false && this.isEditing;
+    }
+
+    get canShowEditButton(): boolean {
+        return this.config.editable !== false && !!this.config.canToggleEdit && !this.isEditing;
+    }
+
+    get isSubmitDisabled(): boolean {
+        if (this.userForm.invalid) {
+            return true;
+        }
+        const current: any = this.userForm.getRawValue();
+
+        const hasRealChange = Object.keys(current).some(key => {
+            return current[key] !== this.initialFormValue[key];
+        });
+
+        return !!(this.config.emitOnlyDirtyFields && !hasRealChange);
+    }
+
+    get minDate(): string {
+        return formatDateInput(yearsAgo(120));
+    }
+
+    get maxDate(): string {
+        return formatDateInput(yearsAgo(18));
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['config']) {
+            this.applyConfig();
+        }
+    }
+
+    isVisible(field: UserFormField): boolean {
+        return this.config.visibleFields.includes(field);
+    }
+
+    isReadonly(field: UserFormField): boolean {
+        return !!this.config.readonlyFields?.includes(field);
+    }
+
+    getError(field: UserFormField): string | null {
+        const control = this.userForm.get(field);
+        if (!control || !control.touched || !control.errors) {
+            return null;
+        }
+
+        const errors = control.errors;
+        if (errors['required']) {
+            return `${field} is required.`;
+        }
+
+        if (errors['birthdate']) {
+            return errors['birthdate'];
+        }
+
+        return 'Invalid value.';
+    }
+
+    canEditField(field: UserFormField): boolean {
+        return this.config.editable !== false && this.isEditing && !this.isReadonly(field);
+    }
+
+    canEditRole(): boolean {
+        return this.canEditField('isAdmin')
+            && !!this.authStore.selectedUser()
+            && !this.authStore.isSelectedIsCurrent();
+    }
+
+    isFieldRequired(field: UserFormField): boolean {
+        return !!this.config.requiredFields?.includes(field);
+    }
+
+    displayValue(field: UserFormField): string {
+        const raw = this.userForm.get(field)?.value;
+
+        if (field === 'password') {
+            return '******';
+        }
+
+        if (field === 'birthdate') {
+            const formatted = this.formatBirthdateForInput(raw as string);
+            return formatted || this.emptyLabel;
+        }
+
+        if (field === 'isAdmin') {
+            return raw ? 'Admin' : 'User';
+        }
+
+        if (raw === null || raw === undefined || raw === '') {
+            return this.emptyLabel;
+        }
+
+        return String(raw);
+    }
+
+    ageLabel(): string {
+        const age = computeAgeFromBirthdate(this.userForm.get('birthdate')?.value);
+        return age ? `${age}` : '';
+    }
+
+    isEmptyDisplay(field: UserFormField): boolean {
+        return this.displayValue(field) === this.emptyLabel;
+    }
+
+    isInvalid(field: string): boolean {
+        const control = this.userForm.get(field);
+        return !!(control && control.touched && control.invalid);
+    }
+
+    shouldShowRequired(field: UserFormField): boolean {
+        return this.config.showRequiredMarkers !== false && this.isFieldRequired(field);
     }
 
     switchToEditMode() {
-        this.mode = Mode.Edit;
-    }
-
-    save() {
-        if (this.userForm.invalid) {
-            return;
-        }
-
-        const updatedUser: Partial<User> = {};
-        const controls = this.userForm.controls;
-        Object.keys(controls).forEach((key) => {
-            const control = controls[key as keyof typeof controls];
-            if (control.dirty) {
-                const controlValue = control.value;
-                // Only include the value if it's not empty
-                if (controlValue !== '' && controlValue !== null) {
-                    (updatedUser as any)[key] = controlValue;
-                }
-            }
-        });
-
-        if (Object.keys(updatedUser).length === 0) {
-            this.userForm.markAsPristine();
-            return;
-        }
-
-        const user = this.user();
-        if (!user) {
-            return;
-        }
-
-        this.userService.updateUser(user.username, updatedUser).subscribe({
-            next: (user) => {
-                if (user) {
-                    if (this.selectedUser()) {
-                        this.authStore.setSelectedUser(user);
-                    } else if (this.currentUser()) {
-                        this.authStore.setCurrentUser(user);
-                    }
-                    this.mode = Mode.View;
-                    this.userForm.markAsPristine();
-                    this.toastService.show('User updated successfully', 'success');
-                }
-            },
-            error: (err) => {
-                this.toastService.show(`Update failed: ${err.message}`, 'error');
-            }
-        });
-    }
-
-    delete() {
-        const user = this.user();
-        let message = '';
-        if (!user) {
-            return;
-        }
-        if (this.selectedUser() && !this.authStore.isSelectedIsCurrent()) {
-            message = `You are about to delete user: <b>'${user.username}'</b>`;
-        } else {
-            message = `You are about to delete your account`;
-        }
-        this.dialogService.show(message + '.<br> are you sure you want to continue?');
-        this.dialogService.action$.pipe(
-            filter((confirmed: boolean) => confirmed)
-        ).subscribe(() => {
-            this.userService.deleteUser(user.username).subscribe({
-                next: () => {
-                    this.toastService.show('User deleted successfully', 'success');
-                    if (!(this.selectedUser() && !this.authStore.isSelectedIsCurrent())) {
-                        this.authService.logout();
-                        this.router.navigate(['/login']);
-                    }
-                },
-                error: (err) => {
-                    this.toastService.show(`Delete failed: ${err.message}`, 'error');
-                }
-            });
-        });
+        this.isEditing = true;
     }
 
     cancel() {
-        const user = this.user();
-        if (!user) {
-            return;
+        if (this.userForm.dirty || this.userForm.touched) {
+            this.cancelled.emit();
         }
-        if (this.userForm.dirty) {
-            this.toastService.show('Changes cancelled', 'info');
-        }
-        this.userForm.reset({
-            username: user.username,
-            displayName: user.displayName ?? null,
-            birthdate: this.formatBirthdateForInput(user.birthdate),
-            gender: user.gender ?? null,
-            isAdmin: user.isAdmin ?? false,
-        } as any);
-        this.mode = Mode.View;
+        this.patchForm(this.authStore.activeUser());
     }
 
     toggleRole() {
-        if (this.isEditRole(this.mode)) {
-            this.userForm.patchValue({isAdmin: !this.userForm.value.isAdmin});
-            this.userForm.get('isAdmin')?.markAsDirty();
+        if (!this.canEditRole()) {
+            return;
         }
+        const current = !!this.userForm.get('isAdmin')?.value;
+        this.userForm.patchValue({isAdmin: !current});
+        this.userForm.get('isAdmin')?.markAsDirty();
+        this.userForm.get('isAdmin')?.markAsTouched();
+    }
+
+    submit() {
+        if (this.userForm.invalid) {
+            this.userForm.markAllAsTouched();
+            return;
+        }
+
+        const payload = this.buildSubmitPayload();
+
+       this.waitingForLoadingStart = true;
+        this.waitingForLoadingEnd = false;
+
+        this.submitted.emit(payload);
+    }
+
+    private buildSubmitPayload(): Partial<User> {
+        const payload: Partial<User> = {};
+        const raw = this.userForm.getRawValue();
+
+        for (const field of this.config.visibleFields) {
+            if (!this.shouldIncludeField(field)) {
+                continue;
+            }
+
+            const value = raw[field];
+            const normalizedValue = this.normalizeFieldValue(field, value);
+
+            if (normalizedValue !== undefined) {
+                (payload as any)[field] = normalizedValue;
+            }
+        }
+
+        return payload;
+    }
+
+    private shouldIncludeField(field: UserFormField): boolean {
+        const control = this.userForm.get(field);
+        if (!control) {
+            return false;
+        }
+        return !(this.config.emitOnlyDirtyFields && !control.dirty);
+    }
+
+    private normalizeFieldValue(field: UserFormField, value: unknown): unknown {
+        if (field === 'password' && !value) {
+            return undefined;
+        }
+
+        if (this.isNullableEmptyField(field, value)) {
+            return this.config.emitOnlyDirtyFields ? null : undefined;
+        }
+
+        if (value === '' || value === null || value === undefined) {
+            return undefined;
+        }
+
+        return value;
+    }
+
+    private isNullableEmptyField(field: UserFormField, value: unknown): boolean {
+        return ['birthdate', 'gender', 'displayName'].includes(field) && (value === '' || value === null);
+    }
+
+    private applyConfig() {
+        this.isEditing = !!this.config.startInEditMode || !this.config.canToggleEdit;
+        this.applyValidators();
+    }
+
+    private applyValidators() {
+        const controls = this.userForm.controls;
+        const allFields: UserFormField[] = ['username', 'displayName', 'password', 'birthdate', 'gender', 'isAdmin'];
+
+        for (const field of allFields) {
+            const validators = [];
+
+            if (this.isFieldRequired(field)) {
+                validators.push(Validators.required);
+            }
+
+            if (field === 'password' && this.config.validatePassword !== false) {
+                validators.push(
+                    passwordValidatorFactory(this.passwordPolicyService, (result) => {
+                        this.passwordValidationResult = result;
+                    })
+                );
+            }
+
+            if (field === 'birthdate') {
+                validators.push(
+                    birthdateValidatorFactory({
+                        minDate: this.minDate,
+                        maxDate: this.maxDate,
+                    })
+                );
+            }
+
+            controls[field].setValidators(validators);
+            controls[field].updateValueAndValidity({emitEvent: false});
+        }
+    }
+
+    private patchForm(user: Partial<User> | null) {
+        this.userForm.reset({
+            username: user?.username ?? '',
+            displayName: user?.displayName ?? '',
+            password: '',
+            birthdate: this.formatBirthdateForInput(user?.birthdate),
+            gender: (user?.gender as string) ?? '',
+            isAdmin: user?.isAdmin ?? false,
+        });
+
+        this.initialFormValue = this.userForm.getRawValue();
+        this.userForm.markAsPristine();
+        this.passwordValidationResult = undefined as never;
+        this.isEditing = !!this.config.startInEditMode || !this.config.canToggleEdit;
     }
 
     private formatBirthdateForInput(birthdate?: string | Date | null): string | null {
         if (!birthdate) return null;
-        const b = typeof birthdate === 'string' ? new Date(birthdate) : birthdate;
-        if (Number.isNaN(b.getTime())) return null;
-        // YYYY-MM-DD
-        return b.toISOString().substring(0, 10);
+        const date = this.toDate(birthdate);
+        if (!date) return null;
+        return date.toISOString().substring(0, 10);
+    }
+
+    private toDate(value?: string | Date | null): Date | null {
+        if (!value) return null;
+        const date = typeof value === 'string' ? new Date(value) : value;
+        return Number.isNaN(date.getTime()) ? null : date;
     }
 }

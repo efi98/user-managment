@@ -16,3 +16,12 @@ export function computeAgeFromBirthdate(birthdate?: string | Date | null): strin
     if (m < 0 || (m === 0 && today.getDate() < b.getDate())) age--;
     return age >= 0 ? `${age}` : '';
 }
+export function yearsAgo(years: number): Date {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - years);
+    return date;
+}
+
+export function formatDateInput(date: Date): string {
+    return date.toISOString().substring(0, 10);
+}

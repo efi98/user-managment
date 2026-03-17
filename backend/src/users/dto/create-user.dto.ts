@@ -1,6 +1,13 @@
+/**
+ * DTO used when creating a user.
+ *
+ * Validation rules enforce username/password presence and birthdate/gender constraints.
+ */
+
 import {IsIn, IsNotEmpty, IsOptional, IsString, Matches, MinLength,} from 'class-validator';
-import {CONSTS, GENDER} from '@consts';
 import {IsNotFutureDate, MaxAge, MinAge} from '@common/validators';
+import {API_RESPONSES} from "@api-res";
+import {GENDER} from "@enums";
 
 export class CreateUserDto {
     @IsString()
@@ -9,7 +16,7 @@ export class CreateUserDto {
 
     @IsString()
     @IsNotEmpty()
-    @MinLength(4, {message: CONSTS.PASSWORD_MIN_LENGTH_MSG})
+    @MinLength(4, {message: API_RESPONSES.PASSWORD_MIN_LENGTH(4)})
     password: string;
 
     @IsOptional()
@@ -17,7 +24,7 @@ export class CreateUserDto {
     displayName?: string;
 
     @IsOptional()
-    @Matches(/^\d{4}-\d{2}-\d{2}$/, {message: 'birthdate must be YYYY-MM-DD'})
+    @Matches(/^\d{4}-\d{2}-\d{2}$/, {message: API_RESPONSES.BIRTHDAY_FORMAT})
     @IsNotFutureDate()
     @MinAge(18)
     @MaxAge(120)
@@ -26,7 +33,7 @@ export class CreateUserDto {
     @IsOptional()
     @IsString()
     @IsIn([GENDER.male, GENDER.female, GENDER.other], {
-        message: CONSTS.GENDER_INVALID_MSG,
+        message: API_RESPONSES.GENDER_INVALID
     })
     gender?: string;
 }

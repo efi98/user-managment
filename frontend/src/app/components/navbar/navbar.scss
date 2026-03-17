@@ -79,3 +79,11 @@
 .user-dropdown-menu button.text:hover {
   background: var(--active-color);
 }
+
+.error-message {
+  height: 2rem;
+  color: var(--white);
+  text-align: center;
+  padding: 0.3rem 0 0;
+  background: var(--error-color);
+}

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '@services/auth.service';
 import { User } from "@interfaces";
 import { AuthStore } from "@store/auth.store";
+import {MESSAGES} from "@consts";
 
 @Component({
     selector: 'app-navbar',
@@ -16,9 +17,12 @@ export class Navbar {
     authStore = inject(AuthStore);
     isLoggedIn = this.authService.isLoggedIn;
     isAdmin = this.authService.isAdmin;
+    isServerDown = this.authStore.isServerDown;
     selectedUser: Signal<User | null> = this.authStore.selectedUser;
+    selectedDisplayName = this.authStore.selectedDisplayName;
     showUserDropdown = false;
     private readonly elementRef = inject(ElementRef);
+    protected errorMessage = MESSAGES.SERVER_DOWN;
 
     @HostListener('document:click', ['$event'])
     onDocumentClick(event: MouseEvent) {

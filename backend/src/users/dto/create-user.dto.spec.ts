@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { validate } from 'class-validator';
 import { ValidationPipe, BadRequestException } from '@nestjs/common';
 import { CreateUserDto } from '@src/users';
-import { CONSTS } from '@consts';
+import {API_RESPONSES} from "@api-res";
 
 describe('CreateUserDto validation', () => {
     it('valid payload passes', async () => {
@@ -21,7 +21,7 @@ describe('CreateUserDto validation', () => {
         const dto = Object.assign(new CreateUserDto(), { username: 'alice', password: '123' });
         const res = await validate(dto);
         const msg = Object.values(res[0].constraints || {})[0];
-        expect(msg).toBe(CONSTS.PASSWORD_MIN_LENGTH_MSG);
+        expect(msg).toBe(API_RESPONSES.PASSWORD_MIN_LENGTH(4));
     });
 
     it('birthdate pattern fails on bad format', async () => {

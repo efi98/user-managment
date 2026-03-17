@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {deleteAvatarIfExists} from '@src/common';
-import {CONSTS} from '@consts';
+import {DEFAULT_AVATAR_FILENAME} from '@consts';
 import {makeTmpDir, rmTmpDir} from "@tests/utils/tmp-dir";
 
 describe('avatar-files.helper', () => {
@@ -20,7 +20,7 @@ describe('avatar-files.helper', () => {
     });
 
     it('does not delete default avatar filename', async () => {
-        const p = `/uploads/avatars/${CONSTS.DEFAULT_AVATAR_FILENAME}`;
+        const p = `/uploads/avatars/${DEFAULT_AVATAR_FILENAME}`;
         await expect(deleteAvatarIfExists(p, dir)).resolves.toBeUndefined();
     });
 

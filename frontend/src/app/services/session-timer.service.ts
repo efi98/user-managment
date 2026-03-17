@@ -5,7 +5,7 @@ import { Subscription, timer } from "rxjs";
 @Injectable({
     providedIn: 'root',
 })
-export class SessionTimer {
+export class SessionTimerService {
     private sessionTimerSub: Subscription | null = null;
     private readonly SESSION_TIMEOUT_MS = environment.SessionTimeoutMs;
 

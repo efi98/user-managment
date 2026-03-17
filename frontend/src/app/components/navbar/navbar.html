@@ -20,7 +20,7 @@
             }
             <li class="user-dropdown-wrapper" style="position: relative;">
                 <button type="button" (click)="toggleUserDropdown()">
-                    {{ authService.currentUser()?.displayName }} &#x25BC;
+                    {{ selectedDisplayName() }} &#x25BC;
                 </button>
                 @if (showUserDropdown) {
                     <ul class="user-dropdown-menu">
@@ -36,3 +36,6 @@
         }
     </ul>
 </nav>
+@if (isServerDown()) {
+    <div class="error-message">{{ errorMessage }}</div>
+}

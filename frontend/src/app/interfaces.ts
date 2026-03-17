@@ -1,4 +1,5 @@
 import zxcvbn from 'zxcvbn';
+import {FormControl, FormGroup} from "@angular/forms";
 
 // Enums
 export enum Gender {
@@ -7,9 +8,12 @@ export enum Gender {
     Other = 'other'
 }
 
-export enum Mode {
-    View = 'view',
-    Edit = 'Edit'
+
+export enum Severity {
+    Success = 'success',
+    Error = 'error',
+    Info = 'info',
+    Warning = 'warning'
 }
 
 // User
@@ -44,4 +48,36 @@ export type ToastSeverity = 'success' | 'error' | 'info' | 'warning';
 export interface Toast {
     message: string;
     severity: ToastSeverity;
+}
+
+// Form
+export type UserFormField = 'username' | 'displayName' | 'password' | 'birthdate' | 'gender' | 'isAdmin';
+
+export type UserFormModel = FormGroup<{
+    username: FormControl<string | null>;
+    displayName: FormControl<string | null>;
+    password: FormControl<string | null>;
+    birthdate: FormControl<string | null>;
+    gender: FormControl<string | null>;
+    isAdmin: FormControl<boolean | null>;
+}>;
+
+export interface UserFormConfig {
+    editable?: boolean;
+    visibleFields: UserFormField[];
+    requiredFields?: UserFormField[];
+    readonlyFields?: UserFormField[];
+    canToggleEdit?: boolean;
+    startInEditMode?: boolean;
+    showMeta?: boolean;
+    showDelete?: boolean;
+    showCancel?: boolean;
+    emitOnlyDirtyFields?: boolean;
+    submitLabel?: string;
+    editLabel?: string;
+    deleteLabel?: string;
+    emptyLabel?: string;
+    hidePasswordStrength?: boolean;
+    validatePassword?: boolean;
+    showRequiredMarkers?: boolean;
 }

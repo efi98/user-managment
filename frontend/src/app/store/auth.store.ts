@@ -1,17 +1,21 @@
-import { computed } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { User } from '@interfaces';
+import {computed} from '@angular/core';
+import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
+import {User} from '@interfaces';
 
 export interface AuthState {
     users: User[];
     currentUser: User | null;
     selectedUser: User | null;
+    usernameSuggestions: string[];
+    isServerDown: boolean;
 }
 
 export const initialAuthState: AuthState = {
     users: [],
     currentUser: null,
     selectedUser: null,
+    usernameSuggestions: [],
+    isServerDown: false
 };
 
 export const AuthStore = signalStore(
@@ -21,7 +25,9 @@ export const AuthStore = signalStore(
         isLoggedIn: computed(() => !!currentUser()),
         isAdmin: computed(() => !!currentUser()?.isAdmin),
         isSelectedIsCurrent: computed(() => currentUser()?.username === selectedUser()?.username),
-        selectedUsername: computed(() => selectedUser()?.username)
+        selectedUsername: computed(() => selectedUser()?.username),
+        selectedDisplayName: computed(() => currentUser()?.displayName ?? currentUser()?.username),
+        activeUser: computed(() => selectedUser() || currentUser()),
     })),
     withMethods((store) => ({
         setUsers(users: User[]) {
@@ -40,6 +46,12 @@ export const AuthStore = signalStore(
             } else {
                 patchState(store, {selectedUser: null});
             }
+        },
+        setUsernameSuggestions(suggestions: string[]) {
+            patchState(store, {usernameSuggestions: suggestions});
+        },
+        setIsServerDown(isDown: boolean) {
+            patchState(store, {isServerDown: isDown});
         }
     }))
 );

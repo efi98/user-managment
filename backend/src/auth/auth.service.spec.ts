@@ -1,10 +1,10 @@
 import {Test} from '@nestjs/testing';
 import {getRepositoryToken} from '@nestjs/typeorm';
-import {NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {Repository} from 'typeorm';
 import {AuthService} from './auth.service';
+import { UsersService } from '@users/users.service';
 import {User} from '@users/entities';
-import {ERRORS} from '@errors';
+import {API_RESPONSES} from '@api-res';
 
 jest.mock('bcrypt', () => ({
   compareSync: jest.fn(),
@@ -22,9 +22,14 @@ describe('AuthService', () => {
             findOne: jest.fn(),
         };
 
+        const usersServiceMock = {
+            getByUsernameOrThrow: jest.fn(),
+        } as any;
+
         const mod = await Test.createTestingModule({
             providers: [
                 AuthService,
+                {provide: UsersService, useValue: usersServiceMock},
                 {provide: getRepositoryToken(User), useValue: repo},
             ],
         }).compile();
@@ -46,7 +51,8 @@ describe('AuthService', () => {
             profilePhoto: null,
         } as User;
 
-    repo.findOne!.mockResolvedValue(user);
+    // stub the injected UsersService used by AuthService
+    (service as any).usersService.getByUsernameOrThrow = jest.fn().mockResolvedValue(user);
     (bcrypt.compareSync as unknown as jest.Mock).mockReturnValue(true);
 
         const res = await service.login({username: 'alice', password: 'pass'});
@@ -61,29 +67,21 @@ describe('AuthService', () => {
     });
 
     it('login throws NotFoundException when user not found', async () => {
-        repo.findOne!.mockResolvedValue(null);
+        (service as any).usersService.getByUsernameOrThrow.mockRejectedValue(
+            new Error(API_RESPONSES.USER_NOT_FOUND('missing')),
+        );
 
         await expect(
             service.login({username: 'missing', password: 'pass'}),
-        ).rejects.toMatchObject(
-            new NotFoundException({
-                code: ERRORS.USER_NOT_FOUND.code,
-                message: ERRORS.USER_NOT_FOUND.message,
-            }),
-        );
+        ).rejects.toThrow(API_RESPONSES.USER_NOT_FOUND('missing'));
     });
 
   it('login throws UnauthorizedException on wrong password', async () => {
-    repo.findOne!.mockResolvedValue({ username: 'alice', password: 'hashed' } as any);
+    (service as any).usersService.getByUsernameOrThrow.mockResolvedValue({ username: 'alice', password: 'hashed' } as any);
     (bcrypt.compareSync as unknown as jest.Mock).mockReturnValue(false);
 
         await expect(
             service.login({username: 'alice', password: 'wrong'}),
-        ).rejects.toMatchObject(
-            new UnauthorizedException({
-                code: ERRORS.INCORRECT_PASSWORD.code,
-                message: ERRORS.INCORRECT_PASSWORD.message,
-            }),
-        );
+        ).rejects.toThrow(API_RESPONSES.INCORRECT_PASSWORD);
     });
 });

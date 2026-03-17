@@ -4,7 +4,7 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { UsersService } from './users.service';
 import { User } from '@users/entities';
-import { ERRORS } from '@errors';
+import { API_RESPONSES } from '@api-res';
 
 jest.mock('bcrypt', () => ({
   compareSync: jest.fn(),
@@ -70,12 +70,13 @@ describe('UsersService', () => {
     it('findOne throws if user missing', async () => {
         repo.findOne!.mockResolvedValue(null);
 
-        await expect(service.findOne('missing')).rejects.toMatchObject(
-            new NotFoundException({
-                code: ERRORS.USER_NOT_FOUND.code,
-                message: ERRORS.USER_NOT_FOUND.message,
-            }),
-        );
+        await expect(service.findOne('missing')).rejects.toBeInstanceOf(NotFoundException);
+        try {
+            await service.findOne('missing');
+        } catch (e: any) {
+            // message is constructed by the service using the username
+            expect(e.message).toBe(API_RESPONSES.USER_NOT_FOUND('missing'));
+        }
     });
 
   it('create throws ConflictException with suggestions if username exists', async () => {
@@ -91,7 +92,8 @@ describe('UsersService', () => {
     } catch (e: any) {
       expect(e.response).toHaveProperty('suggestions');
       expect(Array.isArray(e.response.suggestions)).toBe(true);
-      expect(e.response.code).toBe(ERRORS.USERNAME_EXISTS.code);
+      // message property contains the human readable message produced by API_RESPONSES
+      expect(e.response.message).toBe(API_RESPONSES.USERNAME_EXISTS('taken'));
     }
   });
 
@@ -134,19 +136,19 @@ describe('UsersService', () => {
         expect((res as any).password).toBeUndefined();
     });
 
-    it('remove succeeds and returns void', async () => {
+    it('deleteUser succeeds and calls repository.remove', async () => {
         const entity = {username: 'alice'} as any;
         repo.findOne!.mockResolvedValue(entity);
         repo.remove!.mockResolvedValue(entity);
 
-        await expect(service.remove('alice')).resolves.toBeUndefined();
+        await expect(service.deleteUser('alice')).resolves.toBeUndefined();
         expect(repo.remove).toHaveBeenCalledWith(entity);
     });
 
-    it('remove throws if user missing', async () => {
+    it('deleteUser throws NotFoundException when user missing', async () => {
         repo.findOne!.mockResolvedValue(null);
 
-        await expect(service.remove('missing')).rejects.toBeInstanceOf(NotFoundException);
+        await expect(service.deleteUser('missing')).rejects.toBeInstanceOf(NotFoundException);
     });
 
     it('getStats returns totals and percent', async () => {

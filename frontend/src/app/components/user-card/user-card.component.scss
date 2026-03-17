@@ -6,15 +6,22 @@
   margin: 1rem 25%;
 }
 
-.cancel, .save {
-  width: 40%;
-}
-
 .actions {
   margin-top: 16px;
   display: flex;
   gap: 1rem;
   justify-content: space-evenly;
+
+  .button-spinner {
+    width: 0.5rem;
+    height: 0.5rem;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    animation: button-spin 0.7s cubic-bezier(0.56, -0.29, 0.32, 1.28) infinite;
+    flex-shrink: 0;
+  }
 }
 
 .timestamps {
@@ -31,18 +38,19 @@
 .empty-field {
   font-style: italic;
   color: color.adjust(styles.$text-color-secondary, $lightness: 40%);
-
 }
 
 .view-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.25rem;
 }
 
 .grid-item {
   display: flex;
   flex-direction: column;
+  gap: 0.45rem;
+  min-width: 0;
 }
 
 .grid-item label {
@@ -74,9 +82,11 @@
   transition: background-color 0.3s;
   flex: 1;
   justify-content: center;
+  cursor: default;
 
   &.edit-mode {
     background-color: transparent;
+    cursor: pointer;
   }
 
   &.active {
@@ -102,3 +112,30 @@
   }
 }
 
+.username-suggestions {
+  color: var(--error-color);
+  font-size: 0.7em;
+}
+
+button[type="submit"] {
+  flex: 1;
+}
+
+:not(input).error {
+  grid-column: 1 / -1;
+  color: var(--error-color);
+  font-size: 0.7em;
+
+  &.required-asterisk {
+    font-size: inherit;
+  }
+}
+
+@keyframes button-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

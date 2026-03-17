@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of, tap } from 'rxjs';
-import { NewUser, UpdatedUser, User } from '@interfaces';
+import { catchError, Observable, of, tap } from 'rxjs';
+import {NewUser, Severity, UpdatedUser, User} from '@interfaces';
 import { BASE_URL } from "@consts";
 import { AuthStore } from "@store/auth.store";
 import { ToastService } from "./toast.service";
@@ -19,8 +19,8 @@ export class UserService {
             }),
             catchError(error => {
                 this.toastService.show(
-                    'Error fetching users' + (error.status === 0 ? ': Server Is Down' : ''),
-                    'error'
+                    error,
+                    Severity.Error
                 );
                 return of([]);
             })
@@ -28,12 +28,7 @@ export class UserService {
     }
 
     getUserByUsername(username: string): Observable<User | undefined> {
-        return this.http.get<User>(`${BASE_URL}/users/${username}`, { withCredentials: true }).pipe(
-            map(user => user),
-            catchError(() => {
-                return of(undefined);
-            })
-        );
+        return this.http.get<User>(`${BASE_URL}/users/${username}`, { withCredentials: true });
     }
 
     addUser(user: NewUser): Observable<User | null> {
@@ -41,19 +36,11 @@ export class UserService {
     }
 
     updateUser(username: string, updates: UpdatedUser): Observable<User | null> {
-        return this.http.patch<User>(`${BASE_URL}/users/${username}`, updates, { withCredentials: true }).pipe(
-            catchError(() => {
-                return of(null);
-            })
-        );
+        return this.http.patch<User>(`${BASE_URL}/users/${username}`, updates, { withCredentials: true });
     }
 
     deleteUser(username: string): Observable<any> {
-        return this.http.delete(`${BASE_URL}/users/${username}`, { withCredentials: true }).pipe(
-            catchError(() => {
-                return of(null);
-            })
-        );
+        return this.http.delete(`${BASE_URL}/users/${username}`, { withCredentials: true });
     }
 
     /**
@@ -69,10 +56,8 @@ export class UserService {
      * Expected response: { user: User | null; sessionExpiresAt?: number }
      * Returns null on error.
      */
-    me(): Observable<User | null> {
-        return this.http.get<User>(`${BASE_URL}/me`, { withCredentials: true }).pipe(
-            catchError(() => of(null))
-        );
+    me(): Observable<User> {
+        return this.http.get<User>(`${BASE_URL}/me`, { withCredentials: true });
     }
 
     /**
@@ -82,7 +67,7 @@ export class UserService {
         return this.http.post<void>(`${BASE_URL}/logout`, {}, { withCredentials: true });
     }
 
-    getStats() {
+    getStats(): Observable<any> {
         return this.http.get<any>(`${BASE_URL}/users/stats`, { withCredentials: true });
     }
 }

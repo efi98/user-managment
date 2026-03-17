@@ -1,37 +1,35 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {Injectable, UnauthorizedException} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { User } from '@users/entities/user.entity';
-import { LoginDto } from '@auth/dto';
-import { SafeUser } from '@users/interfaces/safe-user.interface';
-import { ERRORS } from '@errors';
+import {LoginDto} from '@auth/dto';
+import {SafeUser} from '@users/interfaces/safe-user.interface';
+import {API_RESPONSES} from '@api-res';
 import {toSafeUser} from "@src/common";
+import {UsersService} from "@src/users";
 
+/**
+ * Authentication service: validates credentials and returns a safe user object.
+ */
 @Injectable()
 export class AuthService {
     constructor(
-        @InjectRepository(User)
-        private readonly usersRepository: Repository<User>,
+        private readonly usersService: UsersService
     ) {
     }
 
+    /**
+     * Validate a user's credentials and return a SafeUser.
+     *
+     * @param loginDto - Login credentials (username and password)
+     * @returns The sanitized SafeUser object on success
+     * @throws {UnauthorizedException} when the password is incorrect
+     */
     async login(loginDto: LoginDto): Promise<SafeUser> {
         const {username, password} = loginDto;
-
-        const user = await this.usersRepository.findOne({
-            where: {username},
-        });
-
-        if (!user) {
-            const {code, message} = ERRORS.USER_NOT_FOUND;
-            throw new NotFoundException({code, message});
-        }
+        const user = await this.usersService.getByUsernameOrThrow(username);
 
         const isMatch = bcrypt.compareSync(password, user.password);
         if (!isMatch) {
-            const {code, message} = ERRORS.INCORRECT_PASSWORD;
-            throw new UnauthorizedException({code, message});
+            throw new UnauthorizedException(API_RESPONSES.INCORRECT_PASSWORD);
         }
 
         return toSafeUser(user);

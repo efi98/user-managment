@@ -1,86 +1,226 @@
 <div class="container">
-    <form [formGroup]="userForm" (ngSubmit)="save()">
+    <form [formGroup]="userForm" (ngSubmit)="submit()" novalidate>
         <div class="view-grid">
-            <div class="grid-item">
-                <label for="username">Username</label>
-                <input id="username" formControlName="username" readonly>
-            </div>
-            <div class="grid-item">
-                <label for="displayName">Display Name</label>
-                <input id="displayName" formControlName="displayName" [readonly]="mode === Mode.View"
-                       [class.error]="userForm.get('displayName')?.dirty && !userForm.get('displayName')?.value">
-            </div>
-            <div class="grid-item">
-                <label for="password">Password</label>
-                @if (mode === Mode.View) {
-                    <input id="password-view" value="******" readonly class="empty-field reveal">
-                } @else {
-                    <input id="password-edit" type="password" formControlName="password"
-                           [class.error]="userForm.get('password')?.dirty && userForm.get('password')?.invalid">
-                    <app-password-strength
-                            [passwordValidationResult]="passwordValidationResult"></app-password-strength>
-                }
-            </div>
-            <div class="grid-item">
-                <label for="birthdate">Birthdate</label>
-                @if (mode === Mode.View) {
-                    <input id="birthdate-view" type="date" [value]="(user()?.birthdate ? user()?.birthdate : 'EMPTY')" readonly
-                           [class.empty-field]="!user()?.birthdate">
-                } @else {
-                    <input id="birthdate-edit" type="date" formControlName="birthdate"
-                           [class.error]="userForm.get('birthdate')?.dirty && userForm.get('birthdate')?.invalid">
-                }
-            </div>
-            <div class="grid-item">
-                <label for="gender">Gender</label>
-                @if (mode === Mode.View) {
-                    <input id="gender-view" [value]="userForm.get('gender')?.value || 'EMPTY'" readonly
-                           [class.empty-field]="!userForm.get('gender')?.value">
-                } @else {
-                    <select id="gender-edit" formControlName="gender"
-                            [class.error]="userForm.get('gender')?.dirty && !userForm.get('gender')?.value">
-                        <option value="">Select Gender</option>
-                        @for (gender of GENDERS_LIST; track gender) {
-                            <option [value]="gender">{{ gender }}</option>
+            @if (isVisible('username')) {
+                <div class="grid-item">
+                    <label for="username">
+                        Username
+                        @if (shouldShowRequired('username')) {
+                            <span class="required-asterisk"
+                                  [class.error]="isInvalid('username')">*</span>
                         }
-                    </select>
-                }
-            </div>
-            <div class="grid-item">
-                <label>Role</label>
-                <div class="role-card" [class.edit-mode]="isEditRole(mode)">
-                    <div class="role-option" (click)="toggleRole()"
-                         [class.edit-mode]="isEditRole(mode)"
-                         [class.active]="userForm.get('isAdmin')?.value">
-                        <span>👑</span>
-                        <span>Admin</span>
-                    </div>
-                    <div class="role-option" (click)="toggleRole()"
-                         [class.edit-mode]="isEditRole(mode)"
-                         [class.active]="!userForm.get('isAdmin')?.value">
-                        <span>👤</span>
-                        <span>User</span>
+                    </label>
+
+                    @if (canEditField('username')) {
+                        <input id="username"
+                               type="text"
+                               formControlName="username"
+                               autocomplete="username"
+                               [class.error]="isInvalid('username')">
+
+                        @if (getError('username'); as error) {
+                            <div class="error">{{ error }}</div>
+                        }
+
+                        @if (usernameSuggestions().length) {
+                            <div class="username-suggestions">
+                                <span>Available:&nbsp;</span>
+                                <b>{{ usernameSuggestions().join(', ') }}.</b>
+                            </div>
+                        }
+                    } @else {
+                        <input id="username-view"
+                               [value]="displayValue('username')"
+                               readonly
+                               [class.empty-field]="isEmptyDisplay('username')">
+                    }
+                </div>
+            }
+
+            @if (isVisible('displayName')) {
+                <div class="grid-item">
+                    <label for="displayName">
+                        Display Name
+                        @if (shouldShowRequired('displayName')) {
+                            <span class="required-asterisk"
+                                  [class.error]="isInvalid('displayName')">*</span>
+                        }
+                    </label>
+
+                    @if (canEditField('displayName')) {
+                        <input id="displayName"
+                               type="text"
+                               formControlName="displayName"
+                               autocomplete="name"
+                               [class.error]="isInvalid('displayName')">
+
+                        @if (getError('displayName'); as error) {
+                            <div class="error">{{ error }}</div>
+                        }
+                    } @else {
+                        <input id="displayName-view"
+                               [value]="displayValue('displayName')"
+                               readonly
+                               [class.empty-field]="isEmptyDisplay('displayName')">
+                    }
+                </div>
+            }
+
+            @if (isVisible('password')) {
+                <div class="grid-item">
+                    <label for="password">
+                        Password
+                        @if (shouldShowRequired('password')) {
+                            <span class="required-asterisk"
+                                  [class.error]="isInvalid('password')">*</span>
+                        }
+                    </label>
+
+                    @if (canEditField('password')) {
+                        <input id="password"
+                               type="password"
+                               formControlName="password"
+                               autocomplete="new-password"
+                               [class.error]="isInvalid('password')">
+                        @if (!config.hidePasswordStrength) {
+                            <app-password-strength
+                                    [passwordValidationResult]="passwordValidationResult"></app-password-strength>
+                        }
+                    } @else {
+                        <input id="password-view"
+                               [value]="displayValue('password')"
+                               readonly
+                               class="empty-field">
+                    }
+                </div>
+            }
+
+            @if (isVisible('birthdate')) {
+                <div class="grid-item">
+                    <label for="birthdate">
+                        Birthdate
+                        @if (shouldShowRequired('birthdate')) {
+                            <span class="required-asterisk"
+                                  [class.error]="isInvalid('birthdate')">*</span>
+                        }
+                    </label>
+
+                    @if (canEditField('birthdate')) {
+                        <input id="birthdate"
+                               type="date"
+                               min="{{ minDate }}"
+                               max="{{ maxDate }}"
+                               formControlName="birthdate"
+                               [class.error]="isInvalid('birthdate')">
+
+                        @if (getError('birthdate'); as error) {
+                            <div class="error">{{ error }}</div>
+                        }
+                    } @else {
+                        <input id="birthdate-view"
+                               type="date"
+                               [value]="displayValue('birthdate') === emptyLabel ? '' : displayValue('birthdate')"
+                               readonly
+                               [class.empty-field]="isEmptyDisplay('birthdate')">
+                    }
+
+                    @if (ageLabel()) {
+                        <div class="field-note">Age: {{ ageLabel() }}</div>
+                    }
+                </div>
+            }
+
+            @if (isVisible('gender')) {
+                <div class="grid-item">
+                    <label for="gender">
+                        Gender
+                        @if (shouldShowRequired('gender')) {
+                            <span class="required-asterisk"
+                                  [class.error]="isInvalid('gender')">*</span>
+                        }
+                    </label>
+
+                    @if (canEditField('gender')) {
+                        <select id="gender" formControlName="gender"
+                                [class.error]="isInvalid('gender')">
+                            <option value="">Select Gender</option>
+                            @for (gender of GENDERS_LIST; track gender) {
+                                <option [value]="gender">{{ gender }}</option>
+                            }
+                        </select>
+
+                        @if (getError('gender'); as error) {
+                            <div class="error">{{ error }}</div>
+                        }
+                    } @else {
+                        <input id="gender-view"
+                               [value]="displayValue('gender')"
+                               readonly
+                               [class.empty-field]="isEmptyDisplay('gender')">
+                    }
+                </div>
+            }
+
+            @if (isVisible('isAdmin')) {
+                <div class="grid-item">
+                    <label for="isAdmin">Role
+                        @if (shouldShowRequired('isAdmin')) {
+                            <span class="required-asterisk"
+                                  [class.error]="isInvalid('isAdmin')">*</span>
+                        }
+                    </label>
+                    <div class="role-card" [class.edit-mode]="canEditRole()">
+                        <button class="role-option"
+                                type="button"
+                                (click)="toggleRole()"
+                                [class.edit-mode]="canEditRole()"
+                                [class.active]="userForm.get('isAdmin')?.value">
+                            <span>👑</span>
+                            <span>Admin</span>
+                        </button>
+                        <button class="role-option"
+                                type="button"
+                                (click)="toggleRole()"
+                                [class.edit-mode]="canEditRole()"
+                                [class.active]="!userForm.get('isAdmin')?.value">
+                            <span>👤</span>
+                            <span>User</span>
+                        </button>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="timestamps">
-            <span><b>Created:</b> {{ createdRelative() }}</span>
-            @if (updatedRelative().length) {
-                <span>|</span>
-                <span><b>Modified:</b> {{ updatedRelative() }}</span>
             }
         </div>
 
+        @if (config.showMeta) {
+            <div class="timestamps">
+                @if (createdRelative()) {
+                    <span><b>Created:</b> {{ createdRelative() }}</span>
+                }
+                @if (updatedRelative()) {
+                    <span>|</span>
+                    <span><b>Modified:</b> {{ updatedRelative() }}</span>
+                }
+            </div>
+        }
 
-        @if (mode === Mode.View) {
-            <button type="button" (click)="switchToEditMode()" class="edit primary">Edit</button>
-        } @else {
+        @if (canShowEditButton) {
+            <button type="button" (click)="switchToEditMode()" class="edit primary">{{ editLabel }}</button>
+        }
+
+        @if (showActions) {
             <div class="actions">
-                <button type="button" class="delete" (click)="delete()">Delete</button>
-                <button type="button" class="cancel" (click)="cancel()">Cancel</button>
-                <button type="submit" class="save" [disabled]="isSaveDisabled">Save</button>
+                @if (config.showDelete) {
+                    <button type="button" class="delete" (click)="deleted.emit()">{{ deleteLabel }}</button>
+                }
+                @if (config.showCancel) {
+                    <button type="button" (click)="cancel()">Cancel</button>
+                }
+                <button type="submit" class="submit" [disabled]="isSubmitDisabled || loading()">
+                    @if (loading()) {
+                        <span class="button-spinner" aria-hidden="true"></span>
+                    }
+                    {{ submitLabel }}
+                </button>
             </div>
         }
     </form>

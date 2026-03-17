@@ -27,7 +27,8 @@
       "@assets/*": ["assets/*"],
       "@tests/*": ["test/*"],
       "@consts": ["src/common/consts.constants"],
-      "@errors": ["src/common/errors.constants"]
+      "@api-res": ["src/common/api-res.constants"],
+      "@enums": ["src/common/enums.constants"]
     }
   }
 }
