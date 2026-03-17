@@ -18,7 +18,7 @@ export class User {
   birthdate: string;
 
   @Column({ nullable: true })
-  profilePhoto: string;
+  avatar: string;
 
   @Column({ nullable: true })
   gender: string;

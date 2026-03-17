@@ -1,6 +1,14 @@
 <div class="container">
     <form [formGroup]="userForm" (ngSubmit)="submit()" novalidate>
         <div class="view-grid">
+            @if (activeUser()?.avatar || activeUser()?.displayName) {
+                <div class="grid-item avatar-item">
+                    <div class="avatar-large">
+                        <img [src]="getAvatarUrl(activeUser()?.avatar)"
+                             [alt]="activeUser()?.displayName || activeUser()?.username">
+                    </div>
+                </div>
+            }
             @if (isVisible('username')) {
                 <div class="grid-item">
                     <label for="username">

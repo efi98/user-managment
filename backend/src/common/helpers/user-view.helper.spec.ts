@@ -19,33 +19,33 @@ describe('user-view.helper', () => {
         expect((s as any).password).toBeUndefined();
         expect(s.displayName).toBe(null);
         expect(s.isAdmin).toBe(false);
-        expect(s.profilePhoto).toContain('/uploads/avatars/');
+        expect(s.avatar).toContain('/uploads/avatars/');
     });
 
-    it('toSafeUser adds default avatar when profilePhoto is missing', () => {
+    it('toSafeUser adds default avatar when avatar is missing', () => {
         const u: any = {
             username: 'alice',
             password: 'secret',
-            profilePhoto: null,
+            avatar: null,
             createdAt: 'c',
             updatedAt: 'u',
         };
 
         const s = toSafeUser(u)!;
-        expect(s.profilePhoto).toBe(`/uploads/avatars/${DEFAULT_AVATAR_FILENAME}`);
+        expect(s.avatar).toBe(`/uploads/avatars/${DEFAULT_AVATAR_FILENAME}`);
     });
 
-    it('toSafeUser keeps existing profilePhoto', () => {
+    it('toSafeUser keeps existing avatar', () => {
         const u: any = {
             username: 'alice',
             password: 'secret',
-            profilePhoto: '/uploads/avatars/custom.jpg',
+            avatar: '/uploads/avatars/custom.jpg',
             createdAt: 'c',
             updatedAt: 'u',
         };
 
         const s = toSafeUser(u)!;
-        expect(s.profilePhoto).toBe('/uploads/avatars/custom.jpg');
+        expect(s.avatar).toBe('/uploads/avatars/custom.jpg');
     });
 
     it('toSafeUsers maps array', () => {

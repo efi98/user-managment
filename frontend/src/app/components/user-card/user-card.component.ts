@@ -11,7 +11,7 @@ import {
     SimpleChanges
 } from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-import {GENDERS_LIST} from '@consts';
+import {BASE_URL, GENDERS_LIST} from '@consts';
 import {PasswordValidation, User, UserFormConfig, UserFormField, UserFormModel} from '@interfaces';
 import {PasswordStrengthComponent} from '@components/password-strength/password-strength';
 import {PasswordPolicyService} from '@services/password-policy.service';
@@ -71,7 +71,7 @@ export class UserCardComponent implements OnChanges {
     private readonly authStore = inject(AuthStore);
     readonly usernameSuggestions = this.authStore.usernameSuggestions;
     private readonly usernameValue;
-    private readonly activeUser = this.authStore.activeUser;
+    protected readonly activeUser = this.authStore.activeUser;
     private waitingForLoadingStart = false;
     private waitingForLoadingEnd = false
     createdRelative = computed(() => {
@@ -126,6 +126,10 @@ export class UserCardComponent implements OnChanges {
                 }
             }
         });
+    }
+
+    getAvatarUrl(avatar?: string | null): string {
+        return `${BASE_URL}${avatar}`;
     }
 
     get submitLabel(): string {

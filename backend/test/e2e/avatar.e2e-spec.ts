@@ -49,7 +49,7 @@ describe('E2E avatar upload and delete', () => {
         expect(res.body).toHaveProperty('message', API_RESPONSES.UPLOAD_AVATAR_INVALID_FORMAT);
     });
 
-    it('upload accepts image and returns profilePhoto', async () => {
+    it('upload accepts image and returns avatar', async () => {
         const fp = path.join(tmpDir, 'pic.png');
         fs.writeFileSync(fp, Buffer.from([0x89, 0x50, 0x4e, 0x47])); // minimal png header bytes
 
@@ -59,8 +59,8 @@ describe('E2E avatar upload and delete', () => {
             .expect(200);
 
         expect(res.body).toHaveProperty('message', API_RESPONSES.UPLOAD_AVATAR_SUCCESS);
-        expect(res.body).toHaveProperty('profilePhoto');
-        expect(String(res.body.profilePhoto)).toContain('/uploads/avatars/');
+        expect(res.body).toHaveProperty('avatar');
+        expect(String(res.body.avatar)).toContain('/uploads/avatars/');
     });
 
     it('upload rejects file that is too large', async () => {

@@ -12,17 +12,17 @@ const unlink = promisify(fs.unlink);
  * and will rethrow other filesystem errors. It also avoids deleting the
  * configured default avatar filename.
  *
- * @param profilePhoto - A path or URL to the user's profile photo. Only the
+ * @param avatar - A path or URL to the user's profile photo. Only the
  *   basename is used to resolve the file under `avatarsDir`.
  * @param avatarsDir - Absolute path to the directory that contains avatar files.
  */
 export async function deleteAvatarIfExists(
-    profilePhoto: string,
+    avatar: string,
     avatarsDir: string,
 ): Promise<void> {
-    if (!profilePhoto) return;
+    if (!avatar) return;
 
-    const filename = path.basename(profilePhoto);
+    const filename = path.basename(avatar);
 
     if (filename === DEFAULT_AVATAR_FILENAME) return;
 

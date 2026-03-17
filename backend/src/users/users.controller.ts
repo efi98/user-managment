@@ -175,8 +175,8 @@ export class UsersController {
 
         await this.usersService.deleteUser(username);
 
-        if (user.profilePhoto) {
-            await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
+        if (user.avatar) {
+            await deleteAvatarIfExists(user.avatar, avatarsDir);
         }
 
         if (req.session?.user?.username === username) {
@@ -209,20 +209,20 @@ export class UsersController {
         }
 
         const user = await this.usersService.findOne(username);
-        if (user.profilePhoto) {
-            await deleteAvatarIfExists(user.profilePhoto, avatarsDir);
+        if (user.avatar) {
+            await deleteAvatarIfExists(user.avatar, avatarsDir);
         }
 
         const publicPath = `/uploads/avatars/${file.filename}`;
         await this.usersService.updateAvatar(username, publicPath);
 
         if (req.session?.user?.username === username) {
-            req.session.user.profilePhoto = publicPath;
+            req.session.user.avatar = publicPath;
         }
 
         return {
             message: API_RESPONSES.UPLOAD_AVATAR_SUCCESS,
-            profilePhoto: publicPath,
+            avatar: publicPath,
         };
     }
 
@@ -243,7 +243,7 @@ export class UsersController {
         }
 
         if (req.session?.user?.username === username) {
-            req.session.user.profilePhoto = `/uploads/avatars/${DEFAULT_AVATAR_FILENAME}`;
+            req.session.user.avatar = `/uploads/avatars/${DEFAULT_AVATAR_FILENAME}`;
         }
 
         return {message: API_RESPONSES.DELETE_AVATAR_SUCCESS};

@@ -175,7 +175,7 @@ describe('UsersService', () => {
     });
 
     it('updateAvatar stores photo and returns oldPhoto', async () => {
-        repo.findOne!.mockResolvedValue({username: 'alice', profilePhoto: '/uploads/old.jpg'} as any);
+        repo.findOne!.mockResolvedValue({username: 'alice', avatar: '/uploads/old.jpg'} as any);
         repo.save!.mockImplementation(async (x: any) => x);
 
         const res = await service.updateAvatar('alice', '/uploads/new.jpg');
@@ -183,8 +183,8 @@ describe('UsersService', () => {
         expect(res).toEqual({oldPhoto: '/uploads/old.jpg', newPhoto: '/uploads/new.jpg'});
     });
 
-  it('deleteAvatar sets profilePhoto to null and returns oldPhoto', async () => {
-    repo.findOne!.mockResolvedValue({ username: 'alice', profilePhoto: '/uploads/old.jpg' } as any);
+  it('deleteAvatar sets avatar to null and returns oldPhoto', async () => {
+    repo.findOne!.mockResolvedValue({ username: 'alice', avatar: '/uploads/old.jpg' } as any);
     repo.save!.mockImplementation(async (x: any) => x);
 
         const res = await service.deleteAvatar('alice');

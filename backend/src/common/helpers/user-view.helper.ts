@@ -18,7 +18,7 @@ export function toSafeUser(user: any): SafeUser | null {
         username: safeUser.username,
         displayName: safeUser.displayName || null,
         birthdate: safeUser.birthdate ?? null,
-        profilePhoto: safeUser.profilePhoto || DEFAULT_AVATAR,
+        avatar: safeUser.avatar || DEFAULT_AVATAR,
         gender: safeUser.gender ?? null,
         isAdmin: !!safeUser.isAdmin,
         createdAt: safeUser.createdAt,

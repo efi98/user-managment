@@ -197,14 +197,14 @@ export class UsersService {
     /**
      * Update the user's stored avatar path and return the old and new path.
      */
-    async updateAvatar(username: string, profilePhoto: string) {
+    async updateAvatar(username: string, avatar: string) {
         const user = await this.getByUsernameOrThrow(username);
 
-        const oldPhoto = user.profilePhoto;
-        user.profilePhoto = profilePhoto;
+        const oldPhoto = user.avatar;
+        user.avatar = avatar;
         await this.usersRepository.save(user);
 
-        return {oldPhoto, newPhoto: profilePhoto};
+        return {oldPhoto, newPhoto: avatar};
     }
 
     /**
@@ -213,8 +213,8 @@ export class UsersService {
     async deleteAvatar(username: string) {
         const user = await this.getByUsernameOrThrow(username);
 
-        const oldPhoto = user.profilePhoto;
-        user.profilePhoto = null;
+        const oldPhoto = user.avatar;
+        user.avatar = null;
         await this.usersRepository.save(user);
 
         return {oldPhoto};

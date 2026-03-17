@@ -137,7 +137,7 @@ describe('E2E users', () => {
 
         expect(res.body.username).toBe('newuser');
         expect(res.body.password).toBeUndefined();
-        expect(res.body.profilePhoto).toMatch(/^\/uploads\/avatars\//);
+        expect(res.body.avatar).toMatch(/^\/uploads\/avatars\//);
     });
 
     it('POST /users returns 409 and suggestions when username exists', async () => {
