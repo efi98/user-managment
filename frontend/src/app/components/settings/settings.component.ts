@@ -38,11 +38,11 @@ export class SettingsComponent {
     private readonly userService = inject(UserService);
     private readonly authService = inject(AuthService);
     private readonly authStore = inject(AuthStore);
-    user = this.authStore.activeUser;
     private readonly dialogService = inject(DialogService);
     private readonly toastService = inject(ToastService);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
+    activeUser = this.authStore.activeUser;
     protected header = computed(() => {
         const username = this.route.snapshot.paramMap.get('username');
         return username ? `'${username}' Details` : 'User Settings';
@@ -50,7 +50,7 @@ export class SettingsComponent {
 
     onSubmitted(payload: Partial<User>) {
         this.loading.set(true);
-        const user = this.user();
+        const user = this.activeUser();
         if (!user) return;
 
         this.userService.updateUser(user.username, payload as UpdatedUser).pipe(
@@ -60,12 +60,7 @@ export class SettingsComponent {
         ).subscribe({
             next: (updatedUser) => {
                 if (!updatedUser) return;
-
-                if (this.authStore.selectedUser()) {
-                    this.authStore.setSelectedUser(updatedUser);
-                } else {
-                    this.authStore.setCurrentUser(updatedUser);
-                }
+                this.updateActiveUser(updatedUser);
 
                 this.toastService.show(MESSAGES.USER_UPDATED, Severity.Success);
             },
@@ -75,8 +70,48 @@ export class SettingsComponent {
         });
     }
 
+    onAvatarChanged(file: File) {
+        const user = this.activeUser();
+        if (!user) return;
+
+        this.loading.set(true);
+        this.userService.uploadAvatar(user.username, file).pipe(
+            finalize(() => {
+                this.loading.set(false);
+            })
+        ).subscribe({
+            next: ({avatar}) => {
+                this.updateActiveUser({...user, avatar});
+                this.toastService.show(MESSAGES.AVATAR_UPDATED, Severity.Success);
+            },
+            error: (err) => {
+                this.toastService.show(err, Severity.Error);
+            }
+        });
+    }
+
+    onAvatarDeleted() {
+        const user = this.activeUser();
+        if (!user) return;
+
+        this.loading.set(true);
+        this.userService.deleteAvatar(user.username).pipe(
+            finalize(() => {
+                this.loading.set(false);
+            })
+        ).subscribe({
+            next: () => {
+                this.updateActiveUser({...user, avatar: '/uploads/avatars/default.jpg'});
+                this.toastService.show(MESSAGES.AVATAR_DELETED, Severity.Success);
+            },
+            error: (err) => {
+                this.toastService.show(err, Severity.Error);
+            }
+        });
+    }
+
     onDeleted() {
-        const user = this.user();
+        const user = this.activeUser();
         if (!user) return;
 
         const isForeignSelectedUser = !!this.authStore.selectedUser() && !this.authStore.isSelectedIsCurrent();
@@ -112,5 +147,9 @@ export class SettingsComponent {
 
     onCancelled() {
         this.toastService.show(MESSAGES.CHANGES_CANCELLED, Severity.Info);
+    }
+
+    private updateActiveUser(user: User) {
+        this.authStore.updateUser(user);
     }
 }

@@ -24,6 +24,9 @@
   padding: 0;
 }
 
+.navbar-links li {
+    display: flex;
+}
 .navbar-links a,
 .navbar-links button {
   color: var(--white);

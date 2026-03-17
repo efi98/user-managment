@@ -5,6 +5,8 @@
             [config]="formConfig"
             [loading]="loading()"
             (submitted)="onSubmitted($event)"
+            (avatarChanged)="onAvatarChanged($event)"
+            (avatarDeleted)="onAvatarDeleted()"
             (deleted)="onDeleted()"
             (cancelled)="onCancelled()">
     </app-user-card>

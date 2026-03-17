@@ -71,7 +71,6 @@ export class MulterExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
         const res = exception.getResponse() as any;
-
         if (exception instanceof PayloadTooLargeException) {
             return response.status(exception.getStatus()).json({
                 ...res,
@@ -79,9 +78,7 @@ export class MulterExceptionFilter implements ExceptionFilter {
             });
         }
 
-        return response.status(400).json({
-            message: exception.message,
-        });
+        return response.status(400).json(exception.getResponse() as any);
     }
 }
 

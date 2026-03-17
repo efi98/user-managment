@@ -14,4 +14,6 @@ export const MESSAGES = {
     CHANGES_CANCELLED: 'Changes cancelled',
     USER_DELETED: 'User deleted successfully',
     USER_UPDATED: 'User updated successfully',
+    AVATAR_UPDATED: 'Avatar updated successfully',
+    AVATAR_DELETED: 'Avatar deleted successfully',
 };

@@ -2,13 +2,15 @@ import {CommonModule} from '@angular/common';
 import {
     Component,
     computed,
+    ElementRef,
     effect,
     EventEmitter,
     inject, input,
     Input,
     OnChanges,
     Output,
-    SimpleChanges
+    SimpleChanges,
+    ViewChild
 } from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {BASE_URL, GENDERS_LIST} from '@consts';
@@ -52,11 +54,16 @@ export class UserCardComponent implements OnChanges {
     @Output() submitted = new EventEmitter<Partial<User>>();
     @Output() cancelled = new EventEmitter<void>();
     @Output() deleted = new EventEmitter<void>();
+    @Output() avatarChanged = new EventEmitter<File>();
+    @Output() avatarDeleted = new EventEmitter<void>();
     @Output() fieldValueChanged = new EventEmitter<{ field: UserFormField; value: unknown }>();
 
+    @ViewChild('avatarInput') private readonly avatarInput?: ElementRef<HTMLInputElement>;
+
     protected passwordValidationResult!: PasswordValidation;
-    protected readonly GENDERS_LIST = GENDERS_LIST;
     private isEditing = true;
+    protected readonly GENDERS_LIST = GENDERS_LIST;
+    private readonly defaultAvatarSuffix = '/uploads/avatars/default.jpg';
     private readonly fb = inject(FormBuilder);
     userForm: UserFormModel = this.fb.group({
         username: this.fb.control<string | null>(''),
@@ -134,6 +141,15 @@ export class UserCardComponent implements OnChanges {
 
     get submitLabel(): string {
         return this.config.submitLabel!;
+    }
+
+    get canManageAvatar(): boolean {
+        return this.config.editable !== false && this.isEditing;
+    }
+
+    get hasCustomAvatar(): boolean {
+        const avatar = this.activeUser()?.avatar;
+        return !avatar?.endsWith(this.defaultAvatarSuffix);
     }
 
     get editLabel(): string {
@@ -297,6 +313,34 @@ export class UserCardComponent implements OnChanges {
         this.waitingForLoadingEnd = false;
 
         this.submitted.emit(payload);
+    }
+
+    openAvatarPicker() {
+        if (!this.canManageAvatar || this.loading()) {
+            return;
+        }
+
+        this.avatarInput?.nativeElement.click();
+    }
+
+    onAvatarFileSelected(event: Event) {
+        const input = event.target as HTMLInputElement | null;
+        const file = input?.files?.[0];
+
+        if (!file) {
+            return;
+        }
+
+        this.avatarChanged.emit(file);
+        input.value = '';
+    }
+
+    removeAvatar() {
+        if (!this.canManageAvatar || this.loading() || !this.hasCustomAvatar) {
+            return;
+        }
+
+        this.avatarDeleted.emit();
     }
 
     private buildSubmitPayload(): Partial<User> {

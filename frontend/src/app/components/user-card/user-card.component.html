@@ -7,6 +7,27 @@
                         <img [src]="getAvatarUrl(activeUser()?.avatar)"
                              [alt]="activeUser()?.displayName || activeUser()?.username">
                     </div>
+                    @if (canManageAvatar) {
+                        <input #avatarInput
+                               type="file"
+                               accept="image/*"
+                               class="avatar-input"
+                               (change)="onAvatarFileSelected($event)">
+                        <div class="avatar-actions">
+                            <button type="button"
+                                    class="primary"
+                                    [disabled]="loading()"
+                                    (click)="openAvatarPicker()">
+                                Edit Avatar
+                            </button>
+                            <button type="button"
+                                    class="delete"
+                                    [disabled]="loading() || !hasCustomAvatar"
+                                    (click)="removeAvatar()">
+                                Delete Avatar
+                            </button>
+                        </div>
+                    }
                 </div>
             }
             @if (isVisible('username')) {

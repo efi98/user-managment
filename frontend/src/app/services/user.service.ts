@@ -39,6 +39,21 @@ export class UserService {
         return this.http.patch<User>(`${BASE_URL}/users/${username}`, updates, { withCredentials: true });
     }
 
+    uploadAvatar(username: string, file: File): Observable<{ message: string; avatar: string }> {
+        const formData = new FormData();
+        formData.append('avatar', file);
+
+        return this.http.post<{ message: string; avatar: string }>(
+            `${BASE_URL}/users/${username}/avatar`,
+            formData,
+            { withCredentials: true }
+        );
+    }
+
+    deleteAvatar(username: string): Observable<{ message: string }> {
+        return this.http.delete<{ message: string }>(`${BASE_URL}/users/${username}/avatar`, { withCredentials: true });
+    }
+
     deleteUser(username: string): Observable<any> {
         return this.http.delete(`${BASE_URL}/users/${username}`, { withCredentials: true });
     }

@@ -58,6 +58,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 0.75rem;
 
   .avatar-large {
     width: 160px;
@@ -75,6 +76,17 @@
       object-fit: fill;
       display: block;
     }
+  }
+
+  .avatar-input {
+    display: none;
+  }
+
+  .avatar-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
 
@@ -162,5 +174,16 @@ button[type="submit"] {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .view-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions,
+  .avatar-item .avatar-actions {
+    flex-direction: column;
   }
 }
