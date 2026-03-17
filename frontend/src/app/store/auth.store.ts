@@ -1,12 +1,13 @@
-import { computed } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { User } from '@interfaces';
+import {computed} from '@angular/core';
+import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
+import {User} from '@interfaces';
 
 export interface AuthState {
     users: User[];
     currentUser: User | null;
     selectedUser: User | null;
     usernameSuggestions: string[];
+    isServerDown: boolean;
 }
 
 export const initialAuthState: AuthState = {
@@ -14,6 +15,7 @@ export const initialAuthState: AuthState = {
     currentUser: null,
     selectedUser: null,
     usernameSuggestions: [],
+    isServerDown: false
 };
 
 export const AuthStore = signalStore(
@@ -48,6 +50,9 @@ export const AuthStore = signalStore(
         setUsernameSuggestions(suggestions: string[]) {
             patchState(store, {usernameSuggestions: suggestions});
         },
+        setIsServerDown(isDown: boolean) {
+            patchState(store, {isServerDown: isDown});
+        }
     }))
 );
 

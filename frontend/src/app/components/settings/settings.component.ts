@@ -70,7 +70,7 @@ export class SettingsComponent {
                 this.toastService.show(MESSAGES.USER_UPDATED, Severity.Success);
             },
             error: (err) => {
-                this.toastService.show(err.error.message, Severity.Error);
+                this.toastService.show(err, Severity.Error);
             }
         });
     }
@@ -104,7 +104,7 @@ export class SettingsComponent {
                     }
                 },
                 error: (err) => {
-                    this.toastService.show(err.error.message, Severity.Error);
+                    this.toastService.show(err, Severity.Error);
                 }
             });
         });

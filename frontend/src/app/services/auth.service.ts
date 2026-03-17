@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {UserService} from './user.service';
-import {catchError, map, Observable, of, switchMap, tap, throwError} from 'rxjs';
+import {catchError, finalize, map, Observable, of, switchMap, tap, throwError} from 'rxjs';
 import {NewUser, Severity, ToastSeverity, User} from '@interfaces';
 import {Router} from '@angular/router';
 import {AuthStore} from '@store/auth.store';
@@ -41,10 +41,7 @@ export class AuthService {
      */
     login(credentials: Pick<User, 'username' | 'password'>): Observable<User> {
         return this.userService.login(credentials).pipe(
-            map(res => this.handleAuthSuccess(res)),
-            catchError((err) => {
-                return throwError(() => err.error.message);
-            })
+            map(res => this.handleAuthSuccess(res))
         );
     }
 
@@ -65,8 +62,8 @@ export class AuthService {
                 );
             }),
             catchError((err) => {
-                this.authStore.setUsernameSuggestions(err.error.suggestions);
-                return throwError(() => err.error.message);
+                this.authStore.setUsernameSuggestions(err.suggestions);
+                return throwError(() => err.message);
             })
         );
     }
@@ -76,10 +73,9 @@ export class AuthService {
      * Sends request to backend to destroy session, then logs out locally.
      */
     logout(): void {
-        this.userService.logout().subscribe({
-            next: () => this.finishLogout({message: MESSAGES.LOGOUT_SUCCESS}),
-            error: () => this.finishLogout({message: MESSAGES.LOGOUT_SUCCESS})
-        });
+        this.userService.logout().pipe(finalize(() => {
+            this.finishLogout({message: MESSAGES.LOGOUT_SUCCESS});
+        })).subscribe();
     }
 
     /**

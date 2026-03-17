@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, Observable, of, tap } from 'rxjs';
 import {NewUser, Severity, UpdatedUser, User} from '@interfaces';
 import { BASE_URL } from "@consts";
 import { AuthStore } from "@store/auth.store";
@@ -19,7 +19,7 @@ export class UserService {
             }),
             catchError(error => {
                 this.toastService.show(
-                    error.error?.message,
+                    error,
                     Severity.Error
                 );
                 return of([]);

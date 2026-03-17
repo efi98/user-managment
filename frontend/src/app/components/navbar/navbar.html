@@ -36,3 +36,6 @@
         }
     </ul>
 </nav>
+@if (isServerDown()) {
+    <div class="error-message">{{ errorMessage }}</div>
+}
