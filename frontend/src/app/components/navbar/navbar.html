@@ -19,7 +19,12 @@
                 </li>
             }
             <li class="user-dropdown-wrapper" style="position: relative;">
-                <button type="button" (click)="toggleUserDropdown()">
+                <button type="button" class="user-button" (click)="toggleUserDropdown()">
+                    @if (currentUser()?.avatar) {
+                        <span class="avatar-small">
+                            <img [src]="getAvatarUrl(currentUser()?.avatar)" [alt]="selectedDisplayName()">
+                        </span>
+                    }
                     {{ selectedDisplayName() }} &#x25BC;
                 </button>
                 @if (showUserDropdown) {

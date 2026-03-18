@@ -6,7 +6,7 @@ declare module 'express-session' {
       username: string;
       displayName: string;
       birthdate: string;
-      profilePhoto: string;
+      avatar: string;
       gender: string;
       isAdmin: boolean;
       createdAt: string;

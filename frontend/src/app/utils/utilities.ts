@@ -1,9 +1,21 @@
 import RelativeTime from '@yaireo/relative-time'
+import {BASE_URL} from "@consts";
 
 const relativeTime = new RelativeTime();
 
 export function getRelativeTime(date: Date) {
     return relativeTime.from(date);
+}
+
+export function getAvatar(imgUrl: any, value: any)  {
+    imgUrl = `${BASE_URL}${imgUrl}`;
+    return `
+            <div style="display:flex; align-items:center; gap:6px;">
+                <img src="${imgUrl}" 
+                     style="width:20px; height:20px; border-radius:50%;" />
+                <span>${value}</span>
+            </div>
+        `;
 }
 
 export function computeAgeFromBirthdate(birthdate?: string | Date | null): string {

@@ -33,6 +33,17 @@ export const AuthStore = signalStore(
         setUsers(users: User[]) {
             patchState(store, {users: users.map(_mapUserDates)});
         },
+        updateUser(user: User) {
+            const mappedUser = _mapUserDates(user);
+
+            patchState(store, {
+                users: store.users().map(existing =>
+                    existing.username === mappedUser.username ? mappedUser : existing
+                ),
+                currentUser: store.currentUser()?.username === mappedUser.username ? mappedUser : store.currentUser(),
+                selectedUser: store.selectedUser()?.username === mappedUser.username ? mappedUser : store.selectedUser(),
+            });
+        },
         setCurrentUser(user: User | null) {
             if (user) {
                 patchState(store, {currentUser: _mapUserDates(user)});

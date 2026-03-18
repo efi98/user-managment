@@ -36,7 +36,7 @@ async function seed() {
       age: u.age ?? null,
       gender: u.gender ?? null,
       isAdmin: !!u.isAdmin,
-      profilePhoto: u.profilePhoto ?? null,
+      avatar: u.avatar ?? null,
       createdAt: u.createdAt ?? new Date().toISOString(),
       updatedAt: u.updatedAt ?? new Date().toISOString(),
     }));

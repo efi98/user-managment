@@ -15,7 +15,7 @@ describe('avatar-files.helper', () => {
         rmTmpDir(dir);
     });
 
-    it('does nothing for empty profilePhoto', async () => {
+    it('does nothing for empty avatar', async () => {
         await expect(deleteAvatarIfExists('', dir)).resolves.toBeUndefined();
     });
 

@@ -48,7 +48,7 @@ describe('AuthService', () => {
             updatedAt: '2020-01-01',
             birthdate: null,
             gender: null,
-            profilePhoto: null,
+            avatar: null,
         } as User;
 
     // stub the injected UsersService used by AuthService

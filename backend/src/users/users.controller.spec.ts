@@ -129,7 +129,7 @@ describe('UsersController', () => {
     });
 
     it('deleteUser deletes avatar and destroys session when deleting self', async () => {
-        service.findOne.mockResolvedValue({username: 'alice', profilePhoto: '/uploads/avatars/old.jpg'});
+        service.findOne.mockResolvedValue({username: 'alice', avatar: '/uploads/avatars/old.jpg'});
         service.deleteUser.mockResolvedValue(undefined as any);
 
         const req: any = {session: {user: {username: 'alice'}}};
@@ -144,7 +144,7 @@ describe('UsersController', () => {
     });
 
     it('deleteUser does not destroy session when deleting other user', async () => {
-        service.findOne.mockResolvedValue({username: 'alice', profilePhoto: '/uploads/avatars/old.jpg'});
+        service.findOne.mockResolvedValue({username: 'alice', avatar: '/uploads/avatars/old.jpg'});
         service.deleteUser.mockResolvedValue(undefined as any);
 
         const req: any = {session: {user: {username: 'bob'}}};
@@ -182,8 +182,8 @@ describe('UsersController', () => {
         });
     });
 
-    it('uploadAvatar updates profilePhoto and deletes old avatar when old exists', async () => {
-        service.findOne.mockResolvedValue({username: 'alice', profilePhoto: '/uploads/avatars/old.jpg'});
+    it('uploadAvatar updates avatar and deletes old avatar when old exists', async () => {
+        service.findOne.mockResolvedValue({username: 'alice', avatar: '/uploads/avatars/old.jpg'});
         service.updateAvatar.mockResolvedValue({
             oldPhoto: '/uploads/avatars/old.jpg',
             newPhoto: '/uploads/avatars/new.jpg',
@@ -198,12 +198,12 @@ describe('UsersController', () => {
         expect(service.updateAvatar).toHaveBeenCalledWith('alice', '/uploads/avatars/alice-123.jpg');
         expect(res).toEqual({
             message: API_RESPONSES.UPLOAD_AVATAR_SUCCESS,
-            profilePhoto: '/uploads/avatars/alice-123.jpg',
+            avatar: '/uploads/avatars/alice-123.jpg',
         });
     });
 
     it('uploadAvatar does not delete when old avatar is missing', async () => {
-        service.findOne.mockResolvedValue({username: 'alice', profilePhoto: null});
+        service.findOne.mockResolvedValue({username: 'alice', avatar: null});
         service.updateAvatar.mockResolvedValue({oldPhoto: null, newPhoto: '/uploads/avatars/new.jpg'});
 
         const req: any = {};
@@ -215,19 +215,19 @@ describe('UsersController', () => {
         expect(service.updateAvatar).toHaveBeenCalledWith('alice', '/uploads/avatars/alice-123.jpg');
     });
 
-    it('uploadAvatar updates session profilePhoto when uploading self avatar', async () => {
-        service.findOne.mockResolvedValue({username: 'alice', profilePhoto: null});
+    it('uploadAvatar updates session avatar when uploading self avatar', async () => {
+        service.findOne.mockResolvedValue({username: 'alice', avatar: null});
         service.updateAvatar.mockResolvedValue({oldPhoto: null, newPhoto: '/uploads/avatars/alice-123.jpg'});
 
-        const req: any = {session: {user: {username: 'alice', profilePhoto: null}}};
+        const req: any = {session: {user: {username: 'alice', avatar: null}}};
         const file: any = {filename: 'alice-123.jpg'};
 
         const res = await controller.uploadAvatar('alice', req, file);
 
-        expect(req.session.user.profilePhoto).toBe('/uploads/avatars/alice-123.jpg');
+        expect(req.session.user.avatar).toBe('/uploads/avatars/alice-123.jpg');
         expect(res).toEqual({
             message: API_RESPONSES.UPLOAD_AVATAR_SUCCESS,
-            profilePhoto: '/uploads/avatars/alice-123.jpg'
+            avatar: '/uploads/avatars/alice-123.jpg'
         });
     });
 
@@ -251,17 +251,17 @@ describe('UsersController', () => {
         expect(res).toEqual({message: API_RESPONSES.DELETE_AVATAR_SUCCESS});
     });
 
-    it('deleteAvatar resets session profilePhoto when deleting self avatar', async () => {
+    it('deleteAvatar resets session avatar when deleting self avatar', async () => {
         service.deleteAvatar.mockResolvedValue({oldPhoto: null});
 
         const req: any = {
             session: {
-                user: {username: 'alice', profilePhoto: '/uploads/avatars/some.jpg'},
+                user: {username: 'alice', avatar: '/uploads/avatars/some.jpg'},
             },
         };
 
         await controller.deleteAvatar('alice', req);
 
-        expect(req.session.user.profilePhoto).toEqual(expect.stringContaining('/uploads/avatars/'));
+        expect(req.session.user.avatar).toEqual(expect.stringContaining('/uploads/avatars/'));
     });
 });

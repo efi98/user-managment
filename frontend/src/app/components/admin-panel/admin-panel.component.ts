@@ -3,7 +3,7 @@ import type { CellClickedEvent, ColDef } from 'ag-grid-community';
 import { AgGridAngular } from "ag-grid-angular";
 import { UserService } from "@services/user.service";
 import { AuthStore } from "@store/auth.store";
-import {computeAgeFromBirthdate, getRelativeTime} from "@utils/utilities";
+import {computeAgeFromBirthdate, getAvatar, getRelativeTime} from "@utils/utilities";
 import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
@@ -22,7 +22,8 @@ export class AdminPanelComponent implements OnInit {
             colId: "username",
             cellClass: 'link-cell',
             suppressMovable: true,
-            pinned: "left"
+            pinned: "left",
+            cellRenderer: (params: any) => getAvatar(params.data?.avatar, params.value)
         },
         {field: "displayName", filter: true},
         {

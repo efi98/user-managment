@@ -26,7 +26,7 @@ import { AppController } from './app.controller';
         }),
 
         ServeStaticModule.forRoot({
-            rootPath: join(__dirname, '..', 'assets', 'uploads'),
+            rootPath: join(process.cwd(), 'assets', 'uploads'),
             serveRoot: '/uploads',
         }),
 
