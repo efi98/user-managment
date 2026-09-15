@@ -36,16 +36,22 @@ describe('E2E auth flow', () => {
     });
 
     it('login fails on wrong password', async () => {
-        await agent.post('/login').send({username: 'alice', password: 'nope'}).expect(401);
+        const response = await agent.post('/login').send({username: 'alice', password: 'nope'});
+
+        expect(response.status).toBe(401);
     });
 
-  it('login fails on non existing user', async () => {
-    await agent.post('/login').send({ username: 'does-not-exist', password: 'pass' }).expect(404);
-  });
+    it('login fails on non existing user', async () => {
+        const response = await agent.post('/login').send({username: 'does-not-exist', password: 'pass'});
+
+        expect(response.status).toBe(404);
+    });
 
     it('logout clears session', async () => {
         await logoutUser(agent);
-        await agent.get('/me').expect(401);
+        const meRes = await agent.get('/me');
+
+        expect(meRes.status).toBe(401);
     });
 
     it('login works again after logout', async () => {

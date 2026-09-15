@@ -152,7 +152,7 @@ describe('E2E users', () => {
 
         expect(res.status).toBe(409);
         expect(Array.isArray(res.body.suggestions)).toBe(true);
-        expect(res.body.suggestions.length).toBe(3);
+        expect(res.body.suggestions).toHaveLength(3);
     });
 
     it('DELETE /users/:username allows self delete', async () => {

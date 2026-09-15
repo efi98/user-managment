@@ -2,9 +2,9 @@ import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
 import {createClient} from 'redis';
 import {ValidationPipe} from '@nestjs/common';
-import session = require('express-session');
 import type {RequestHandler} from 'express';
 import {RedisStore} from "connect-redis";
+import session = require('express-session');
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN;
 const MAX_AGE = Number.parseInt(process.env.MAX_AGE_MS, 10);
