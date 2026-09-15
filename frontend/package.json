@@ -10,18 +10,6 @@
     "test": "ng test",
     "typecheck": "tsc --noEmit"
   },
-  "prettier": {
-    "printWidth": 100,
-    "singleQuote": true,
-    "overrides": [
-      {
-        "files": "*.html",
-        "options": {
-          "parser": "angular"
-        }
-      }
-    ]
-  },
   "dependencies": {
     "@angular/common": "^20.3.16",
     "@angular/compiler": "^20.3.16",
