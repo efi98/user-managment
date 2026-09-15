@@ -17,7 +17,7 @@ describe('user-view.helper', () => {
 
         const s = toSafeUser(u)!;
         expect((s as any).password).toBeUndefined();
-        expect(s.displayName).toBe(null);
+        expect(s.displayName).toBeNull();
         expect(s.isAdmin).toBe(false);
         expect(s.avatar).toContain('/uploads/avatars/');
     });

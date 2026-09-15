@@ -1,8 +1,9 @@
-import { Component, ElementRef, HostListener, inject, Signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '@services/auth.service';
-import { User } from "@interfaces";
-import { AuthStore } from "@store/auth.store";
+import {Component, ElementRef, HostListener, inject, Signal} from '@angular/core';
+import {Router} from '@angular/router';
+import {AuthService} from '@services/auth.service';
+import {RouteStateService} from '@services/route-state.service';
+import {User} from "@interfaces";
+import {AuthStore} from "@store/auth.store";
 import {BASE_URL, MESSAGES} from "@consts";
 
 @Component({
@@ -14,6 +15,7 @@ import {BASE_URL, MESSAGES} from "@consts";
 export class Navbar {
     router = inject(Router);
     authService = inject(AuthService);
+    routeState = inject(RouteStateService);
     authStore = inject(AuthStore);
     isLoggedIn = this.authService.isLoggedIn;
     isAdmin = this.authService.isAdmin;
@@ -33,7 +35,7 @@ export class Navbar {
     }
 
     getCurrentRouteTitle(): string {
-        const path = this.router.url.split('?')[0].replace(/^\//, '').split('/')[0];
+        const path = this.routeState.currentRouteUrl().split('?')[0].replace(/^\//, '').split('/')[0];
         if (!path) return 'Home page';
         return path
             .split('-')
