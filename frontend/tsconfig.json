@@ -14,19 +14,18 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "preserve",
-    "baseUrl": "./src",
     "paths": {
       "@environments": [
-        "environments/environment.ts"
+        "./src/environments/environment.ts"
       ],
-      "@components/*": ["app/components/*"],
-      "@guards/*": ["app/guards/*"],
-      "@interceptors/*": ["app/interceptors/*"],
-      "@services/*": ["app/services/*"],
-      "@store/*": ["app/store/*"],
-      "@utils/*": ["app/utils/*"],
-      "@consts": ["app/consts"],
-      "@interfaces": ["app/interfaces"]
+      "@components/*": ["./src/app/components/*"],
+      "@guards/*": ["./src/app/guards/*"],
+      "@interceptors/*": ["./src/app/interceptors/*"],
+      "@services/*": ["./src/app/services/*"],
+      "@store/*": ["./src/app/store/*"],
+      "@utils/*": ["./src/app/utils/*"],
+      "@consts": ["./src/app/consts"],
+      "@interfaces": ["./src/app/interfaces"]
     }
   },
   "angularCompilerOptions": {
