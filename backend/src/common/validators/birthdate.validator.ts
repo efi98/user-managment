@@ -9,11 +9,11 @@ import {ageFromBirthdate, API_RESPONSES} from "@src/common";
 
 // Checks if the given birthdate is not in the future
 export function IsNotFutureDate(validationOptions?: ValidationOptions): PropertyDecorator {
-  return function (object: object, propertyName: string) {
+  return function (object: object, propertyKey: string | symbol) {
     registerDecorator({
       name: 'isNotFutureDate',
       target: object.constructor,
-      propertyName,
+      propertyName: String(propertyKey),
       options: validationOptions,
       validator: {
         validate(value: string | Date) {
@@ -46,11 +46,11 @@ export function IsNotFutureDate(validationOptions?: ValidationOptions): Property
 
 // Ensures computed age from birthdate is greater than or equal to `min`
 export function MinAge(min: number, validationOptions?: ValidationOptions): PropertyDecorator {
-  return function (object: object, propertyName: string) {
+  return function (object: object, propertyKey: string | symbol) {
     registerDecorator({
       name: 'minAge',
       target: object.constructor,
-      propertyName,
+      propertyName: String(propertyKey),
       constraints: [min],
       options: validationOptions,
       validator: {
@@ -70,11 +70,11 @@ export function MinAge(min: number, validationOptions?: ValidationOptions): Prop
 
 // Ensures computed age from birthdate is less than or equal to `max`
 export function MaxAge(max: number, validationOptions?: ValidationOptions): PropertyDecorator {
-  return function (object: object, propertyName: string) {
+  return function (object: object, propertyKey: string | symbol) {
     registerDecorator({
       name: 'maxAge',
       target: object.constructor,
-      propertyName,
+      propertyName: String(propertyKey),
       constraints: [max],
       options: validationOptions,
       validator: {

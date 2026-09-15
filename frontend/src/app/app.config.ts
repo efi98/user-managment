@@ -1,6 +1,7 @@
 import {
-    APP_INITIALIZER,
     ApplicationConfig,
+    inject,
+    provideAppInitializer,
     provideBrowserGlobalErrorListeners,
     provideZonelessChangeDetection
 } from '@angular/core';
@@ -18,16 +19,10 @@ export const appConfig: ApplicationConfig = {
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideHttpClient(withInterceptorsFromDi()),
-        {
-            provide: APP_INITIALIZER,
-            useFactory: (auth: AuthService) => {
-                return async () => {
-                    await firstValueFrom(auth.initUserSession$());
-                };
-            },
-            deps: [AuthService],
-            multi: true
-        },
+        provideAppInitializer(async () => {
+            const auth = inject(AuthService);
+            await firstValueFrom(auth.initUserSession$());
+        }),
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,

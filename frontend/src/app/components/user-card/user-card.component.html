@@ -8,7 +8,9 @@
                              [alt]="activeUser()?.displayName || activeUser()?.username">
                     </div>
                     @if (canManageAvatar) {
+                        <label for="avatar-input" class="sr-only">Choose avatar image</label>
                         <input #avatarInput
+                               id="avatar-input"
                                type="file"
                                accept="image/*"
                                class="avatar-input"
@@ -58,7 +60,7 @@
                             </div>
                         }
                     } @else {
-                        <input id="username-view"
+                        <input id="username"
                                [value]="displayValue('username')"
                                readonly
                                [class.empty-field]="isEmptyDisplay('username')">
@@ -87,7 +89,7 @@
                             <div class="error">{{ error }}</div>
                         }
                     } @else {
-                        <input id="displayName-view"
+                        <input id="displayName"
                                [value]="displayValue('displayName')"
                                readonly
                                [class.empty-field]="isEmptyDisplay('displayName')">
@@ -116,7 +118,7 @@
                                     [passwordValidationResult]="passwordValidationResult"></app-password-strength>
                         }
                     } @else {
-                        <input id="password-view"
+                        <input id="password"
                                [value]="displayValue('password')"
                                readonly
                                class="empty-field">
@@ -146,7 +148,7 @@
                             <div class="error">{{ error }}</div>
                         }
                     } @else {
-                        <input id="birthdate-view"
+                        <input id="birthdate"
                                type="date"
                                [value]="displayValue('birthdate') === emptyLabel ? '' : displayValue('birthdate')"
                                readonly
@@ -182,7 +184,7 @@
                             <div class="error">{{ error }}</div>
                         }
                     } @else {
-                        <input id="gender-view"
+                        <input id="gender"
                                [value]="displayValue('gender')"
                                readonly
                                [class.empty-field]="isEmptyDisplay('gender')">
