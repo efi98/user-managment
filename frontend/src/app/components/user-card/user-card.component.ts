@@ -2,10 +2,11 @@ import {CommonModule} from '@angular/common';
 import {
     Component,
     computed,
-    ElementRef,
     effect,
+    ElementRef,
     EventEmitter,
-    inject, input,
+    inject,
+    input,
     Input,
     OnChanges,
     Output,
@@ -13,7 +14,7 @@ import {
     ViewChild
 } from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-import {BASE_URL, GENDERS_LIST} from '@consts';
+import {BASE_URL, GENDER_LABELS, GENDERS_LIST} from '@consts';
 import {PasswordValidation, User, UserFormConfig, UserFormField, UserFormModel} from '@interfaces';
 import {PasswordStrengthComponent} from '@components/password-strength/password-strength';
 import {PasswordPolicyService} from '@services/password-policy.service';
@@ -22,6 +23,11 @@ import {computeAgeFromBirthdate, formatDateInput, getRelativeTime, yearsAgo} fro
 import {toSignal} from "@angular/core/rxjs-interop";
 import {AuthStore} from "@store/auth.store";
 import {startWith} from "rxjs";
+
+const ROLE_ADMIN_LABEL = $localize`:@@userCardRoleAdmin:Admin`;
+const ROLE_USER_LABEL = $localize`:@@userCardRoleUser:User`;
+const FIELD_REQUIRED_MESSAGE = $localize`:@@userCardFieldRequired:This field is required.`;
+const FIELD_INVALID_MESSAGE = $localize`:@@userCardFieldInvalid:Invalid value.`;
 
 @Component({
     selector: 'app-user-card',
@@ -42,10 +48,10 @@ export class UserCardComponent implements OnChanges {
         showDelete: false,
         showCancel: false,
         emitOnlyDirtyFields: false,
-        submitLabel: 'Save',
-        editLabel: 'Edit',
-        deleteLabel: 'Delete',
-        emptyLabel: 'EMPTY',
+        submitLabel: $localize`:@@userCardSubmit:Save`,
+        editLabel: $localize`:@@userCardEdit:Edit`,
+        deleteLabel: $localize`:@@userCardDelete:Delete`,
+        emptyLabel: $localize`:@@userCardEmpty:EMPTY`,
         hidePasswordStrength: false,
         validatePassword: true,
         showRequiredMarkers: true,
@@ -57,12 +63,13 @@ export class UserCardComponent implements OnChanges {
     @Output() avatarChanged = new EventEmitter<File>();
     @Output() avatarDeleted = new EventEmitter<void>();
     @Output() fieldValueChanged = new EventEmitter<{ field: UserFormField; value: unknown }>();
-
-    @ViewChild('avatarInput') private readonly avatarInput?: ElementRef<HTMLInputElement>;
-
     protected passwordValidationResult!: PasswordValidation;
-    private isEditing = true;
     protected readonly GENDERS_LIST = GENDERS_LIST;
+    protected readonly GENDER_LABELS = GENDER_LABELS;
+    protected readonly ROLE_ADMIN_LABEL = ROLE_ADMIN_LABEL;
+    protected readonly ROLE_USER_LABEL = ROLE_USER_LABEL;
+    @ViewChild('avatarInput') private readonly avatarInput?: ElementRef<HTMLInputElement>;
+    private isEditing = true;
     private readonly defaultAvatarSuffix = '/uploads/avatars/default.jpg';
     private readonly fb = inject(FormBuilder);
     userForm: UserFormModel = this.fb.group({
@@ -73,14 +80,10 @@ export class UserCardComponent implements OnChanges {
         gender: this.fb.control<string | null>(''),
         isAdmin: this.fb.control<boolean | null>(false),
     });
-
     private readonly passwordPolicyService = inject(PasswordPolicyService);
     private readonly authStore = inject(AuthStore);
     readonly usernameSuggestions = this.authStore.usernameSuggestions;
-    private readonly usernameValue;
     protected readonly activeUser = this.authStore.activeUser;
-    private waitingForLoadingStart = false;
-    private waitingForLoadingEnd = false
     createdRelative = computed(() => {
         const activeUser = this.activeUser();
         if (!activeUser?.createdAt) return '';
@@ -94,6 +97,9 @@ export class UserCardComponent implements OnChanges {
         if (createdAt.getTime() === updatedAt.getTime()) return '';
         return getRelativeTime(updatedAt);
     });
+    private readonly usernameValue;
+    private waitingForLoadingStart = false;
+    private waitingForLoadingEnd = false
     private initialFormValue: any;
 
     constructor() {
@@ -133,10 +139,6 @@ export class UserCardComponent implements OnChanges {
                 }
             }
         });
-    }
-
-    getAvatarUrl(avatar?: string | null): string {
-        return `${BASE_URL}${avatar}`;
     }
 
     get submitLabel(): string {
@@ -193,6 +195,10 @@ export class UserCardComponent implements OnChanges {
         return formatDateInput(yearsAgo(18));
     }
 
+    getAvatarUrl(avatar?: string | null): string {
+        return `${BASE_URL}${avatar}`;
+    }
+
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['config']) {
             this.applyConfig();
@@ -215,14 +221,14 @@ export class UserCardComponent implements OnChanges {
 
         const errors = control.errors;
         if (errors['required']) {
-            return `${field} is required.`;
+            return FIELD_REQUIRED_MESSAGE;
         }
 
         if (errors['birthdate']) {
             return errors['birthdate'];
         }
 
-        return 'Invalid value.';
+        return FIELD_INVALID_MESSAGE;
     }
 
     canEditField(field: UserFormField): boolean {
@@ -252,7 +258,7 @@ export class UserCardComponent implements OnChanges {
         }
 
         if (field === 'isAdmin') {
-            return raw ? 'Admin' : 'User';
+            return raw ? ROLE_ADMIN_LABEL : ROLE_USER_LABEL;
         }
 
         if (raw === null || raw === undefined || raw === '') {
@@ -309,7 +315,7 @@ export class UserCardComponent implements OnChanges {
 
         const payload = this.buildSubmitPayload();
 
-       this.waitingForLoadingStart = true;
+        this.waitingForLoadingStart = true;
         this.waitingForLoadingEnd = false;
 
         this.submitted.emit(payload);
