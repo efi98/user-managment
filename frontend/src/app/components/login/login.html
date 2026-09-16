@@ -1,9 +1,9 @@
-<h2>Login</h2>
+<h2 i18n="@@loginTitle">Login</h2>
 <app-user-card
         [loading]="loading()"
         [config]="formConfig"
         (submitted)="onSubmitted($event)">
 </app-user-card>
-<div class="footer-card">
+<div class="footer-card" i18n="@@loginFooter">
     New? <a routerLink="/signup">Sign up</a>
 </div>

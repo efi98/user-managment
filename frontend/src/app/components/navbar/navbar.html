@@ -1,7 +1,7 @@
 <nav class="navbar">
     <div class="navbar-brand">
         <button class="text" (click)="navigate('/')">
-            <b>User Management App</b>
+            <b i18n="@@navbarBrand">User Management App</b>
         </button>
         @if (isLoggedIn()) {
             <span>&nbsp;|&nbsp;{{ getTitleName() }}</span>
@@ -11,11 +11,15 @@
     <ul class="navbar-links">
         @if (isLoggedIn()) {
             <li>
-                <button (click)="navigate('/')">Home</button>
+                <button (click)="navigate('/')">
+                    <span i18n="@@navbarHome">Home</span>
+                </button>
             </li>
             @if (isAdmin()) {
                 <li>
-                    <button (click)="navigate('/admin-panel')">Admin Panel</button>
+                    <button (click)="navigate('/admin-panel')">
+                        <span i18n="@@navbarAdminPanel">Admin Panel</span>
+                    </button>
                 </li>
             }
             <li class="user-dropdown-wrapper" style="position: relative;">
@@ -30,10 +34,14 @@
                 @if (showUserDropdown) {
                     <ul class="user-dropdown-menu">
                         <li>
-                            <button type="button" class="text" (click)="goToSettings()">Settings</button>
+                            <button type="button" class="text" (click)="goToSettings()">
+                                <span i18n="@@navbarSettings">Settings</span>
+                            </button>
                         </li>
                         <li>
-                            <button type="button" class="text" (click)="logout()">Logout</button>
+                            <button type="button" class="text" (click)="logout()">
+                                <span i18n="@@navbarLogout">Logout</span>
+                            </button>
                         </li>
                     </ul>
                 }

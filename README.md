@@ -5,6 +5,7 @@
 * customization on stats
 * use JWT for authentication
 * add sign in with Google
+* add passkeys
 
 ### General
 * Update tests and add docks (add package for generating docks) [front]

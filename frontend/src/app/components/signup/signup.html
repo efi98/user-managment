@@ -1,10 +1,10 @@
-<h2>Sign Up</h2>
+<h2 i18n="@@signupTitle">Sign Up</h2>
 <app-user-card
         [config]="formConfig"
         [loading]="loading()"
         (submitted)="onSubmitted($event)"
         (fieldValueChanged)="onFieldValueChanged($event)">
 </app-user-card>
-<div class="footer-card">
+<div class="footer-card" i18n="@@signupFooter">
     Already have an account? <a routerLink="/login">Login</a>
 </div>

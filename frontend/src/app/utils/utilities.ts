@@ -2,9 +2,11 @@ import RelativeTime from '@yaireo/relative-time'
 import {BASE_URL} from "@consts";
 
 const relativeTime = new RelativeTime();
+const relativeTimeSpanish = new RelativeTime({locale: 'es'});
 
 export function getRelativeTime(date: Date) {
-    return relativeTime.from(date);
+    const isSpanish = document.documentElement.lang.toLowerCase().startsWith('es');
+    return (isSpanish ? relativeTimeSpanish : relativeTime).from(date);
 }
 
 export function getAvatar(imgUrl: any, value: any)  {
@@ -12,7 +14,7 @@ export function getAvatar(imgUrl: any, value: any)  {
     return `
             <div style="display:flex; align-items:center; gap:6px;">
                 <img src="${imgUrl}" 
-                     style="width:20px; height:20px; border-radius:50%;" />
+                     style="width:20px; height:20px; border-radius:50%;"  alt="${value}"/>
                 <span>${value}</span>
             </div>
         `;

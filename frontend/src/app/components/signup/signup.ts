@@ -27,8 +27,8 @@ export class SignupComponent {
         showDelete: false,
         showCancel: false,
         emitOnlyDirtyFields: false,
-        submitLabel: 'Sign Up',
-        emptyLabel: 'EMPTY',
+        submitLabel: $localize`:@@signupSubmit:Sign Up`,
+        emptyLabel: $localize`:@@signupEmpty:EMPTY`,
     };
     private readonly router = inject(Router);
     private readonly authService = inject(AuthService);

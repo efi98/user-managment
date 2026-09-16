@@ -51,6 +51,7 @@
   flex-direction: column;
   gap: 0.45rem;
   min-width: 0;
+  container-type: inline-size;
 }
 
 .avatar-item {
@@ -130,6 +131,7 @@
   border: transparent 1px solid;
   transition: background-color 0.3s;
   flex: 1;
+  min-width: 0;
   justify-content: center;
   cursor: default;
 
@@ -158,6 +160,24 @@
 
   span:first-child {
     margin-right: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .role-label {
+    overflow-wrap: anywhere;
+    text-align: center;
+  }
+}
+
+@container (max-width: 14rem) {
+  .role-option {
+    .role-label {
+      display: none;
+    }
+
+    span:first-child {
+      margin-right: 0;
+    }
   }
 }
 

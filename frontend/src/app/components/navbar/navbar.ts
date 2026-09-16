@@ -6,11 +6,19 @@ import {User} from "@interfaces";
 import {AuthStore} from "@store/auth.store";
 import {BASE_URL, MESSAGES} from "@consts";
 
+const ROUTE_TITLES: Record<string, string> = {
+    '': $localize`:@@navbarHomePage:Home page`,
+    'admin-panel': $localize`:@@navbarAdminPanel:Admin Panel`,
+    settings: $localize`:@@navbarSettings:Settings`,
+    login: $localize`:@@loginTitle:Login`,
+    signup: $localize`:@@signupTitle:Sign Up`,
+};
+
 @Component({
     selector: 'app-navbar',
     imports: [],
     templateUrl: './navbar.html',
-    styleUrl: './navbar.scss',
+    styleUrls: ['./navbar.scss'],
 })
 export class Navbar {
     router = inject(Router);
@@ -36,11 +44,7 @@ export class Navbar {
 
     getCurrentRouteTitle(): string {
         const path = this.routeState.currentRouteUrl().split('?')[0].replace(/^\//, '').split('/')[0];
-        if (!path) return 'Home page';
-        return path
-            .split('-')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
+        return ROUTE_TITLES[path] ?? '';
     }
 
     logout() {
@@ -54,14 +58,13 @@ export class Navbar {
 
     getTitleName() {
         if (this.selectedUser()) {
-            let title = `Edit '${this.selectedUser()?.username}'`;
+            const username = this.selectedUser()?.username ?? '';
             if (this.authStore.isSelectedIsCurrent()) {
-                title += ' (YOU)';
+                return $localize`:@@navbarEditSelf:Edit '${username}' (YOU)`;
             }
-            return title;
-        } else {
-            return this.getCurrentRouteTitle();
+            return $localize`:@@navbarEditOther:Edit '${username}'`;
         }
+        return this.getCurrentRouteTitle();
     }
 
     toggleUserDropdown() {

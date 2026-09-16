@@ -5,7 +5,7 @@
         <div class="toast-message">
             <p [innerText]="toast.message"></p>
         </div>
-        <button class="toast-close-btn" (click)="toastService.hide()">
+        <button class="toast-close-btn" (click)="toastService.hide()" i18n-aria-label="@@toastClose" aria-label="Close notification">
             &times;
         </button>
     </div>

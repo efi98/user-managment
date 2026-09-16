@@ -5,6 +5,7 @@ import { UserService } from "@services/user.service";
 import { AuthStore } from "@store/auth.store";
 import {computeAgeFromBirthdate, getAvatar, getRelativeTime} from "@utils/utilities";
 import { ActivatedRoute, Router } from "@angular/router";
+import {GENDER_LABELS} from "@consts";
 
 @Component({
     selector: 'app-admin-panel',
@@ -18,6 +19,7 @@ export class AdminPanelComponent implements OnInit {
     colDefs: ColDef[] = [
         {
             field: "username",
+            headerName: $localize`:@@adminPanelUsername:Username`,
             filter: true,
             colId: "username",
             cellClass: 'link-cell',
@@ -25,9 +27,13 @@ export class AdminPanelComponent implements OnInit {
             pinned: "left",
             cellRenderer: (params: any) => getAvatar(params.data?.avatar, params.value)
         },
-        {field: "displayName", filter: true},
         {
-            headerName: 'Age',
+            field: "displayName",
+            headerName: $localize`:@@adminPanelDisplayName:Display Name`,
+            filter: true,
+        },
+        {
+            headerName: $localize`:@@adminPanelAge:Age`,
             valueGetter: (params: any) => computeAgeFromBirthdate(params.data?.birthdate),
             filter: true,
             minWidth: 70,
@@ -35,7 +41,9 @@ export class AdminPanelComponent implements OnInit {
         },
         {
             field: "gender",
+            headerName: $localize`:@@adminPanelGender:Gender`,
             filter: true,
+            valueFormatter: params => GENDER_LABELS[params.value as keyof typeof GENDER_LABELS] ?? '',
             cellStyle: params => {
                 switch ((params.value || '').toLowerCase()) {
                     case 'male':
@@ -49,9 +57,26 @@ export class AdminPanelComponent implements OnInit {
                 }
             }
         },
-        {field: "isAdmin", filter: true},
-        {field: "createdAt", filter: true, cellRenderer: (d: any) => getRelativeTime(d.value)},
-        {field: "updatedAt", filter: true, cellRenderer: (d: any) => getRelativeTime(d.value)},
+        {
+            field: "isAdmin",
+            headerName: $localize`:@@adminPanelRole:Role`,
+            filter: true,
+            valueFormatter: params => params.value
+                ? $localize`:@@adminPanelAdmin:Admin`
+                : $localize`:@@adminPanelUser:User`,
+        },
+        {
+            field: "createdAt",
+            headerName: $localize`:@@adminPanelCreated:Created`,
+            filter: true,
+            cellRenderer: (d: any) => getRelativeTime(d.value),
+        },
+        {
+            field: "updatedAt",
+            headerName: $localize`:@@adminPanelModified:Modified`,
+            filter: true,
+            cellRenderer: (d: any) => getRelativeTime(d.value),
+        },
     ];
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);

@@ -2,13 +2,13 @@
     <div class="overlay">
         <div class="dialog">
             <header>
-                <h2>Confirm</h2>
-                <button class="close-btn" (click)="onCancel()">X</button>
+                <h2 i18n="@@confirmDialogTitle">Confirm</h2>
+                <button class="close-btn" (click)="onCancel()" i18n-aria-label="@@confirmDialogClose" aria-label="Close">X</button>
             </header>
             <p [innerHTML]="dialogService.message$()"></p>
             <footer>
-                <button class="primary" (click)="onConfirm()">Confirm</button>
-                <button (click)="onCancel()">Cancel</button>
+                <button class="primary" (click)="onConfirm()" i18n="@@confirmDialogAccept">Confirm</button>
+                <button (click)="onCancel()" i18n="@@confirmDialogCancel">Cancel</button>
             </footer>
         </div>
     </div>

@@ -50,6 +50,9 @@
             ],
             "styles": [
               "src/styles.scss"
+            ],
+            "polyfills": [
+              "@angular/localize/init"
             ]
           },
           "configurations": {
@@ -69,6 +72,9 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "es": {
+              "localize": ["es"]
             }
           },
           "defaultConfiguration": "production"
@@ -84,6 +90,9 @@
             },
             "development": {
               "buildTarget": "user-managment:build:development"
+            },
+            "es": {
+              "buildTarget": "user-managment:build:development,es"
             }
           },
           "defaultConfiguration": "development"
@@ -104,8 +113,17 @@
             ],
             "styles": [
               "src/styles.scss"
+            ],
+            "polyfills": [
+              "@angular/localize/init"
             ]
           }
+        }
+      },
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "es": "src/locale/messages.es.xlf"
         }
       }
     }

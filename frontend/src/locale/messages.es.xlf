@@ -1,0 +1,782 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="adminPanelUsername" datatype="html">
+        <source>Username</source>
+        <target>Usuario</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/admin-panel/admin-panel.component.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="adminPanelDisplayName" datatype="html">
+        <source>Display Name</source>
+        <target>Nombre visible</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/admin-panel/admin-panel.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="adminPanelAge" datatype="html">
+        <source>Age</source>
+        <target>Edad</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/admin-panel/admin-panel.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="adminPanelGender" datatype="html">
+        <source>Gender</source>
+        <target>Género</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/admin-panel/admin-panel.component.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="adminPanelRole" datatype="html">
+        <source>Role</source>
+        <target>Rol</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/admin-panel/admin-panel.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="adminPanelAdmin" datatype="html">
+        <source>Admin</source>
+        <target>Administrador</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/admin-panel/admin-panel.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="adminPanelUser" datatype="html">
+        <source>User</source>
+        <target>Usuario</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/admin-panel/admin-panel.component.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="adminPanelCreated" datatype="html">
+        <source>Created</source>
+        <target>Creado</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/admin-panel/admin-panel.component.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="adminPanelModified" datatype="html">
+        <source>Modified</source>
+        <target>Modificado</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/admin-panel/admin-panel.component.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="confirmDialogTitle" datatype="html">
+        <source>Confirm</source>
+        <target>Confirmar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/confirm-dialog/confirm-dialog.html</context>
+          <context context-type="linenumber">5,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="confirmDialogClose" datatype="html">
+        <source>Close</source>
+        <target>Cerrar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/confirm-dialog/confirm-dialog.html</context>
+          <context context-type="linenumber">6,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="confirmDialogAccept" datatype="html">
+        <source>Confirm</source>
+        <target>Confirmar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/confirm-dialog/confirm-dialog.html</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="confirmDialogCancel" datatype="html">
+        <source>Cancel</source>
+        <target>Cancelar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/confirm-dialog/confirm-dialog.html</context>
+          <context context-type="linenumber">11,13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboardHeader" datatype="html">
+        <source>User Management Dashboard Stats</source>
+        <target>Estadísticas del panel de usuarios</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.html</context>
+          <context context-type="linenumber">3,4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboardTotalUsers" datatype="html">
+        <source>Total Users</source>
+        <target>Usuarios totales</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.html</context>
+          <context context-type="linenumber">7,8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboardAdmins" datatype="html">
+        <source>Admins</source>
+        <target>Administradores</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.html</context>
+          <context context-type="linenumber">11,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboardRecentSignups" datatype="html">
+        <source>Recent Signups (10)</source>
+        <target>Registros recientes (10)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.html</context>
+          <context context-type="linenumber">16,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboardGenderBreakdown" datatype="html">
+        <source>Gender Breakdown</source>
+        <target>Distribución por género</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.html</context>
+          <context context-type="linenumber">22,24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboardAgeStats" datatype="html">
+        <source>Age Statistics</source>
+        <target>Estadísticas de edad</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.html</context>
+          <context context-type="linenumber">36,38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboardGenderBlank" datatype="html">
+        <source>Blank</source>
+        <target>Sin especificar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboardAgeAverage" datatype="html">
+        <source>Average</source>
+        <target>Promedio</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboardAgeMinimum" datatype="html">
+        <source>Minimum</source>
+        <target>Mínimo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboardAgeMaximum" datatype="html">
+        <source>Maximum</source>
+        <target>Máximo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboardAgeMedian" datatype="html">
+        <source>Median</source>
+        <target>Mediana</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="loginTitle" datatype="html">
+        <source>Login</source>
+        <target>Iniciar sesión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/login/login.html</context>
+          <context context-type="linenumber">1,3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/navbar/navbar.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="loginFooter" datatype="html">
+        <source> New? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/signup&quot;&gt;" />Sign up<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" />
+        </source>
+        <target>¿Nuevo? <x id="START_LINK" />Regístrate<x id="CLOSE_LINK" />
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/login/login.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="loginSubmit" datatype="html">
+        <source>Login</source>
+        <target>Iniciar sesión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/login/login.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="navbarBrand" datatype="html">
+        <source>User Management App</source>
+        <target>Aplicación de gestión de usuarios</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/navbar/navbar.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="navbarHome" datatype="html">
+        <source>Home</source>
+        <target>Inicio</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/navbar/navbar.html</context>
+          <context context-type="linenumber">15,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="navbarAdminPanel" datatype="html">
+        <source>Admin Panel</source>
+        <target>Panel de administración</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/navbar/navbar.html</context>
+          <context context-type="linenumber">21,22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/navbar/navbar.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="navbarSettings" datatype="html">
+        <source>Settings</source>
+        <target>Configuración</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/navbar/navbar.html</context>
+          <context context-type="linenumber">38,39</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/navbar/navbar.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="navbarLogout" datatype="html">
+        <source>Logout</source>
+        <target>Cerrar sesión</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/navbar/navbar.html</context>
+          <context context-type="linenumber">43,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="navbarHomePage" datatype="html">
+        <source>Home page</source>
+        <target>Página de inicio</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/navbar/navbar.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="signupTitle" datatype="html">
+        <source>Sign Up</source>
+        <target>Registrarse</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/navbar/navbar.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/signup/signup.html</context>
+          <context context-type="linenumber">1,3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="navbarEditSelf" datatype="html">
+        <source>Edit '<x id="PH" equiv-text="username" />' (YOU)</source>
+        <target>Editar '<x id="PH" equiv-text="username" />' (TÚ)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/navbar/navbar.ts</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="navbarEditOther" datatype="html">
+        <source>Edit '<x id="PH" equiv-text="username" />'</source>
+        <target>Editar '<x id="PH" equiv-text="username" />'</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/navbar/navbar.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settingsSubmit" datatype="html">
+        <source>Save</source>
+        <target>Guardar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings/settings.component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settingsEdit" datatype="html">
+        <source>Edit</source>
+        <target>Editar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings/settings.component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settingsDelete" datatype="html">
+        <source>Delete</source>
+        <target>Eliminar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings/settings.component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settingsEmpty" datatype="html">
+        <source>EMPTY</source>
+        <target>VACÍO</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings/settings.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settingsUserDetails" datatype="html">
+        <source> '<x id="PH" equiv-text="username" />' Details</source>
+        <target>Detalles de '<x id="PH" equiv-text="username" />'</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings/settings.component.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settingsHeader" datatype="html">
+        <source>User Settings</source>
+        <target>Configuración del usuario</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings/settings.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settingsDeleteOther" datatype="html">
+        <source>You are about to delete user: &lt;b&gt;'<x id="PH" equiv-text="user.username" />'&lt;/b&gt;.&lt;br&gt; Are you sure you want to continue?</source>
+        <target>Estás a punto de eliminar al usuario: &lt;b&gt;'<x id="PH" equiv-text="user.username" />'&lt;/b&gt;.&lt;br&gt; ¿Estás seguro de que deseas continuar?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings/settings.component.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settingsDeleteSelf" datatype="html">
+        <source>You are about to delete your account.&lt;br&gt; Are you sure you want to continue?</source>
+        <target>Estás a punto de eliminar tu cuenta.&lt;br&gt; ¿Estás seguro de que deseas continuar?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings/settings.component.ts</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="signupFooter" datatype="html">
+        <source> Already have an account? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/login&quot;&gt;" />Login<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" />
+        </source>
+        <target>¿Ya tienes una cuenta? <x id="START_LINK" />Inicia sesión<x id="CLOSE_LINK" />
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/signup/signup.html</context>
+          <context context-type="linenumber">9,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="signupSubmit" datatype="html">
+        <source>Sign Up</source>
+        <target>Registrarse</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/signup/signup.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="signupEmpty" datatype="html">
+        <source>EMPTY</source>
+        <target>VACÍO</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/signup/signup.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="toastClose" datatype="html">
+        <source>Close notification</source>
+        <target>Cerrar notificación</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/toast/toast.component.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardChooseAvatar" datatype="html">
+        <source>Choose avatar image</source>
+        <target>Elegir imagen de avatar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">11,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardEditAvatar" datatype="html">
+        <source>Edit Avatar</source>
+        <target>Editar avatar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">23,24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardDeleteAvatar" datatype="html">
+        <source>Delete Avatar</source>
+        <target>Eliminar avatar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">29,30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="usernameLabel" datatype="html">
+        <source> Username <x id="START_BLOCK_IF" equiv-text="@if (shouldShowRequired('username')) {" />
+          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;required-asterisk&quot;                                   [class.error]=&quot;isInvalid('username')&quot;&gt;" />*<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" />
+          <x id="CLOSE_BLOCK_IF" equiv-text="}" />
+        </source>
+        <target>Usuario <x id="START_BLOCK_IF" />
+          <x id="START_TAG_SPAN" />*<x id="CLOSE_TAG_SPAN" />
+          <x id="CLOSE_BLOCK_IF" />
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">38,43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardAvailableLabel" datatype="html">
+        <source>Available: </source>
+        <target>Disponible: </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">58,59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="displayNameLabel" datatype="html">
+        <source> Display Name <x id="START_BLOCK_IF" equiv-text="@if (shouldShowRequired('displayName')) {" />
+          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;required-asterisk&quot;                                   [class.error]=&quot;isInvalid('displayName')&quot;&gt;" />*<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" />
+          <x id="CLOSE_BLOCK_IF" equiv-text="}" />
+        </source>
+        <target>Nombre visible <x id="START_BLOCK_IF" />
+          <x id="START_TAG_SPAN" />*<x id="CLOSE_TAG_SPAN" />
+          <x id="CLOSE_BLOCK_IF" />
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">74,79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="passwordLabel" datatype="html">
+        <source> Password <x id="START_BLOCK_IF" equiv-text="@if (shouldShowRequired('password')) {" />
+          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;required-asterisk&quot;                                   [class.error]=&quot;isInvalid('password')&quot;&gt;" />*<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" />
+          <x id="CLOSE_BLOCK_IF" equiv-text="}" />
+        </source>
+        <target>Contraseña <x id="START_BLOCK_IF" />
+          <x id="START_TAG_SPAN" />*<x id="CLOSE_TAG_SPAN" />
+          <x id="CLOSE_BLOCK_IF" />
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">103,108</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="birthdateLabel" datatype="html">
+        <source> Birthdate <x id="START_BLOCK_IF" equiv-text="@if (shouldShowRequired('birthdate')) {" />
+          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;required-asterisk&quot;                                   [class.error]=&quot;isInvalid('birthdate')&quot;&gt;" />*<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" />
+          <x id="CLOSE_BLOCK_IF" equiv-text="}" />
+        </source>
+        <target>Fecha de nacimiento <x id="START_BLOCK_IF" />
+          <x id="START_TAG_SPAN" />*<x id="CLOSE_TAG_SPAN" />
+          <x id="CLOSE_BLOCK_IF" />
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">132,137</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardAgeLabel" datatype="html">
+        <source>Age: <x id="INTERPOLATION" equiv-text="{{ ageLabel() }}" />
+        </source>
+        <target>Edad: <x id="INTERPOLATION" equiv-text="{{ ageLabel() }}" />
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">159,160</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="genderLabel" datatype="html">
+        <source> Gender <x id="START_BLOCK_IF" equiv-text="@if (shouldShowRequired('gender')) {" />
+          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;required-asterisk&quot;                                   [class.error]=&quot;isInvalid('gender')&quot;&gt;" />*<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" />
+          <x id="CLOSE_BLOCK_IF" equiv-text="}" />
+        </source>
+        <target>Género <x id="START_BLOCK_IF" />
+          <x id="START_TAG_SPAN" />*<x id="CLOSE_TAG_SPAN" />
+          <x id="CLOSE_BLOCK_IF" />
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">167,172</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selectGenderOption" datatype="html">
+        <source>Select Gender</source>
+        <target>Seleccionar género</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">177,178</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="roleLabel" datatype="html">
+        <source>Role <x id="START_BLOCK_IF" equiv-text="@if (shouldShowRequired('isAdmin')) {" />
+          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;required-asterisk&quot;                                   [class.error]=&quot;isInvalid('isAdmin')&quot;&gt;" />*<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" />
+          <x id="CLOSE_BLOCK_IF" equiv-text="}" />
+        </source>
+        <target>Rol <x id="START_BLOCK_IF" />
+          <x id="START_TAG_SPAN" />*<x id="CLOSE_TAG_SPAN" />
+          <x id="CLOSE_BLOCK_IF" />
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">200,204</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardCreatedLabel" datatype="html">
+        <source>
+          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;" />Created:<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;" />
+          <x id="INTERPOLATION" equiv-text="{{ createdRelative() }}" />
+        </source>
+        <target>
+          <x id="START_BOLD_TEXT" />Creado:<x id="CLOSE_BOLD_TEXT" />
+          <x id="INTERPOLATION" equiv-text="{{ createdRelative() }}" />
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">230,231</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardModifiedLabel" datatype="html">
+        <source>
+          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;" />Modified:<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;" />
+          <x id="INTERPOLATION" equiv-text="{{ updatedRelative() }}" />
+        </source>
+        <target>
+          <x id="START_BOLD_TEXT" />Modificado:<x id="CLOSE_BOLD_TEXT" />
+          <x id="INTERPOLATION" equiv-text="{{ updatedRelative() }}" />
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">234,235</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardCancel" datatype="html">
+        <source>Cancel</source>
+        <target>Cancelar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
+          <context context-type="linenumber">249,250</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardRoleAdmin" datatype="html">
+        <source>Admin</source>
+        <target>Administrador</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardRoleUser" datatype="html">
+        <source>User</source>
+        <target>Usuario</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardFieldRequired" datatype="html">
+        <source>This field is required.</source>
+        <target>Este campo es obligatorio.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardFieldInvalid" datatype="html">
+        <source>Invalid value.</source>
+        <target>Valor inválido.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardSubmit" datatype="html">
+        <source>Save</source>
+        <target>Guardar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardEdit" datatype="html">
+        <source>Edit</source>
+        <target>Editar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardDelete" datatype="html">
+        <source>Delete</source>
+        <target>Eliminar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userCardEmpty" datatype="html">
+        <source>EMPTY</source>
+        <target>VACÍO</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/user-card/user-card.component.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="genderMale" datatype="html">
+        <source>Male</source>
+        <target>Masculino</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/consts.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="genderFemale" datatype="html">
+        <source>Female</source>
+        <target>Femenino</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/consts.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="genderOther" datatype="html">
+        <source>Other</source>
+        <target>Otro</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/consts.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="notLoggedIn" datatype="html">
+        <source>not logged in.</source>
+        <target>no has iniciado sesión.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/consts.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="loginSuccess" datatype="html">
+        <source>Login successful!</source>
+        <target>¡Inicio de sesión exitoso!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/consts.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="signupSuccess" datatype="html">
+        <source>Signup successful!</source>
+        <target>¡Registro exitoso!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/consts.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="logoutSuccess" datatype="html">
+        <source>Logged out successfully</source>
+        <target>Sesión cerrada correctamente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/consts.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="serverDown" datatype="html">
+        <source>Server is currently unavailable.\nPlease check your connection and try again.</source>
+        <target>El servidor no está disponible actualmente.
+Por favor, verifica tu conexión e inténtalo de nuevo.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/consts.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sessionExpired" datatype="html">
+        <source>Your session has expired. Please log in again.</source>
+        <target>Tu sesión ha expirado. Por favor, inicia sesión nuevamente.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/consts.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="changesCancelled" datatype="html">
+        <source>Changes cancelled</source>
+        <target>Cambios cancelados</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/consts.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userDeleted" datatype="html">
+        <source>User deleted successfully</source>
+        <target>Usuario eliminado correctamente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/consts.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="userUpdated" datatype="html">
+        <source>User updated successfully</source>
+        <target>Usuario actualizado correctamente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/consts.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="avatarUploaded" datatype="html">
+        <source>Avatar updated successfully</source>
+        <target>Avatar actualizado correctamente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/consts.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="avatarDeleted" datatype="html">
+        <source>Avatar deleted successfully</source>
+        <target>Avatar eliminado correctamente</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/consts.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="birthdateInvalid" datatype="html">
+        <source>Invalid birthdate.</source>
+        <target>Fecha de nacimiento no válida.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/utils/validators.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="birthdateMinimum" datatype="html">
+        <source>Birthdate must be on or after <x id="PH" equiv-text="options.minDate" />.</source>
+        <target>La fecha de nacimiento debe ser el <x id="PH" equiv-text="options.minDate" /> o posterior.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/utils/validators.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="birthdateMaximum" datatype="html">
+        <source>Birthdate must be on or before <x id="PH" equiv-text="options.maxDate" />.</source>
+        <target>La fecha de nacimiento debe ser el <x id="PH" equiv-text="options.maxDate" /> o anterior.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/utils/validators.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

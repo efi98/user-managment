@@ -30,10 +30,10 @@ export class SettingsComponent {
         showDelete: true,
         showCancel: true,
         emitOnlyDirtyFields: true,
-        submitLabel: 'Save',
-        editLabel: 'Edit',
-        deleteLabel: 'Delete',
-        emptyLabel: 'EMPTY',
+        submitLabel: $localize`:@@settingsSubmit:Save`,
+        editLabel: $localize`:@@settingsEdit:Edit`,
+        deleteLabel: $localize`:@@settingsDelete:Delete`,
+        emptyLabel: $localize`:@@settingsEmpty:EMPTY`,
     };
     private readonly userService = inject(UserService);
     private readonly authService = inject(AuthService);
@@ -45,7 +45,11 @@ export class SettingsComponent {
     activeUser = this.authStore.activeUser;
     protected header = computed(() => {
         const username = this.route.snapshot.paramMap.get('username');
-        return username ? `'${username}' Details` : 'User Settings';
+
+        if (username) {
+            return $localize`:@@settingsUserDetails: '${username}' Details`;
+        }
+        return $localize`:@@settingsHeader:User Settings`;
     });
 
     onSubmitted(payload: Partial<User>) {
@@ -116,8 +120,8 @@ export class SettingsComponent {
 
         const isForeignSelectedUser = !!this.authStore.selectedUser() && !this.authStore.isSelectedIsCurrent();
         const message = isForeignSelectedUser
-            ? `You are about to delete user: <b>'${user.username}'</b>.<br> are you sure you want to continue?`
-            : `You are about to delete your account.<br> are you sure you want to continue?`;
+            ? $localize`:@@settingsDeleteOther:You are about to delete user: <b>'${user.username}'</b>.<br> Are you sure you want to continue?`
+            : $localize`:@@settingsDeleteSelf:You are about to delete your account.<br> Are you sure you want to continue?`;
 
         this.dialogService.show(message);
 

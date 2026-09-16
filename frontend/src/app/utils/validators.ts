@@ -20,7 +20,7 @@ export function birthdateValidatorFactory(options: { minDate: string; maxDate: s
 
         const birthdate = new Date(value);
         if (Number.isNaN(birthdate.getTime())) {
-            return {birthdate: {message: 'Invalid birthdate.'}};
+            return {birthdate: $localize`:@@birthdateInvalid:Invalid birthdate.`};
         }
 
         const minDate = new Date(options.minDate);
@@ -28,13 +28,13 @@ export function birthdateValidatorFactory(options: { minDate: string; maxDate: s
 
         if (birthdate < minDate) {
             return {
-                birthdate: `Birthdate must be on or after ${options.minDate}.`
+                birthdate: $localize`:@@birthdateMinimum:Birthdate must be on or after ${options.minDate}.`
             };
         }
 
         if (birthdate > maxDate) {
             return {
-                birthdate: `Birthdate must be on or before ${options.maxDate}.`
+                birthdate: $localize`:@@birthdateMaximum:Birthdate must be on or before ${options.maxDate}.`
             };
         }
 

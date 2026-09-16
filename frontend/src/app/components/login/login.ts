@@ -28,7 +28,7 @@ export class LoginComponent {
         showDelete: false,
         showCancel: false,
         emitOnlyDirtyFields: false,
-        submitLabel: 'Login',
+        submitLabel: $localize`:@@loginSubmit:Login`,
         hidePasswordStrength: true,
         validatePassword: false,
         showRequiredMarkers: false,

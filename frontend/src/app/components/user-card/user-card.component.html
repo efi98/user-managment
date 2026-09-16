@@ -8,7 +8,7 @@
                              [alt]="activeUser()?.displayName || activeUser()?.username">
                     </div>
                     @if (canManageAvatar) {
-                        <label for="avatar-input" class="sr-only">Choose avatar image</label>
+                        <label for="avatar-input" class="sr-only" i18n="@@userCardChooseAvatar">Choose avatar image</label>
                         <input #avatarInput
                                id="avatar-input"
                                type="file"
@@ -20,13 +20,13 @@
                                     class="primary"
                                     [disabled]="loading()"
                                     (click)="openAvatarPicker()">
-                                Edit Avatar
+                                <span i18n="@@userCardEditAvatar">Edit Avatar</span>
                             </button>
                             <button type="button"
                                     class="delete"
                                     [disabled]="loading() || !hasCustomAvatar"
                                     (click)="removeAvatar()">
-                                Delete Avatar
+                                <span i18n="@@userCardDeleteAvatar">Delete Avatar</span>
                             </button>
                         </div>
                     }
@@ -34,7 +34,7 @@
             }
             @if (isVisible('username')) {
                 <div class="grid-item">
-                    <label for="username">
+                    <label for="username" i18n="@@usernameLabel">
                         Username
                         @if (shouldShowRequired('username')) {
                             <span class="required-asterisk"
@@ -51,14 +51,14 @@
 
                         @if (getError('username'); as error) {
                             <div class="error">{{ error }}</div>
-                        }
+                    }
 
-                        @if (usernameSuggestions().length) {
-                            <div class="username-suggestions">
-                                <span>Available:&nbsp;</span>
-                                <b>{{ usernameSuggestions().join(', ') }}.</b>
-                            </div>
-                        }
+                    @if (usernameSuggestions().length) {
+                        <div class="username-suggestions">
+                            <span i18n="@@userCardAvailableLabel">Available:&nbsp;</span>
+                            <b>{{ usernameSuggestions().join(', ') }}.</b>
+                        </div>
+                    }
                     } @else {
                         <input id="username"
                                [value]="displayValue('username')"
@@ -70,7 +70,7 @@
 
             @if (isVisible('displayName')) {
                 <div class="grid-item">
-                    <label for="displayName">
+                    <label for="displayName" i18n="@@displayNameLabel">
                         Display Name
                         @if (shouldShowRequired('displayName')) {
                             <span class="required-asterisk"
@@ -99,7 +99,7 @@
 
             @if (isVisible('password')) {
                 <div class="grid-item">
-                    <label for="password">
+                    <label for="password" i18n="@@passwordLabel">
                         Password
                         @if (shouldShowRequired('password')) {
                             <span class="required-asterisk"
@@ -128,7 +128,7 @@
 
             @if (isVisible('birthdate')) {
                 <div class="grid-item">
-                    <label for="birthdate">
+                    <label for="birthdate" i18n="@@birthdateLabel">
                         Birthdate
                         @if (shouldShowRequired('birthdate')) {
                             <span class="required-asterisk"
@@ -156,14 +156,14 @@
                     }
 
                     @if (ageLabel()) {
-                        <div class="field-note">Age: {{ ageLabel() }}</div>
+                        <div class="field-note" i18n="@@userCardAgeLabel">Age: {{ ageLabel() }}</div>
                     }
                 </div>
             }
 
             @if (isVisible('gender')) {
                 <div class="grid-item">
-                    <label for="gender">
+                    <label for="gender" i18n="@@genderLabel">
                         Gender
                         @if (shouldShowRequired('gender')) {
                             <span class="required-asterisk"
@@ -174,9 +174,11 @@
                     @if (canEditField('gender')) {
                         <select id="gender" formControlName="gender"
                                 [class.error]="isInvalid('gender')">
-                            <option value="">Select Gender</option>
+                            <option value="" i18n="@@selectGenderOption">Select Gender</option>
                             @for (gender of GENDERS_LIST; track gender) {
-                                <option [value]="gender">{{ gender }}</option>
+                                <option [value]="gender">
+                                    {{ GENDER_LABELS[gender] }}
+                                </option>
                             }
                         </select>
 
@@ -194,7 +196,7 @@
 
             @if (isVisible('isAdmin')) {
                 <div class="grid-item">
-                    <label for="isAdmin">Role
+                    <label for="isAdmin" i18n="@@roleLabel">Role
                         @if (shouldShowRequired('isAdmin')) {
                             <span class="required-asterisk"
                                   [class.error]="isInvalid('isAdmin')">*</span>
@@ -204,18 +206,20 @@
                         <button class="role-option"
                                 type="button"
                                 (click)="toggleRole()"
+                                [attr.aria-label]="ROLE_ADMIN_LABEL"
                                 [class.edit-mode]="canEditRole()"
                                 [class.active]="userForm.get('isAdmin')?.value">
-                            <span>👑</span>
-                            <span>Admin</span>
+                            <span aria-hidden="true">👑</span>
+                            <span class="role-label">{{ ROLE_ADMIN_LABEL }}</span>
                         </button>
                         <button class="role-option"
                                 type="button"
                                 (click)="toggleRole()"
+                                [attr.aria-label]="ROLE_USER_LABEL"
                                 [class.edit-mode]="canEditRole()"
                                 [class.active]="!userForm.get('isAdmin')?.value">
-                            <span>👤</span>
-                            <span>User</span>
+                            <span aria-hidden="true">👤</span>
+                            <span class="role-label">{{ ROLE_USER_LABEL }}</span>
                         </button>
                     </div>
                 </div>
@@ -225,11 +229,11 @@
         @if (config.showMeta) {
             <div class="timestamps">
                 @if (createdRelative()) {
-                    <span><b>Created:</b> {{ createdRelative() }}</span>
+                    <span i18n="@@userCardCreatedLabel"><b>Created:</b> {{ createdRelative() }}</span>
                 }
                 @if (updatedRelative()) {
                     <span>|</span>
-                    <span><b>Modified:</b> {{ updatedRelative() }}</span>
+                    <span i18n="@@userCardModifiedLabel"><b>Modified:</b> {{ updatedRelative() }}</span>
                 }
             </div>
         }
@@ -244,7 +248,7 @@
                     <button type="button" class="delete" (click)="deleted.emit()">{{ deleteLabel }}</button>
                 }
                 @if (config.showCancel) {
-                    <button type="button" (click)="cancel()">Cancel</button>
+                    <button type="button" (click)="cancel()" i18n="@@userCardCancel">Cancel</button>
                 }
                 <button type="submit" class="submit" [disabled]="isSubmitDisabled || loading()">
                     @if (loading()) {
