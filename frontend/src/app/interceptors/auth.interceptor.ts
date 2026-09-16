@@ -7,7 +7,7 @@ import {
     HttpRequest,
     HttpResponse
 } from '@angular/common/http';
-import {catchError, Observable, throwError} from 'rxjs';
+import {catchError, EMPTY, Observable, throwError} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {AuthService} from '@services/auth.service';
 import {SessionTimerService} from "@services/session-timer.service";
@@ -34,6 +34,11 @@ export class AuthInterceptor implements HttpInterceptor {
                 }
             }),
             catchError((error: HttpErrorResponse) => {
+                if (error.status === 401 && this.authStore.isLoggedIn()) {
+                    this.authService.sessionExpiredLogout();
+                    return EMPTY;
+                }
+
                 const isServerDown = error.status === 0;
                 let errorRes: any = 'Error';
                 console.error('[AuthInterceptor] Error intercepted:', error);
