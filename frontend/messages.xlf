@@ -139,35 +139,35 @@
         <source>Blank</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dashboardAgeAverage" datatype="html">
         <source>Average</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dashboardAgeMinimum" datatype="html">
         <source>Minimum</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dashboardAgeMaximum" datatype="html">
         <source>Maximum</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dashboardAgeMedian" datatype="html">
         <source>Median</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="loginTitle" datatype="html">
@@ -236,6 +236,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/navbar/navbar.html</context>
           <context context-type="linenumber">43,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="serverReconnecting" datatype="html">
+        <source>Reconnecting…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/navbar/navbar.html</context>
+          <context context-type="linenumber">55,58</context>
         </context-group>
       </trans-unit>
       <trans-unit id="navbarHomePage" datatype="html">
@@ -448,21 +455,21 @@
         <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Created:<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> <x id="INTERPOLATION" equiv-text="{{ createdRelative() }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
-          <context context-type="linenumber">230,231</context>
+          <context context-type="linenumber">232,233</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userCardModifiedLabel" datatype="html">
         <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Modified:<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> <x id="INTERPOLATION" equiv-text="{{ updatedRelative() }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
-          <context context-type="linenumber">234,235</context>
+          <context context-type="linenumber">236,237</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userCardCancel" datatype="html">
         <source>Cancel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
-          <context context-type="linenumber">249,250</context>
+          <context context-type="linenumber">251,252</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userCardRoleAdmin" datatype="html">
@@ -571,7 +578,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="serverDown" datatype="html">
-        <source>Server is currently unavailable.\nPlease check your connection and try again.</source>
+        <source>Server is currently unavailable.
+Please check your connection and try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/consts.ts</context>
           <context context-type="linenumber">17</context>

@@ -50,5 +50,8 @@
     </ul>
 </nav>
 @if (isServerDown()) {
-    <div class="error-message">{{ errorMessage }}</div>
+    <div class="error-message">
+        <div>{{ errorMessage }}</div>
+        <div class="reconnect-status" i18n="@@serverReconnecting">Reconnecting…</div>
+    </div>
 }

@@ -14,7 +14,7 @@ export const MESSAGES = {
     LOGIN_SUCCESS: $localize`:@@loginSuccess:Login successful!`,
     SIGNUP_SUCCESS: $localize`:@@signupSuccess:Signup successful!`,
     LOGOUT_SUCCESS: $localize`:@@logoutSuccess:Logged out successfully`,
-    SERVER_DOWN: $localize`:@@serverDown:Server is currently unavailable.\\nPlease check your connection and try again.`,
+    SERVER_DOWN: $localize`:@@serverDown:Server is currently unavailable.\nPlease check your connection and try again.`,
     SESSION_EXPIRED: $localize`:@@sessionExpired:Your session has expired. Please log in again.`,
     CHANGES_CANCELLED: $localize`:@@changesCancelled:Changes cancelled`,
     USER_DELETED: $localize`:@@userDeleted:User deleted successfully`,

@@ -84,11 +84,16 @@
 }
 
 .error-message {
-  height: 2rem;
+  min-height: 2rem;
   color: var(--white);
   text-align: center;
-  padding: 0.3rem 0 0;
+  padding: 0.3rem 0;
   background: var(--error-color);
+  white-space: pre-line;
+}
+
+.reconnect-status {
+  font-size: 0.8rem;
 }
 
 .user-button {

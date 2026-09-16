@@ -159,7 +159,7 @@
         <target>Sin especificar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dashboardAgeAverage" datatype="html">
@@ -167,7 +167,7 @@
         <target>Promedio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dashboardAgeMinimum" datatype="html">
@@ -175,7 +175,7 @@
         <target>Mínimo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dashboardAgeMaximum" datatype="html">
@@ -183,7 +183,7 @@
         <target>Máximo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dashboardAgeMedian" datatype="html">
@@ -191,7 +191,7 @@
         <target>Mediana</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/dashboard/dashboard.component.ts</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="loginTitle" datatype="html">
@@ -270,6 +270,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/navbar/navbar.html</context>
           <context context-type="linenumber">43,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="serverReconnecting" datatype="html">
+        <source>Reconnecting…</source>
+        <target>Reconectando…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/navbar/navbar.html</context>
+          <context context-type="linenumber">55,58</context>
         </context-group>
       </trans-unit>
       <trans-unit id="navbarHomePage" datatype="html">
@@ -551,7 +559,7 @@
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
-          <context context-type="linenumber">230,231</context>
+          <context context-type="linenumber">232,233</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userCardModifiedLabel" datatype="html">
@@ -565,7 +573,7 @@
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
-          <context context-type="linenumber">234,235</context>
+          <context context-type="linenumber">236,237</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userCardCancel" datatype="html">
@@ -573,7 +581,7 @@
         <target>Cancelar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/user-card/user-card.component.html</context>
-          <context context-type="linenumber">249,250</context>
+          <context context-type="linenumber">251,252</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userCardRoleAdmin" datatype="html">
@@ -697,7 +705,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="serverDown" datatype="html">
-        <source>Server is currently unavailable.\nPlease check your connection and try again.</source>
+        <source>Server is currently unavailable.
+Please check your connection and try again.</source>
         <target>El servidor no está disponible actualmente.
 Por favor, verifica tu conexión e inténtalo de nuevo.</target>
         <context-group purpose="location">

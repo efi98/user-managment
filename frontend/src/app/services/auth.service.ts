@@ -1,6 +1,19 @@
 import {inject, Injectable} from '@angular/core';
 import {UserService} from './user.service';
-import {catchError, finalize, map, Observable, of, switchMap, tap, throwError} from 'rxjs';
+import {
+    catchError,
+    exhaustMap,
+    filter,
+    finalize,
+    map,
+    Observable,
+    of,
+    Subscription,
+    switchMap,
+    tap,
+    throwError,
+    timer
+} from 'rxjs';
 import {NewUser, Severity, ToastSeverity, User} from '@interfaces';
 import {Router} from '@angular/router';
 import {AuthStore} from '@store/auth.store';
@@ -10,13 +23,14 @@ import {HttpErrorResponse} from "@angular/common/http";
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
+    private static readonly SERVER_RETRY_INTERVAL_MS = 2_000;
     private readonly userService = inject(UserService);
     private readonly router = inject(Router);
     private readonly authStore = inject(AuthStore);
     readonly isLoggedIn = this.authStore.isLoggedIn;
     readonly isAdmin = this.authStore.isAdmin;
-    usernameSuggestions = this.authStore.usernameSuggestions;
     private readonly toastService = inject(ToastService);
+    private serverRecoverySubscription?: Subscription;
 
     /**
      * Checks session by calling userService.me(). Updates AuthStore and redirects to /login if not logged in.
@@ -93,6 +107,7 @@ export class AuthService {
     private finishLogout(toastOptions: { message: string, severity?: ToastSeverity }): void {
         const {message, severity = Severity.Info} = toastOptions;
 
+        this.stopServerRecoveryMonitor();
         this.authStore.setCurrentUser(null);
         this.authStore.setSelectedUser(null);
 
@@ -103,18 +118,44 @@ export class AuthService {
 
     private handleAuthSuccess(res: User): User {
         this.authStore.setCurrentUser(res);
+        this.stopServerRecoveryMonitor();
         return res;
     }
 
     private handleAuthFailure(err: HttpErrorResponse): void {
         this.authStore.setCurrentUser(null);
 
-        const toastObj = {
-            message: err.status === 0 ? MESSAGES.SERVER_DOWN : MESSAGES.NOT_LOGGED_IN,
-            severity: err.status === 0 ? Severity.Error : Severity.Warning
-        }
+        const toastObj = {message: MESSAGES.NOT_LOGGED_IN, severity: Severity.Warning};
         this.router.navigate(['/login']).then(() => {
-            this.toastService.show(toastObj.message, toastObj.severity);
+            if (!this.authStore.isServerDown()) {
+                this.toastService.show(toastObj.message, toastObj.severity);
+            }
         });
+    }
+
+    startServerRecoveryMonitor(): void {
+        if (this.serverRecoverySubscription) {
+            return;
+        }
+
+        this.serverRecoverySubscription = timer(0, AuthService.SERVER_RETRY_INTERVAL_MS).pipe(
+            filter(() => this.authStore.isServerDown()),
+            exhaustMap(() => this.userService.me().pipe(
+                tap(user => this.handleAuthSuccess(user)),
+                // A non-network response, including 401, proves the server is back. A 401 for
+                // an authenticated user is handled by AuthInterceptor.
+                catchError(() => {
+                    if (!this.authStore.isServerDown()) {
+                        this.stopServerRecoveryMonitor();
+                    }
+                    return of(null);
+                }),
+            )),
+        ).subscribe();
+    }
+
+    stopServerRecoveryMonitor(): void {
+        this.serverRecoverySubscription?.unsubscribe();
+        this.serverRecoverySubscription = undefined;
     }
 }

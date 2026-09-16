@@ -1,7 +1,7 @@
 ## todo:
 
 ### Future dev
-* add language (Spanish, for example)
+* add language (Spanish, for example) [support multi-language switch]
 * customization on stats
 * use JWT for authentication
 * add sign in with Google

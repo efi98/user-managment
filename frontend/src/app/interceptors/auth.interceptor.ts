@@ -11,7 +11,6 @@ import {catchError, EMPTY, Observable, throwError} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {AuthService} from '@services/auth.service';
 import {SessionTimerService} from "@services/session-timer.service";
-import {Severity} from "@interfaces";
 import {MESSAGES} from "@consts";
 import {ToastService} from "@services/toast.service";
 import {AuthStore} from "@store/auth.store";
@@ -44,7 +43,7 @@ export class AuthInterceptor implements HttpInterceptor {
                 console.error('[AuthInterceptor] Error intercepted:', error);
                 this.authStore.setIsServerDown(isServerDown);
                 if (isServerDown) {
-                    this.toastService.show(MESSAGES.SERVER_DOWN, Severity.Error);
+                    this.authService.startServerRecoveryMonitor();
                     errorRes = MESSAGES.SERVER_DOWN;
                 } else if (error) {
                     errorRes = error.error.message;
